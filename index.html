@@ -326,14 +326,14 @@ function renderFactMarkup(f,expanded){
 function modernShowFortune(){
   dismissFortune();
   const wrap=document.createElement("div");wrap.id="fortuneOverlay";wrap.className="lottery";
-  wrap.innerHTML=`<div class="lottery-panel" role="dialog" aria-modal="true" aria-label="今日健康小签"><button class="lottery-close" onclick="dismissFortune()" aria-label="关闭今日签">×</button><div id="fortuneContent"><div class="storybook-ribbon">今日健康小签 ✨</div><h2 class="shake-title">摇一摇，开启今日灵感</h2><p class="storybook-head">给每一天一点轻松的仪式感</p><div class="storybook-stage"><div class="storybook-sun"></div><svg class="storybook-pot" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="蓝黄色小签筒轻轻摇摆，一支幸运签跃出"><g class="storybook-raise"><g class="storybook-stick"><path d="M83 24v124h23V24Z" fill="#ffed94" stroke="#1a6696" stroke-width="4"/><path d="M89 42h11m-11 13h11" stroke="#e18a4e" stroke-width="3"/></g></g><g fill="#ffeb9c" stroke="#246d9a" stroke-width="4"><rect x="62" y="56" width="15" height="92" rx="4" transform="rotate(-17 69 150)"/><rect x="112" y="47" width="15" height="102" rx="4" transform="rotate(15 119 150)"/><rect x="135" y="65" width="15" height="90" rx="4" transform="rotate(22 142 160)"/></g><ellipse cx="100" cy="115" rx="66" ry="18" fill="#2c8abc" stroke="#1d6393" stroke-width="4"/><path d="M34 115L47 198Q100 218 153 198L166 115Q99 140 34 115Z" fill="#ffda52" stroke="#246d9a" stroke-width="5"/><path d="M42 137Q99 157 159 137" fill="none" stroke="#f49f55" stroke-width="12"/><path d="M51 191Q100 204 149 191" fill="none" stroke="#2a83af" stroke-width="10"/><circle cx="101" cy="168" r="25" fill="#fffcdf"/><path d="M100 150v35m-17-18h34" stroke="#e98062" stroke-width="6" stroke-linecap="round"/><path d="M77 155l13 13m22-13-12 13" stroke="#6da96c" stroke-width="5" stroke-linecap="round"/></svg></div><div class="storybook-progress"><i></i></div><p class="storybook-note">正在为你抽取今天的小小好签…</p><button class="shake-skip" onclick="revealFortune()">跳过动画 · 直接打开</button></div></div>`;
+  wrap.innerHTML=`<div class="lottery-panel" role="dialog" aria-modal="true" aria-label="今日健康小签"><button class="lottery-close" onclick="dismissFortune()" aria-label="关闭今日签">×</button><div id="fortuneContent"><div class="storybook-ribbon">今日健康小签 ✨</div><h2 class="shake-title">摇一摇，开启今日灵感</h2><p class="storybook-head">给每一天一点轻松的仪式感</p><div class="storybook-stage"><div class="storybook-sun"></div><img class="storybook-pot gluco-painterly-pot" src="data:image/webp;base64,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" alt="蓝黄相间的抽签筒，手绘纸张质感，签子正在抽出" /></div><div class="storybook-progress"><i></i></div><p class="storybook-note">正在为你抽取今天的小小好签…</p><button class="shake-skip" onclick="revealFortune()">跳过动画 · 直接打开</button></div></div>`;
   document.body.append(wrap);
   clearTimeout(lotteryTimer);lotteryTimer=setTimeout(modernRevealFortune,2200);
 }
 function modernRevealFortune(){
  clearTimeout(lotteryTimer);const el=document.querySelector("#fortuneContent");if(!el)return;
  const q=fortuneQuotes[fortuneIndex%fortuneQuotes.length],fact=getTodayFact();
- el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><img class="storybook-illustration" src="https://raw.githubusercontent.com/lxy0329/GlucoMate/main/assets/fortune-walk.svg" alt="阳光下戴蓝帽子的卡通小朋友在绿色草地上散步" /><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
+ el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><div class="storybook-scene" role="img" aria-label="蓝帽子的小朋友在绿色草地上散步的手绘儿童绘本插画"></div><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
 }
 function modernKnowledge(){
  const f=healthFacts[factIndex%healthFacts.length];
@@ -400,7 +400,7 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
   function paint(){
     const sample=sampleAt(ratio);
     const d=toPath(),value=sample.value,cx=x(sample.ratio),cy=y(value);
-    const tipX=Math.min(R-104,Math.max(L,cx-46)),tipY=Math.max(4,cy-58);
+    const tipX=Math.min(R-143,Math.max(L,cx-55)),tipY=Math.max(3,cy-74);
     const label=timeLabel(sample.ratio);
     const tickLabels=mode==="今日"?["06:00","09:00","12:00","15:00","18:00"]:mode==="7天"?["7天前","5天前","3天前","1天前","今天"]:["30天前","23天前","15天前","7天前","今天"];
     svg.innerHTML=`<defs><linearGradient id="glucoNewFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#297bb8" stop-opacity=".24"/><stop offset="1" stop-color="#297bb8" stop-opacity=".02"/></linearGradient></defs>
@@ -412,7 +412,7 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
       <circle cx="${cx}" cy="${cy}" r="11" fill="#2d85c4" opacity=".13"/>
       <circle cx="${cx}" cy="${cy}" r="6.2" fill="#fff" stroke="#176eaf" stroke-width="3"/>
       <circle cx="${R}" cy="${y(getVals().at(-1))}" r="4.7" fill="#176eaf" stroke="#fff" stroke-width="2.2"/>
-      <g class="cursor-tip" transform="translate(${tipX},${tipY})"><rect x="0" y="0" width="104" height="43" rx="10" fill="#206eab"/><path d="M${Math.max(8,Math.min(96,cx-tipX))} 48 l-6 -6 h12Z" fill="#206eab"/><text x="10" y="16" fill="#e5f4ff" font-size="11" font-weight="600">${label}</text><text x="10" y="34" fill="#fff" font-size="15" font-weight="800">${value.toFixed(1)} <tspan font-size="10" font-weight="500">${units}</tspan></text></g>
+      <g class="cursor-tip" transform="translate(${tipX},${tipY})"><rect x="0" y="0" width="143" height="61" rx="13" fill="#206eab"/><path d="M${Math.max(10,Math.min(133,cx-tipX))} 67 l-6 -6 h12Z" fill="#206eab"/><text class="cursor-time" x="13" y="21" fill="#dcecff" font-size="14" font-weight="700">${label}</text><text class="cursor-value" x="13" y="45" fill="#fff" font-size="21" font-weight="800">${value.toFixed(1)}<tspan class="cursor-unit" dx="6" font-size="11" font-weight="500">${units}</tspan></text></g>
       ${tickLabels.map((s,i)=>`<text class="axis-label time-label" x="${x(i/4)}" y="${H-9}" text-anchor="${i===0?"start":i===4?"end":"middle"}">${s}</text>`).join("")}
       <rect x="${L}" y="${T}" width="${R-L}" height="${B-T+10}" fill="transparent" style="cursor:ew-resize" aria-hidden="true"/>`;
     const metric=document.getElementById("reading");
@@ -892,6 +892,48 @@ revealFortune=function(){
   }
 };
 </script>
+<!-- GLUCOMATE USER VISUAL POLISH 2026-11-11 -->
+<style id="gluco-user-visual-polish">
+svg.chart .cursor-time{font-family:Arial,"Noto Sans SC",sans-serif!important;font-size:14px!important;font-weight:700!important;letter-spacing:0!important;fill:#dfedff!important;font-stretch:normal!important}
+svg.chart .cursor-value{font-family:Arial,"Noto Sans SC",sans-serif!important;font-size:21px!important;font-weight:800!important;letter-spacing:0!important;fill:#fff!important;font-stretch:normal!important}
+svg.chart .cursor-unit{font-family:Arial,"Noto Sans SC",sans-serif!important;font-size:11px!important;font-weight:500!important;letter-spacing:0!important;fill:#eff6ff!important}
+.gluco-daily-report{border:1.5px solid #e5d9b8!important;background:#fffaf0!important}
+.gluco-daily-report .daily-report-header{display:flex;align-items:center;gap:12px}
+.gluco-daily-report .daily-report-emblem{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:14px;background:#fff0bc;color:#1d679a;font-size:24px;border:1px solid #ebce8d}
+.gluco-daily-report .daily-report-body{flex:1;min-width:0}
+.gluco-daily-report h2{font-size:17px!important;color:#1e537a!important;line-height:1.3;margin:0 0 5px}
+.gluco-daily-report p{font-size:12px!important;line-height:1.65!important;color:#64717a!important;margin:0}
+.gluco-daily-report .daily-report-button{font-size:13px;font-weight:800;color:#176ab0;border:0;background:none;padding:12px 3px;flex:none}
+.gluco-daily-report:focus-within{outline:2px solid #176ab0;outline-offset:2px}
+.gluco-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:13px 0}
+.gluco-report-grid>div{padding:11px;border-radius:12px;background:#fff8e8;border:1px solid #eddfc9}
+.gluco-report-grid b{display:block;font-size:17px;color:#176ab0}
+.gluco-report-grid small{font-size:10px;color:#737984}
+.storybook-result .storybook-scene{background-image:url("assets/glucomate-scenes.webp"),linear-gradient(135deg,#d5ecf1,#fff2be)!important;min-height:168px}
+#fortuneOverlay .storybook-pot.gluco-painterly-pot{width:180px!important;height:210px!important;object-fit:contain!important;filter:drop-shadow(0 5px 3px #244f7640);mix-blend-mode:multiply;transform-origin:50% 85%;border-radius:13px}
+#fortuneOverlay .storybook-stage{background:#e1eef0!important;border:2px solid #b1ccd5!important;border-radius:22px!important}
+@media(max-width:600px){.gluco-daily-report .daily-report-header{gap:9px}.gluco-daily-report h2{font-size:16px!important}.gluco-daily-report .daily-report-button{padding:7px 0;font-size:12px}}
+</style>
+<script>
+(function installDailyReport(){
+  const home=document.getElementById('homeLeft');
+  const goal=home?.querySelector('.light-goal');
+  if(!home||!goal||document.getElementById('todayHealthReport'))return;
+  const article=document.createElement('article');
+  article.className='card gluco-daily-report';
+  article.id='todayHealthReport';
+  article.innerHTML='<div class="daily-report-header"><span class="daily-report-emblem" aria-hidden="true">▤</span><div class="daily-report-body"><h2>今日健康报告</h2><p>血糖趋势、饮食记录与今日轻目标 · 模拟摘要</p></div><button type="button" class="daily-report-button" onclick="openDailyHealthReport()" aria-label="查看今日健康报告">查看 ›</button></div>';
+  goal.insertAdjacentElement('afterend',article);
+})();
+function openDailyHealthReport(){
+ const count=Array.isArray(state.meals)?state.meals.length:0;
+ const glucose=document.getElementById('reading')?.textContent?.replace('→','').trim()||'6.8 mmol/L';
+ const status=document.getElementById('demoState')?.value==='high'?'模拟偏高':'模拟平稳';
+ const goals=state.lightChecked?'今日轻目标已完成':'今日轻目标尚未完成';
+ modal('今日健康报告',`<p class="muted small">以下为概念原型中的模拟信息，并非实际传感器检测结果。</p><div class="gluco-report-grid"><div><small>模拟血糖读数</small><b>${esc(glucose)}</b></div><div><small>血糖趋势状态</small><b>${status}</b></div><div><small>模拟血氧饱和度</small><b>98% SpO₂</b></div><div><small>饮食记录</small><b>${count} 条</b></div></div><p class="small muted">${goals}。建议结合生活情境查看趋势，不要根据单次模拟数据判断健康状况。</p><p class="small muted" style="margin-top:12px">本报告仅用于课程交互测试，不能用于诊断、用药或真实风险判断。</p><div class="modal-actions"><button class="button secondary" onclick="closeModal();go('insights')">查看历史总结</button><button class="button" onclick="closeModal()">完成</button></div>`);
+}
+</script>
+<!-- END GLUCOMATE USER VISUAL POLISH -->
 </body></html>
 
 
