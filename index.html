@@ -2447,6 +2447,165 @@ if(profileDeviceCard){
 }
 historyCard.after(fortuneSettings);
 </script>
+
+<!-- GLUCOMATE EXPLAINABLE CLINICAL-STYLE REPORT V1 -->
+<style id="gm-explainable-report-style">
+#modal:has(.gm-med-report){width:min(690px,calc(100vw - 28px));max-width:690px!important;max-height:calc(100dvh - 42px);overflow-y:auto;box-sizing:border-box}
+#modal .gm-med-report{color:#29465d;line-height:1.6}
+.gm-med-report *{box-sizing:border-box}
+.gm-med-report .gm-report-meta{display:flex;gap:5px 12px;flex-wrap:wrap;color:#84919f;font-size:11px;margin:4px 0 15px}
+.gm-med-report .gm-report-badge{display:inline-flex;align-items:center;background:#fff0cc;color:#8b641a;border-radius:20px;font-size:11px;font-weight:700;padding:5px 11px}
+.gm-med-report .gm-report-summary{border:1px solid #d4e2e4;border-radius:19px;padding:17px;background:linear-gradient(135deg,#eef7f6,#f9fcf8);margin-bottom:17px}
+.gm-med-report .gm-summary-kicker{font-size:11px;font-weight:800;letter-spacing:1px;color:#2d8089}
+.gm-med-report .gm-report-summary h3{color:#18566e;font-size:20px;margin:8px 0}
+.gm-med-report .gm-report-summary p{color:#517080;margin:7px 0;font-size:13px;line-height:1.8}
+.gm-med-report .gm-report-section-title{color:#294c65;margin:20px 0 10px;font-size:15px;font-weight:800}
+.gm-med-report .gm-clinical-indicators{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.gm-med-report button.gm-indicator{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:4px;min-width:0;background:#fffaf1;border:1px solid #ebddc5;border-radius:16px;padding:13px 14px;color:#2d4e66;cursor:pointer;transition:border-color .15s,transform .15s;box-shadow:none;font:inherit}
+.gm-med-report button.gm-indicator:hover,.gm-med-report button.gm-indicator:focus-visible{outline:2px solid #9ecbd7;outline-offset:1px;border-color:#75aebb;transform:translateY(-1px)}
+.gm-med-report .gm-label{font-size:11px;color:#697e8b;line-height:1.6}
+.gm-med-report .gm-value{font-size:23px;font-weight:850;color:#176ba9;line-height:1.3;font-variant-numeric:tabular-nums}
+.gm-med-report .gm-value small{font-size:11px;font-weight:600}
+.gm-med-report .gm-flag{display:inline-block;margin-top:3px;padding:3px 7px;border-radius:7px;color:#257460;background:#e0f1e9;font-size:11px;font-weight:750}
+.gm-med-report .gm-flag.pending{background:#f3ede0;color:#89632d}
+.gm-med-report .gm-flag.attention{background:#fff0d9;color:#a86624}
+.gm-med-report .gm-indicator .gm-hint{font-size:11px;color:#7b8794;margin-top:4px;line-height:1.65}
+.gm-med-report .gm-indicator .gm-next{margin-top:auto;color:#276eaa;font-weight:750;font-size:11px;padding-top:4px}
+.gm-med-report .gm-explain-box{padding:14px;border:1px solid #e7e6da;border-radius:14px;background:#fbfaf5;margin-top:12px}
+.gm-med-report .gm-explain-box p,.gm-med-report .gm-explain-box li{font-size:12px;line-height:1.9;color:#556a77;margin:6px 0}
+.gm-med-report .gm-explain-box ul{padding-left:18px;margin:5px 0}
+.gm-med-report .gm-disclaimer{border-top:1px solid #e3e9e9;margin-top:15px;padding-top:12px;color:#89929d;font-size:11px;line-height:1.75}
+.gm-med-report .gm-report-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.gm-med-report .gm-report-actions button{flex:1;min-width:110px;border-radius:12px;padding:11px 9px;font-weight:750;font-size:13px}
+.gm-med-report .gm-detail-back{color:#276ea5!important;font-size:12px;font-weight:700;background:transparent!important;border:0!important;padding:4px 0!important}
+.gm-med-report .gm-reading-line{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:10px 0}
+.gm-med-report .gm-reading-line strong{font-size:33px;color:#176da9}
+.gm-med-report .gm-range-meter{height:14px;border-radius:12px;background:linear-gradient(90deg,#e3bd71 0 18%,#7fbca6 18% 88%,#e9c779 88% 100%);position:relative;margin:17px 0}
+.gm-med-report .gm-range-meter .marker{position:absolute;top:-6px;left:var(--pos,62%);width:7px;height:25px;border:2px solid white;border-radius:4px;background:#216eaa;box-shadow:0 1px 3px #3b50657f}
+.gm-med-report .gm-ref-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
+.gm-med-report .gm-ref-table td,.gm-med-report .gm-ref-table th{padding:9px 6px;border-bottom:1px solid #e7e9e8;text-align:left;vertical-align:top}
+.gm-med-report .gm-ref-table th{color:#2f5a75}
+.gm-med-report a{color:#1d76ad;text-decoration:underline}
+.gm-med-report .gm-context-select{width:100%;padding:11px 12px;border:1px solid #c9d9df;border-radius:11px;background:#fff;margin:8px 0;color:#264963;font-size:13px}
+#todayHealthReport .daily-report-body p{font-size:12px}
+#todayHealthReport .gm-report-status{font-size:10px;color:#257867;font-weight:700;margin-top:3px}
+@media(max-width:480px){.gm-med-report .gm-clinical-indicators{grid-template-columns:1fr 1fr;gap:7px}.gm-med-report button.gm-indicator{padding:10px;min-height:136px}.gm-med-report .gm-value{font-size:19px}.gm-med-report .gm-report-summary h3{font-size:17px}.gm-med-report .gm-report-actions{gap:7px}.gm-med-report .gm-report-actions button{min-width:80px;font-size:11px}}
+</style>
+<script>
+(function(){
+  const prep = () => {
+    const card=document.getElementById('todayHealthReport');
+    if(!card||card.dataset.reportV2)return;
+    card.dataset.reportV2='1';
+    const subtitle=card.querySelector('.daily-report-body p');
+    if(subtitle)subtitle.textContent='指标解读 · 风险提示 · 可供医生查看的结构化摘要';
+    const body=card.querySelector('.daily-report-body');
+    if(body){const el=document.createElement('div');el.className='gm-report-status';el.textContent='查看参考范围和指标解释';body.append(el);}
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',prep);
+  else prep();
+})();
+const GM_CLINICAL_LINKS={
+ fda:'https://www.fda.gov/consumers/consumer-updates/pulse-oximeters-and-oxygen-concentrators-what-know-about-home-oxygen-therapy',
+ medline:'https://medlineplus.gov/lab-tests/pulse-oximetry/',
+ diabetes:'https://www.cdc.gov/diabetes/diabetes-testing/index.html',
+ ada:'https://diabetesjournals.org/care/issue/49/Supplement_1'
+};
+function gmNum(v){return Number.isFinite(Number(v))?Number(v):null}
+function gmReportData(){
+ const text=document.getElementById('reading')?.textContent||'';
+ const n=Number((text.match(/[0-9]+(?:\.[0-9]+)?/)||[])[0]);
+ // 6.9 is an explicitly labelled demo placeholder when no numeric reading exists.
+ const glucose=n>0&&n<35?n:6.9;
+ const demo=document.getElementById('demoState')?.value||'stable';
+ return {
+   glucose,oxygen:98,trend:demo==='high'?'示例：需关注波动':'示例：波动较平稳',
+   mealCount:Array.isArray(state?.meals)?state.meals.length:0,
+   measuredAt:new Date().toLocaleString('zh-CN',{hour12:false}),
+   timeContext:window.gmMealContext||'unknown', source:'GlucoMate · 模拟数据（未连接真实传感器）'
+ };
+}
+function gmGlucoseMeaning(d){
+ if(d.timeContext==='unknown')return {kind:'pending',flag:'进食状态未知，暂不判定',summary:'同一血糖数值在空腹、餐后和其他时段的意义不同。请先标记测量情境，再结合经过验证的检测结果判断。'};
+ if(d.timeContext==='fasting')return {kind:d.glucose<=5.5?'normal':'attention',flag:d.glucose<=5.5?'与常见空腹参考值相符':'高于常见空腹参考值',summary:d.glucose<=5.5?'如果这是经实验室测得的真实空腹血糖，数值位于常见空腹范围内。':'若为实验室空腹血浆葡萄糖，这一数值高于常见正常范围；当前是演示用连续监测数值，不能用来诊断糖尿病。'};
+ return {kind:'pending',flag:'餐后读数：仅供趋势参考',summary:'餐后变化受食物、用餐时间和活动影响。正式的糖代谢诊断标准涉及实验室空腹血浆血糖或75克口服葡萄糖耐量试验，不能将任意餐后连续监测数值直接与诊断阈值比较。'};
+}
+function gmOxygenMeaning(v){
+ return v>=95&&v<=100?{kind:'normal',flag:'位于常见参考区间',summary:'98% 位于多数健康成人常见的静息SpO₂参考范围（95%–100%）。这不代表排除所有呼吸系统疾病。'}:{kind:'attention',flag:'低于常见参考区间',summary:'如连续测得较低数值，应结合症状、测量条件和专业建议进一步评估。'};
+}
+function gmPill(text,kind){return '<span class="gm-flag '+(kind==='normal'?'':kind==='attention'?'attention':'pending')+'">'+esc(text)+'</span>'}
+function gmReportShell(inner){return '<div class="gm-med-report">'+inner+'</div>'}
+function gmDisclaimer(){return '<p class="gm-disclaimer">模拟报告，不含经认证的临床监测结果或医师签名；仅供课程设计与交互评估。CGM趋势不能单独用于糖尿病诊断，血氧读数也受设备和测量条件影响。此文件不是医院化验单，不代表已对接医院信息系统。</p>'}
+function gmGeneralSummary(d){
+ const glucose=gmGlucoseMeaning(d),oxygen=gmOxygenMeaning(d.oxygen);
+ return '<div class="gm-report-meta"><span>日报 · '+esc(d.measuredAt)+'</span><span>来源：概念原型模拟传感器</span></div>'+
+ '<div class="gm-report-summary"><div class="gm-summary-kicker">HEALTH OVERVIEW · 今日概览</div><h3>血氧处于常见范围，血糖需要结合测量情境解读</h3>'+
+ '<p>本次模拟血氧为 '+d.oxygen+'%，位于多数健康成人常见范围。模拟血糖为 '+d.glucose.toFixed(1)+' mmol/L；'+glucose.summary+'</p></div>'+
+ '<h4 class="gm-report-section-title">核心指标 · 点击查看医学参考说明</h4>'+
+ '<div class="gm-clinical-indicators">'+
+ '<button type="button" class="gm-indicator" onclick="openGlucoMetric(\'glucose\')"><span class="gm-label">血糖 · Glucose</span><span class="gm-value">'+d.glucose.toFixed(1)+' <small>mmol/L</small></span>'+gmPill(glucose.flag,glucose.kind)+'<span class="gm-hint">参考值需区分空腹／餐后</span><span class="gm-next">查看指标详情 →</span></button>'+
+ '<button type="button" class="gm-indicator" onclick="openGlucoMetric(\'oxygen\')"><span class="gm-label">血氧饱和度 · SpO₂</span><span class="gm-value">'+d.oxygen+'<small>%</small></span>'+gmPill(oxygen.flag,oxygen.kind)+'<span class="gm-hint">常见参考：95%–100%</span><span class="gm-next">查看指标详情 →</span></button>'+
+ '<button type="button" class="gm-indicator" onclick="openGlucoMetric(\'trend\')"><span class="gm-label">今日趋势 · Trend</span><span class="gm-value" style="font-size:17px">'+esc(d.trend)+'</span>'+gmPill('模拟曲线，不用于诊断','pending')+'<span class="gm-hint">查看记录与局限</span><span class="gm-next">查看趋势说明 →</span></button>'+
+ '<button type="button" class="gm-indicator" onclick="openGlucoMetric(\'notes\')"><span class="gm-label">临床备注 · Notes</span><span class="gm-value" style="font-size:18px">暂无症状记录</span>'+gmPill('需补充主观信息','pending')+'<span class="gm-hint">饮食记录 '+d.mealCount+' 条（可能跨天）</span><span class="gm-next">查看记录说明 →</span></button>'+
+ '</div><div class="gm-explain-box"><strong>下一步建议</strong><p>查看各项参考值、确认数据采集时间与进食状态。如果真实检测持续异常，或出现呼吸困难、意识异常等严重症状，应及时寻求专业医疗帮助。</p></div>'+
+ gmDisclaimer()+'<div class="gm-report-actions"><button class="button secondary" onclick="gmExportMedicalReport()">导出医生参考报告</button><button class="button" onclick="closeModal()">完成</button></div>';
+}
+openDailyHealthReport=function(){modal('今日健康报告',gmReportShell(gmGeneralSummary(gmReportData())));};
+function gmMetricBase(title,body){
+ modal(title,gmReportShell('<button class="gm-detail-back" onclick="openDailyHealthReport()">← 返回健康报告</button>'+body+gmDisclaimer()+'<div class="gm-report-actions"><button class="button secondary" onclick="gmExportMedicalReport()">导出参考报告</button><button class="button" onclick="openDailyHealthReport()">返回概览</button></div>'));
+}
+function gmMealContextChanged(v){window.gmMealContext=v;openGlucoMetric('glucose')}
+function openGlucoMetric(which){
+ const d=gmReportData(),mg=gmGlucoseMeaning(d),mo=gmOxygenMeaning(d);
+ if(which==='oxygen'){
+  gmMetricBase('血氧饱和度 · SpO₂',
+  '<div class="gm-reading-line"><strong>'+d.oxygen+'%</strong>'+gmPill(mo.flag,mo.kind)+'</div><p class="gm-label">数据采集时间：'+esc(d.measuredAt)+' · 来源：模拟手环</p>'+
+  '<h4 class="gm-report-section-title">医学参考说明</h4><div class="gm-range-meter" style="--pos:62%"><span class="marker"></span></div>'+
+  '<table class="gm-ref-table"><tr><th>参考信息</th><th>说明</th></tr><tr><td>95%–100%</td><td>多数健康成人常见静息范围</td></tr><tr><td>≤92%</td><td>若是真实家用血氧读数，建议联系医疗服务者评估</td></tr><tr><td>≤88%</td><td>应立即寻求医疗帮助（个体情况可能不同）</td></tr></table>'+
+  '<div class="gm-explain-box"><strong>本次数值解读</strong><p>'+esc(mo.summary)+'</p><p>血氧仪测量可能受末梢循环、肤色、皮肤温度、指甲油等因素影响；出现呼吸困难、胸痛或意识改变时不能仅依赖设备数值。</p></div>'+
+  '<div class="gm-explain-box"><strong>与个人平时水平比较</strong><p>未提供可信的个人基线及连续实测记录，无法判断相较本人平时水平升高或降低。此处只展示与一般参考范围的对照。</p></div>'+
+  '<p class="gm-label">资料来源：<a target="_blank" rel="noopener" href="'+GM_CLINICAL_LINKS.fda+'">FDA · Pulse Oximeter Basics</a> · <a target="_blank" rel="noopener" href="'+GM_CLINICAL_LINKS.medline+'">MedlinePlus · Pulse Oximetry</a></p>');
+  return;
+ }
+ if(which==='glucose'){
+  gmMetricBase('葡萄糖趋势 · Glucose',
+  '<div class="gm-reading-line"><strong>'+d.glucose.toFixed(1)+' mmol/L</strong>'+gmPill(mg.flag,mg.kind)+'</div><p class="gm-label">数据采集时间：'+esc(d.measuredAt)+' · 来源：模拟连续监测数值（非实验室血浆检测）</p>'+
+  '<h4 class="gm-report-section-title">本次数值对应什么情况？</h4>'+
+  '<label class="gm-label" for="gmMealContext">测量情境（课程演示选项）</label><select id="gmMealContext" class="gm-context-select" onchange="gmMealContextChanged(this.value)">'+
+  [['unknown','尚未标记'],['fasting','空腹（演示）'],['after','餐后（演示）']].map(a=>'<option value="'+a[0]+'" '+(d.timeContext===a[0]?'selected':'')+'>'+a[1]+'</option>').join('')+'</select>'+
+  '<div class="gm-explain-box"><strong>结果怎么理解？</strong><p>'+esc(mg.summary)+'</p></div>'+
+  '<h4 class="gm-report-section-title">医学参考阈值（仅适用于相应实验室检查）</h4>'+
+  '<table class="gm-ref-table"><tr><th>检测方法</th><th>正常</th><th>需进一步评估的范围</th></tr><tr><td>实验室空腹血浆葡萄糖</td><td>低于5.6 mmol/L</td><td>5.6–6.9 mmol/L为糖尿病前期范围；≥7.0 mmol/L须进一步评估</td></tr><tr><td>75g OGTT 2小时血浆葡萄糖</td><td>低于7.8 mmol/L</td><td>7.8–11.0 mmol/L为糖尿病前期范围；≥11.1 mmol/L须进一步评估</td></tr></table>'+
+  '<div class="gm-explain-box"><strong>重要区别</strong><p>上表是医学机构使用的实验室检测阈值，不能直接套用于任意时点的CGM读数，也不能仅凭一条连续葡萄糖数据判断糖尿病。若真实测量反复异常，应联系医疗人员安排适当检测。</p></div>'+
+  '<p class="gm-label">资料来源：<a target="_blank" rel="noopener" href="'+GM_CLINICAL_LINKS.diabetes+'">CDC · Diabetes Testing</a></p>');
+  return;
+ }
+ if(which==='trend'){
+  gmMetricBase('今日血糖趋势解读','<div class="gm-report-summary"><h3>'+esc(d.trend)+'</h3><p>血糖变化受进食、活动、睡眠、应激和药物等影响，不能仅凭曲线形状确定异常原因。</p></div><div class="gm-explain-box"><strong>目前可以看什么？</strong><p>请返回首页拖动血糖趋势曲线，查看对应时间点的模拟读数；标记进食情境后再理解变化方向。</p><p>当前原型没有经过验证的全天采样、异常事件统计、设备质量标记，不能生成可信的最低值、最高值或医学级趋势分析。</p></div>');
+  return;
+ }
+ gmMetricBase('临床备注与数据完整性','<div class="gm-explain-box"><strong>数据质量说明</strong><p>当前暂无经验证的症状、用药记录、既往诊断或个人基线。饮食集锦包含 '+d.mealCount+' 条本地记录，但不一定都发生在今天。</p><p>如准备就医，可携带真实设备报告、检验单、症状时间及用药清单；本原型生成的文件只用于演示信息结构。</p></div>');
+}
+function gmExportMedicalReport(){
+ const d=gmReportData(),mg=gmGlucoseMeaning(d),ox=gmOxygenMeaning(d.oxygen);
+ const rows=[
+ ['报告类型','GlucoMate 模拟健康摘要 · 供医生参考的格式演示'],
+ ['生成时间',d.measuredAt],['患者身份','未采集（演示，无实名信息）'],
+ ['检测设备','未连接真实设备 / 未经临床验证'],['采样方式','概念原型模拟数值'],
+ ['葡萄糖',d.glucose.toFixed(1)+' mmol/L'],['血糖测量情境',d.timeContext==='fasting'?'空腹（用户选择）':d.timeContext==='after'?'餐后（用户选择）':'未标记'],
+ ['血糖解读',mg.flag],['SpO₂',d.oxygen+'%'],['血氧参考说明',ox.flag],
+ ['趋势信息',d.trend],['饮食记录',d.mealCount+'条本地记录（未保证为当天）'],
+ ['主观症状','未记录'],['用药信息','未记录'],['传感器校验','无'],['临床签名','无']
+ ];
+ const safe= v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const template='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>GlucoMate_模拟健康报告</title><style>body{font:14px/1.8 system-ui,"Microsoft YaHei",sans-serif;color:#24394a;max-width:780px;margin:35px auto;padding:0 20px}h1{color:#1f5b89;border-bottom:2px solid #1f5b89;padding-bottom:10px}.notice{background:#fff3d9;border:1px solid #e3c783;padding:12px;margin:15px 0}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccd9de;padding:9px 12px;text-align:left;vertical-align:top}th{width:30%;background:#f1f6f7}.note{font-size:12px;color:#607080;margin-top:22px}@media print{body{margin:0}.notice{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body><h1>GlucoMate · 健康摘要报告</h1><div class="notice"><strong>演示样本 · 非临床诊断报告</strong><br>以下数值均为课堂原型模拟内容，不得用于诊断、治疗、风险分级或替代检验单。</div><table>'+rows.map(r=>'<tr><th>'+safe(r[0])+'</th><td>'+safe(r[1])+'</td></tr>').join('')+'</table><p class="note">一般参考：多数健康成年人静息SpO₂约95%–100%（FDA）；糖尿病筛查须使用适当实验室检验（CDC）。血氧读数受测量条件影响，CGM不能仅凭单点结果诊断糖尿病。<br>资料来源：FDA Pulse Oximeter Basics；CDC Diabetes Testing。没有医院系统对接或医疗人员认证。</p><p class="note">可在浏览器中打开此HTML，选择“打印 → 保存为PDF”，与真实医疗记录一同向专业人员展示，但此文件仅作原型演示。</p></body></html>';
+ const blob=new Blob([template],{type:'text/html;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download='GlucoMate_模拟健康摘要_医生参考版.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ if(typeof toast==='function')toast('报告已导出为HTML，可在浏览器中打印并保存PDF');
+}
+</script>
+<!-- END GLUCOMATE EXPLAINABLE CLINICAL-STYLE REPORT -->
 </body></html>
 
 
