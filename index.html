@@ -321,7 +321,7 @@ let factIndex=Math.floor((Date.UTC(new Date().getFullYear(),new Date().getMonth(
 function getTodayFact(){const d=new Date(),day=Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(d.getFullYear(),0,1))/86400000);return healthFacts[day%healthFacts.length]}
 function renderFactMarkup(f,expanded){
   const txt=expanded?f.detail:f.short;
-  return `<div class="storybook-fact"><strong>📖 一口小知识 · ${esc(f.title)}</strong><p>${esc(txt)}</p><a href="${f.url}" target="_blank" rel="noopener noreferrer">来源：${esc(f.source)} ↗</a>${!expanded?'<button class="textbutton" style="margin-left:10px" onclick="dismissFortune();knowledge()">了解更多 →</button>':''}</div>`
+  return `<div class="storybook-fact"><strong>一口小知识 · ${esc(f.title)}</strong><p>${esc(txt)}</p><a href="${f.url}" target="_blank" rel="noopener noreferrer">来源：${esc(f.source)} ↗</a>${!expanded?'<button class="textbutton" style="margin-left:10px" onclick="dismissFortune();knowledge()">了解更多 →</button>':''}</div>`
 }
 function modernShowFortune(){
   dismissFortune();
@@ -333,11 +333,11 @@ function modernShowFortune(){
 function modernRevealFortune(){
  clearTimeout(lotteryTimer);const el=document.querySelector("#fortuneContent");if(!el)return;
  const q=fortuneQuotes[fortuneIndex%fortuneQuotes.length],fact=getTodayFact();
- el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><img class="storybook-illustration" src="assets/fortune-walk.svg" alt="阳光下戴蓝帽子的卡通小朋友在绿色草地上散步" /><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
+ el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><div class="storybook-illustration storybook-scene" role="img" aria-label="复古手绘风格的阳光散步插画：蓝帽子的年轻人在草地上活动"></div><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
 }
 function modernKnowledge(){
  const f=healthFacts[factIndex%healthFacts.length];
- modal("一口小知识",`<article class="knowledge-sheet"><div class="fact-figure" aria-hidden="true"><span>☀️</span><span>${f.icon}</span><span>🌿</span></div><div class="eyebrow" style="margin-top:14px">GLUCOMATE · HEALTH SCIENCE</div><h2>${esc(f.title)}</h2><span class="fact-tag">血糖健康科普 · 第 ${factIndex%healthFacts.length+1} / ${healthFacts.length} 张</span><p>${esc(f.detail)}</p><a href="${f.url}" target="_blank" rel="noopener noreferrer">阅读资料来源：${esc(f.source)} ↗</a><p class="fact-warning">内容仅供一般健康教育，不能代替专业诊断；出现严重不适应及时寻求医疗帮助。</p></article><div class="modal-actions"><button class="button secondary" onclick="factIndex=(factIndex+1)%healthFacts.length;knowledge()">下一条科普 →</button><button class="button" onclick="closeModal()">知道啦</button></div>`);
+ modal("一口小知识",`<article class="knowledge-sheet">${scienceArt(factIndex)}<div class="eyebrow" style="margin-top:14px">GLUCOMATE · HEALTH SCIENCE</div><h2>${esc(f.title)}</h2><span class="fact-tag">血糖健康科普 · 第 ${factIndex%healthFacts.length+1} / ${healthFacts.length} 张</span><p>${esc(f.detail)}</p><a href="${f.url}" target="_blank" rel="noopener noreferrer">阅读资料来源：${esc(f.source)} ↗</a><p class="fact-warning">内容仅供一般健康教育，不能代替专业诊断；出现严重不适应及时寻求医疗帮助。</p></article><div class="modal-actions"><button class="button secondary" onclick="factIndex=(factIndex+1)%healthFacts.length;knowledge()">下一条科普 →</button><button class="button" onclick="closeModal()">知道啦</button></div>`);
 }
 showFortune=modernShowFortune; revealFortune=modernRevealFortune; knowledge=modernKnowledge;
 const sciencePreview=document.createElement('p');sciencePreview.id='dailySciencePreview';sciencePreview.textContent='今日科普 · '+getTodayFact().title+'｜'+getTodayFact().short;const insightCard=document.querySelector('#today .learn-card');if(insightCard){const oldCopy=insightCard.querySelector('p');if(oldCopy)oldCopy.replaceWith(sciencePreview);const btn=insightCard.querySelector('button');if(btn){btn.textContent='看看今天的科普 →';btn.onclick=knowledge;}}
@@ -444,6 +444,34 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
   paint();
 })();</script>
 <!-- END GLUCOMATE DRAGGABLE CHART -->
+<!-- GLUCOMATE ILLUSTRATED HEALTH FACTS + SOFT FORTUNE 2026-11-11 -->
+<style id="gluco-illustration-enhancements">
+/* Flat retro picture-book art rather than emoji/medical pictograms. All assets are stored in the repo. */
+.atlas-illustration,.storybook-scene{background-image:url("assets/glucomate-scenes.webp")!important;background-size:300% 200%!important;background-repeat:no-repeat!important;background-color:#fff4df!important;border:1px solid #e3d6b5;border-radius:17px;display:block;box-shadow:inset 0 0 0 2px #ffffff70;}
+.storybook-result .storybook-scene{background-position:0% 0%!important;aspect-ratio:270/156!important;width:100%!important;height:auto!important;border:2px solid #34769e!important;border-radius:17px!important;box-shadow:0 5px 0 #285c801a!important;image-rendering:auto;}
+.knowledge-sheet .science-illustration{background-position:var(--atlas-x) var(--atlas-y)!important;aspect-ratio:270/156!important;width:100%;margin:0 0 16px!important;box-shadow:none!important}
+.knowledge-sheet .fact-figure{display:none!important}
+.knowledge-sheet{background:#fffaf0;border:1px solid #e7dcc3;border-radius:20px;padding:15px!important}
+.knowledge-sheet h2{color:#205c87!important;letter-spacing:.1px}
+.knowledge-sheet .fact-tag{background:#fff0bd;color:#ab6639;}
+.knowledge-sheet p{color:#48556b!important}
+.lottery-panel{background:#fffaf0!important;color:#215579!important;border:2px solid #b5ced8!important;box-shadow:0 14px 40px #173b5a33!important}
+.lottery-panel .storybook-ribbon{background:#fff2be!important;color:#195785!important;border-color:#86a9c1!important;box-shadow:0 3px 0 #c4cbd1!important}
+.lottery-panel .storybook-stage{background:#d7eff0!important;border:2px solid #9bb9c2!important}
+.lottery-panel .storybook-stage:after{color:#ffcf49!important}
+.lottery-panel .storybook-fact{background:#fff3d4!important;border:1px solid #ead8a4!important}
+.lottery-panel .storybook-quote{border-left-color:#edbd58!important}
+.lottery-panel .storybook-result .button{box-shadow:none!important}
+@media(max-width:600px){.storybook-result .storybook-scene{aspect-ratio:270/156!important}.knowledge-sheet .science-illustration{aspect-ratio:270/156!important}}
+</style>
+<script>function scienceArt(i){
+  // Seven factual cards, each with a picture region from the original storybook illustration atlas.
+  const sceneIndex=[1,2,2,3,4,5,2][i%7]??1;
+  const x=["0%","50%","100%"][sceneIndex%3],y=sceneIndex>=3?"100%":"0%";
+  const labels=["散步运动","血糖症状","疲惫与不适","身体变化","饮品与糖分","读取营养标签"];
+  return `<div class="science-illustration atlas-illustration" style="--atlas-x:${x};--atlas-y:${y}" role="img" aria-label="${labels[sceneIndex]||"血糖科普手绘插画"}"></div>`;
+}</script>
+<!-- END GLUCOMATE ILLUSTRATED HEALTH FACTS -->
 </body></html>
 
 
