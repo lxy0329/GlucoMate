@@ -212,7 +212,7 @@ drawLightGoal();
 function savedSigns(){return Array.isArray(state.savedSigns)?state.savedSigns:[];}
 function setSignFavorite(quote, shouldSave){
   state.savedSigns=savedSigns().filter(item=>item.quote!==quote.quote);
-  if(shouldSave)state.savedSigns.unshift({...quote});
+  if(shouldSave)state.savedSigns.unshift({...quote,savedAt:new Date().toISOString(),kind:'今日宜 · 运动'});
   save();
 }
 const revealBeforeCompactSign=revealFortune;
@@ -257,9 +257,9 @@ favoriteEntry.querySelector('button').onclick=showSavedSigns;
 $('#profile').prepend(favoriteEntry);
 function showSavedSigns(){
   const items=savedSigns();
-  modal('收藏的今日签',items.length?'<div class="sign-favorites">'+items.map(item=>
-    '<div class="history-item"><h3>'+esc(item.quote)+'</h3><p>'+esc(item.author)+'</p><p>'+esc(item.tip)+'</p><button class="textbutton" data-remove-sign>取消收藏</button></div>'
-  ).join('')+'</div>':'<p>收藏后的今日签会出现在这里。</p>');
+  modal('收藏的今日签',items.length?'<div class="sign-favorites gluco-fortune-history">'+items.map(item=>
+    '<article class="history-item gluco-fortune-history-item"><img class="gluco-saved-art" src="assets/fortune-running-handdrawn.svg" onerror="this.onerror=null;this.src=GLUCO_FORTUNE_ART" alt="收藏的今日签手绘插画"><div class="gluco-saved-details"><strong>'+esc(item.kind||'今日健康签')+'</strong><p class="gluco-saved-quote">“'+esc(item.quote)+'”</p><p>— '+esc(item.author)+'</p><p>'+esc(item.tip||'给今天的一点健康灵感')+'</p><small>'+(item.savedAt?new Date(item.savedAt).toLocaleDateString('zh-CN'):'历史收藏')+'</small><button class="textbutton" data-remove-sign>取消收藏</button></div></article>'
+  ).join('')+'</div>':'<div class="gluco-fortune-empty">还没有收藏的今日签。下次抽签后，点 ♡ 收藏今日签，就能在这里找到。</div>');
   $('#modal').querySelectorAll('[data-remove-sign]').forEach((button,index)=>{
     button.onclick=()=>{setSignFavorite(items[index],false);showSavedSigns();};
   });
@@ -326,14 +326,62 @@ function renderFactMarkup(f,expanded){
 function modernShowFortune(){
   dismissFortune();
   const wrap=document.createElement("div");wrap.id="fortuneOverlay";wrap.className="lottery";
-  wrap.innerHTML=`<div class="lottery-panel" role="dialog" aria-modal="true" aria-label="今日健康小签"><button class="lottery-close" onclick="dismissFortune()" aria-label="关闭今日签">×</button><div id="fortuneContent"><div class="storybook-ribbon">今日健康小签 ✨</div><h2 class="shake-title">摇一摇，开启今日灵感</h2><p class="storybook-head">给每一天一点轻松的仪式感</p><div class="storybook-stage"><div class="storybook-sun"></div><svg class="storybook-pot" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="蓝黄色小签筒轻轻摇摆，一支幸运签跃出"><g class="storybook-raise"><g class="storybook-stick"><path d="M83 24v124h23V24Z" fill="#ffed94" stroke="#1a6696" stroke-width="4"/><path d="M89 42h11m-11 13h11" stroke="#e18a4e" stroke-width="3"/></g></g><g fill="#ffeb9c" stroke="#246d9a" stroke-width="4"><rect x="62" y="56" width="15" height="92" rx="4" transform="rotate(-17 69 150)"/><rect x="112" y="47" width="15" height="102" rx="4" transform="rotate(15 119 150)"/><rect x="135" y="65" width="15" height="90" rx="4" transform="rotate(22 142 160)"/></g><ellipse cx="100" cy="115" rx="66" ry="18" fill="#2c8abc" stroke="#1d6393" stroke-width="4"/><path d="M34 115L47 198Q100 218 153 198L166 115Q99 140 34 115Z" fill="#ffda52" stroke="#246d9a" stroke-width="5"/><path d="M42 137Q99 157 159 137" fill="none" stroke="#f49f55" stroke-width="12"/><path d="M51 191Q100 204 149 191" fill="none" stroke="#2a83af" stroke-width="10"/><circle cx="101" cy="168" r="25" fill="#fffcdf"/><path d="M100 150v35m-17-18h34" stroke="#e98062" stroke-width="6" stroke-linecap="round"/><path d="M77 155l13 13m22-13-12 13" stroke="#6da96c" stroke-width="5" stroke-linecap="round"/></svg></div><div class="storybook-progress"><i></i></div><p class="storybook-note">正在为你抽取今天的小小好签…</p><button class="shake-skip" onclick="revealFortune()">跳过动画 · 直接打开</button></div></div>`;
+  wrap.innerHTML=`<div class="lottery-panel" role="dialog" aria-modal="true" aria-label="今日健康小签"><button class="lottery-close" onclick="dismissFortune()" aria-label="关闭今日签">×</button><div id="fortuneContent"><div class="storybook-ribbon">今日健康小签 ✨</div><h2 class="shake-title">摇一摇，开启今日灵感</h2><p class="storybook-head">给每一天一点轻松的仪式感</p><div class="storybook-stage"><div class="storybook-sun"></div><svg class="storybook-pot gluco-animated-cup" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 260" role="img" aria-label="五根手绘签条各自左右摇摆，中间的签条逐渐向上抽出">
+<defs>
+<linearGradient id="gmCup" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#ffde69"/><stop offset=".62" stop-color="#f8c840"/><stop offset="1" stop-color="#e6b031"/></linearGradient>
+<linearGradient id="gmBlue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4396c7"/><stop offset=".65" stop-color="#196aa8"/><stop offset="1" stop-color="#164c83"/></linearGradient>
+<filter id="gmPaper"><feTurbulence type="fractalNoise" baseFrequency=".23" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".14"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+</defs>
+<g class="gluco-sign gluco-sign-1"><path d="M67 180Q60 151 46 101L35 67Q32 57 39 55Q48 51 52 62L91 179Z" fill="#f5cc70" stroke="#976435" stroke-width="3.2" stroke-linejoin="round"/><path d="M41 64L55 110" fill="none" stroke="#fff1aa" stroke-width="3" stroke-linecap="round"/></g>
+<g class="gluco-sign gluco-sign-2"><path d="M91 177Q87 137 83 88L81 39Q80 27 87 25Q96 23 98 38L114 174Z" fill="#f7d685" stroke="#996333" stroke-width="3.3"/><path d="M89 47L94 86" stroke="#fff2b0" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+<g class="gluco-sign gluco-sign-3"><path d="M112 181Q109 133 111 76L113 22Q114 11 123 12Q133 12 134 24L137 182Z" fill="#ffe2a1" stroke="#9b693f" stroke-width="3.5"/><path d="M121 36L119 72" fill="none" stroke="#fff4c4" stroke-width="4" stroke-linecap="round"/><path d="M119 48L129 49" stroke="#db8b5b" stroke-width="3"/><path d="M119 62L130 63" stroke="#db8b5b" stroke-width="3"/></g>
+<g class="gluco-sign gluco-sign-4"><path d="M138 180Q151 127 161 83L166 48Q169 37 178 41Q186 43 182 55L159 183Z" fill="#f7d98a" stroke="#986b36" stroke-width="3.2"/><path d="M173 54L159 101" fill="none" stroke="#ffedab" stroke-width="3.2" stroke-linecap="round"/></g>
+<g class="gluco-sign gluco-sign-5"><path d="M159 185Q184 136 199 91L206 70Q212 58 221 64Q226 69 220 81L185 190Z" fill="#f1c66b" stroke="#9c6a3c" stroke-width="3.1"/><path d="M213 78L190 130" fill="none" stroke="#fff1ae" stroke-width="3.2" stroke-linecap="round"/></g>
+<g class="gluco-handpainted-cup">
+<!-- Hand-drawn wooden bamboo-stick barrel, deliberately layered in FRONT of the moving sticks -->
+<defs>
+<linearGradient id="gmWood" x1="0" y1=".2" x2="1" y2=".35"><stop stop-color="#613b2b"/><stop offset=".18" stop-color="#a56b42"/><stop offset=".52" stop-color="#d79c62"/><stop offset=".78" stop-color="#965732"/><stop offset="1" stop-color="#5f3527"/></linearGradient>
+<linearGradient id="gmDarkRim" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#5f3728"/><stop offset=".53" stop-color="#a96842"/><stop offset="1" stop-color="#4d2b22"/></linearGradient>
+<linearGradient id="gmRedCord" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f5754c"/><stop offset=".65" stop-color="#c44230"/><stop offset="1" stop-color="#9d302c"/></linearGradient>
+</defs>
+<path d="M59 135Q55 177 66 229Q89 244 129 244Q166 244 187 231Q195 179 192 135Z" fill="url(#gmWood)" stroke="#4b3027" stroke-width="5" stroke-linejoin="round"/>
+<path d="M76 149Q70 195 82 229M99 154Q95 196 99 239M125 156Q127 196 127 241M153 154Q159 195 157 238M176 147Q181 188 174 229" fill="none" stroke="#593727" stroke-width="2.6" opacity=".55" stroke-linecap="round"/>
+<path d="M72 159Q77 192 71 213M110 161Q105 196 111 226M144 162Q143 188 147 221M169 155Q166 188 169 217" stroke="#e9ae75" stroke-width="2.6" opacity=".62" stroke-linecap="round" fill="none"/>
+<path d="M63 175Q128 188 187 176" fill="none" stroke="#72432e" stroke-width="1.8" stroke-dasharray="4 7" opacity=".55"/>
+<ellipse cx="125" cy="135" rx="70" ry="15" fill="#3c2922" stroke="#613e2e" stroke-width="7"/>
+<path d="M59 135Q125 153 191 135L190 148Q127 165 60 149Z" fill="url(#gmDarkRim)" stroke="#57372a" stroke-width="4"/>
+<path d="M64 150Q127 168 187 150" stroke="#edb675" stroke-width="2.2" fill="none"/>
+<!-- golden Greek-key pattern, inspired by the traditional woven rim -->
+<path d="M68 154v8h8v-5h-4v3M83 157v8h9v-5h-5M99 160v8h8v-5h-4M114 162v8h8v-5h-4M130 162v8h8v-5h-4M146 161v8h8v-5h-4M161 159v8h8v-5h-4M176 155v7h7" stroke="#f3c577" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".95"/>
+<path d="M61 210Q126 225 191 210" stroke="#d87b4b" stroke-width="3.6" fill="none"/>
+<path d="M64 216Q130 232 188 217" stroke="url(#gmRedCord)" stroke-width="10" fill="none" stroke-linecap="round"/>
+<path d="M64 216Q127 229 189 216" stroke="#f5a36f" stroke-width="2" fill="none"/>
+<path d="M65 216Q54 210 48 223Q49 231 58 231Q62 243 73 235Q82 222 66 216Z" fill="url(#gmRedCord)" stroke="#8d352b" stroke-width="2.7"/>
+<path d="M57 233Q45 253 44 258M64 236Q61 249 61 258M69 236Q76 245 78 256" stroke="#ba4934" stroke-width="4" stroke-linecap="round"/>
+<circle cx="60" cy="234" r="5" fill="#f2a15f" stroke="#913c31" stroke-width="2"/>
+<path d="M66 229Q127 247 185 231" stroke="#3b2b26" stroke-width="4" fill="none"/>
+<path d="M73 232Q127 247 181 233" stroke="#e5ac6d" stroke-width="2.8" fill="none"/>
+<path d="M65 179Q65 191 67 202M184 178Q181 196 184 204" stroke="#f0c08c" stroke-width="3" opacity=".55" stroke-linecap="round"/>
+</g>
+<path d="M18 111Q9 97 14 87M29 96L24 74M231 120Q241 107 239 91M222 83L227 69" stroke="#e4a341" stroke-width="5" stroke-linecap="round" fill="none"/>
+<g fill="#ffce4b"><path d="M42 37l5 10 11 4-11 5-5 11-5-11-11-5 11-4Z"/><path d="M214 27l4 8 9 3-9 5-4 8-4-8-8-5 8-3Z"/></g>
+</svg></div><div class="storybook-progress"><i></i></div><p class="storybook-note">正在为你抽取今天的小小好签…</p><button class="shake-skip" onclick="revealFortune()">跳过动画 · 直接打开</button></div></div>`;
   document.body.append(wrap);
-  clearTimeout(lotteryTimer);lotteryTimer=setTimeout(modernRevealFortune,2200);
+  // Each fortune stick is a real independent animated, selectable element.
+  wrap.querySelectorAll('.gluco-sign').forEach((stick,index)=>{
+    stick.setAttribute('role','button');
+    stick.setAttribute('tabindex','0');
+    stick.setAttribute('aria-label','抽取第'+(index+1)+'支签');
+    const choose=()=>revealFortune();
+    stick.addEventListener('click',choose);
+    stick.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}});
+  });
+  clearTimeout(lotteryTimer);lotteryTimer=setTimeout(()=>revealFortune(),2700);
 }
 function modernRevealFortune(){
  clearTimeout(lotteryTimer);const el=document.querySelector("#fortuneContent");if(!el)return;
  const q=fortuneQuotes[fortuneIndex%fortuneQuotes.length],fact=getTodayFact();
- el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><img class="storybook-illustration" src="https://raw.githubusercontent.com/lxy0329/GlucoMate/main/assets/fortune-walk.svg" alt="阳光下戴蓝帽子的卡通小朋友在绿色草地上散步" /><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
+ el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><img class="gluco-result-photo" src="assets/fortune-running-handdrawn.svg" onerror="this.onerror=null;this.src=GLUCO_FORTUNE_ART" alt="手绘插画：蓝帽子的小朋友与小狗在绿色草地奔跑" loading="eager" /><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
 }
 function modernKnowledge(){
  const f=healthFacts[factIndex%healthFacts.length];
@@ -349,7 +397,10 @@ const navKnowledge=document.createElement('button');navKnowledge.className='text
 <style id="interactive-glucose-css">
 svg.chart{display:block!important;width:100%!important;height:auto!important;max-height:none!important;min-height:0!important;aspect-ratio:360/218;overflow:visible;touch-action:none;user-select:none;margin:5px 0 0}
 svg.chart .axis-label{font-size:13.5px!important;font-weight:500!important;fill:#7b8fa7!important;font-family:Arial,"Noto Sans SC",sans-serif!important;letter-spacing:0!important}
-svg.chart .cursor-tip text{font-family:Arial,"Noto Sans SC",sans-serif!important;letter-spacing:0!important}
+svg.chart .cursor-tip text{font-family:Arial,"Noto Sans SC",sans-serif!important;letter-spacing:0!important;font-stretch:normal!important}
+svg.chart{font-synthesis:none;shape-rendering:geometricPrecision}
+svg.chart .axis-label{font-stretch:normal!important;font-variant-numeric:tabular-nums}
+svg.chart .cursor-tip{pointer-events:none}
 svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radius:8px}
 .chart-scrub-hint{font-size:11px!important;margin:2px 0 9px;color:#617b92;text-align:center;font-weight:500;letter-spacing:0}
 #reading{font-variant-numeric:tabular-nums}
@@ -368,9 +419,11 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
   let mode="今日",ratio=1,dragging=false;
   const fixed=n=>Number(n).toFixed(2);
   function getVals(){return datasets[mode]}
-  function fromRatio(r){
-    const a=getVals(),scaled=Math.max(0,Math.min(a.length-1,r*(a.length-1))),i=Math.floor(scaled),b=scaled-i;
-    return a[Math.min(i,a.length-1)]*(1-b)+a[Math.min(i+1,a.length-1)]*b;
+  // Select the nearest recorded demo sample; do not invent interpolated readings.
+  function sampleAt(r){
+    const values=getVals();
+    const index=Math.round(Math.max(0,Math.min(1,r))*(values.length-1));
+    return {value:values[index],ratio:index/(values.length-1),index};
   }
   const y=v=>B-(v-3)/6*(B-T);
   const x=r=>L+(R-L)*r;
@@ -393,9 +446,10 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
     return d;
   }
   function paint(){
-    const d=toPath(),value=fromRatio(ratio),cx=x(ratio),cy=y(value);
-    let tipX=Math.min(R-100,Math.max(L,cx-46)),tipY=Math.max(4,cy-58);
-    const label=timeLabel(ratio);
+    const sample=sampleAt(ratio);
+    const d=toPath(),value=sample.value,cx=x(sample.ratio),cy=y(value);
+    const tipX=Math.min(R-143,Math.max(L,cx-55)),tipY=Math.max(3,cy-74);
+    const label=timeLabel(sample.ratio);
     const tickLabels=mode==="今日"?["06:00","09:00","12:00","15:00","18:00"]:mode==="7天"?["7天前","5天前","3天前","1天前","今天"]:["30天前","23天前","15天前","7天前","今天"];
     svg.innerHTML=`<defs><linearGradient id="glucoNewFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#297bb8" stop-opacity=".24"/><stop offset="1" stop-color="#297bb8" stop-opacity=".02"/></linearGradient></defs>
       ${[9,7,5,3].map(v=>`<line x1="${L}" y1="${y(v)}" x2="${R}" y2="${y(v)}" stroke="#dbe7ef" stroke-width="1" stroke-dasharray="3 5"/><text class="axis-label" x="${L-10}" y="${y(v)+5}" text-anchor="end">${v.toFixed(1)}</text>`).join("")}
@@ -406,7 +460,7 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
       <circle cx="${cx}" cy="${cy}" r="11" fill="#2d85c4" opacity=".13"/>
       <circle cx="${cx}" cy="${cy}" r="6.2" fill="#fff" stroke="#176eaf" stroke-width="3"/>
       <circle cx="${R}" cy="${y(getVals().at(-1))}" r="4.7" fill="#176eaf" stroke="#fff" stroke-width="2.2"/>
-      <g class="cursor-tip" transform="translate(${tipX},${tipY})"><rect x="0" y="0" width="104" height="43" rx="10" fill="#206eab"/><path d="M${Math.max(8,Math.min(96,cx-tipX))} 48 l-6 -6 h12Z" fill="#206eab"/><text x="10" y="16" fill="#e5f4ff" font-size="11" font-weight="600">${label}</text><text x="10" y="34" fill="#fff" font-size="15" font-weight="800">${value.toFixed(1)} <tspan font-size="10" font-weight="500">${units}</tspan></text></g>
+      <g class="cursor-tip" transform="translate(${tipX},${tipY})"><rect x="0" y="0" width="143" height="61" rx="13" fill="#206eab"/><path d="M${Math.max(10,Math.min(133,cx-tipX))} 67 l-6 -6 h12Z" fill="#206eab"/><text class="cursor-time" x="13" y="21" fill="#dcecff" font-size="14" font-weight="700">${label}</text><text class="cursor-value" x="13" y="45" fill="#fff" font-size="21" font-weight="800">${value.toFixed(1)}<tspan class="cursor-unit" dx="6" font-size="11" font-weight="500">${units}</tspan></text></g>
       ${tickLabels.map((s,i)=>`<text class="axis-label time-label" x="${x(i/4)}" y="${H-9}" text-anchor="${i===0?"start":i===4?"end":"middle"}">${s}</text>`).join("")}
       <rect x="${L}" y="${T}" width="${R-L}" height="${B-T+10}" fill="transparent" style="cursor:ew-resize" aria-hidden="true"/>`;
     const metric=document.getElementById("reading");
@@ -434,10 +488,11 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
   svg.setAttribute("aria-label","血糖趋势：拖动或使用左右方向键查看各时间点模拟读数");
   svg.setAttribute("aria-valuemin","3");
   svg.setAttribute("aria-valuemax","9");
-  svg.addEventListener("pointerdown",e=>{if(e.button!==0&&e.pointerType==="mouse")return;dragging=true;svg.setPointerCapture?.(e.pointerId);movePointer(e);});
+  svg.addEventListener("pointerdown",e=>{if(e.button!==0&&e.pointerType==="mouse")return;e.preventDefault();dragging=true;svg.setPointerCapture?.(e.pointerId);movePointer(e);});
   svg.addEventListener("pointermove",e=>{if(dragging)movePointer(e)});
   const stop=()=>{dragging=false};
   svg.addEventListener("pointerup",stop);svg.addEventListener("pointercancel",stop);
+  svg.addEventListener("lostpointercapture",stop);
   svg.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","Home","End"].includes(e.key)){e.preventDefault();if(e.key==="Home")ratio=0;else if(e.key==="End")ratio=1;else ratio=Math.max(0,Math.min(1,ratio+(e.key==="ArrowRight"?1:-1)/(mode==="今日"?24:mode==="7天"?6:14)));paint();}});
   window.range=function(label,el){if(!datasets[label])return;mode=label;ratio=1;buttons.forEach(b=>b.classList.toggle("active",b===el));paint();};
   const hint=document.createElement("p");hint.id="chartScrubHint";hint.className="chart-scrub-hint";hint.setAttribute("aria-live","polite");svg.insertAdjacentElement("afterend",hint);
@@ -865,11 +920,12 @@ revealFortune=function(){
     const result=$('#fortuneContent .storybook-result');
     const q=fortuneQuotes[fortuneIndex%fortuneQuotes.length];
     const favorite=document.createElement('button');
-    favorite.className='button secondary';
-    favorite.textContent=savedSigns().some(item=>item.quote===q.quote)?'★ 已收藏':'☆ 收藏';
-    favorite.onclick=()=>{const selected=savedSigns().some(item=>item.quote===q.quote);setSignFavorite(q,!selected);favorite.textContent=selected?'☆ 收藏':'★ 已收藏';};
+    favorite.className='button secondary gluco-save-sign';
+    const refreshFavorite=()=>{const selected=savedSigns().some(item=>item.quote===q.quote);favorite.setAttribute('aria-pressed',String(selected));favorite.textContent=selected?'♥ 已收藏 · 取消收藏':'♡ 收藏今日签';};
+    favorite.onclick=()=>{const selected=savedSigns().some(item=>item.quote===q.quote);setSignFavorite(q,!selected);refreshFavorite();};
+    refreshFavorite();
     const again=document.createElement('button');again.className='button again';again.textContent='再摇一签';
-    result.append(favorite,again);
+    const art=result.querySelector('.storybook-scene,.gluco-result-photo');if(art)art.insertAdjacentElement('afterend',favorite);else result.prepend(favorite);result.append(again);
   }
   state.dailyFortune={day:fortuneDayKey(),index:fortuneIndex%fortuneQuotes.length};
   save();
@@ -885,6 +941,148 @@ revealFortune=function(){
   }
 };
 </script>
+<!-- GLUCOMATE USER VISUAL POLISH 2026-11-11 -->
+<style id="gluco-user-visual-polish">
+svg.chart .cursor-time{font-family:Arial,"Noto Sans SC",sans-serif!important;font-size:14px!important;font-weight:700!important;letter-spacing:0!important;fill:#dfedff!important;font-stretch:normal!important}
+svg.chart .cursor-value{font-family:Arial,"Noto Sans SC",sans-serif!important;font-size:21px!important;font-weight:800!important;letter-spacing:0!important;fill:#fff!important;font-stretch:normal!important}
+svg.chart .cursor-unit{font-family:Arial,"Noto Sans SC",sans-serif!important;font-size:11px!important;font-weight:500!important;letter-spacing:0!important;fill:#eff6ff!important}
+.gluco-daily-report{border:1.5px solid #e5d9b8!important;background:#fffaf0!important}
+.gluco-daily-report .daily-report-header{display:flex;align-items:center;gap:12px}
+.gluco-daily-report .daily-report-emblem{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:14px;background:#fff0bc;color:#1d679a;font-size:24px;border:1px solid #ebce8d}
+.gluco-daily-report .daily-report-body{flex:1;min-width:0}
+.gluco-daily-report h2{font-size:17px!important;color:#1e537a!important;line-height:1.3;margin:0 0 5px}
+.gluco-daily-report p{font-size:12px!important;line-height:1.65!important;color:#64717a!important;margin:0}
+.gluco-daily-report .daily-report-button{font-size:13px;font-weight:800;color:#176ab0;border:0;background:none;padding:12px 3px;flex:none}
+.gluco-daily-report:focus-within{outline:2px solid #176ab0;outline-offset:2px}
+.gluco-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:13px 0}
+.gluco-report-grid>div{padding:11px;border-radius:12px;background:#fff8e8;border:1px solid #eddfc9}
+.gluco-report-grid b{display:block;font-size:17px;color:#176ab0}
+.gluco-report-grid small{font-size:10px;color:#737984}
+.storybook-result .storybook-scene{background-image:url("assets/glucomate-scenes.webp"),linear-gradient(135deg,#d5ecf1,#fff2be)!important;min-height:168px}
+#fortuneOverlay .storybook-pot.gluco-painterly-pot{width:180px!important;height:210px!important;object-fit:contain!important;filter:drop-shadow(0 5px 3px #244f7640);mix-blend-mode:multiply;transform-origin:50% 85%;border-radius:13px}
+#fortuneOverlay .storybook-stage{background:#e1eef0!important;border:2px solid #b1ccd5!important;border-radius:22px!important}
+@media(max-width:600px){.gluco-daily-report .daily-report-header{gap:9px}.gluco-daily-report h2{font-size:16px!important}.gluco-daily-report .daily-report-button{padding:7px 0;font-size:12px}}
+</style>
+<script>
+(function installDailyReport(){
+  const home=document.getElementById('homeLeft');
+  const goal=home?.querySelector('.light-goal');
+  if(!home||!goal||document.getElementById('todayHealthReport'))return;
+  const article=document.createElement('article');
+  article.className='card gluco-daily-report';
+  article.id='todayHealthReport';
+  article.innerHTML='<div class="daily-report-header"><span class="daily-report-emblem" aria-hidden="true">▤</span><div class="daily-report-body"><h2>今日健康报告</h2><p>血糖趋势、饮食记录与今日轻目标 · 模拟摘要</p></div><button type="button" class="daily-report-button" onclick="openDailyHealthReport()" aria-label="查看今日健康报告">查看 ›</button></div>';
+  goal.insertAdjacentElement('afterend',article);
+})();
+function openDailyHealthReport(){
+ const count=Array.isArray(state.meals)?state.meals.length:0;
+ const glucose=document.getElementById('reading')?.textContent?.replace('→','').trim()||'6.8 mmol/L';
+ const status=document.getElementById('demoState')?.value==='high'?'模拟偏高':'模拟平稳';
+ const goals=state.lightChecked?'今日轻目标已完成':'今日轻目标尚未完成';
+ modal('今日健康报告',`<p class="muted small">以下为概念原型中的模拟信息，并非实际传感器检测结果。</p><div class="gluco-report-grid"><div><small>模拟血糖读数</small><b>${esc(glucose)}</b></div><div><small>血糖趋势状态</small><b>${status}</b></div><div><small>模拟血氧饱和度</small><b>98% SpO₂</b></div><div><small>饮食记录</small><b>${count} 条</b></div></div><p class="small muted">${goals}。建议结合生活情境查看趋势，不要根据单次模拟数据判断健康状况。</p><p class="small muted" style="margin-top:12px">本报告仅用于课程交互测试，不能用于诊断、用药或真实风险判断。</p><div class="modal-actions"><button class="button secondary" onclick="closeModal();go('insights')">查看历史总结</button><button class="button" onclick="closeModal()">完成</button></div>`);
+}
+</script>
+<!-- END GLUCOMATE USER VISUAL POLISH -->
+<!-- GLUCOMATE INDEPENDENT STICK ANIMATION & FAVORITES -->
+<style id="gluco-sign-animation-favorites">
+#fortuneOverlay .gluco-animated-cup{display:block!important;width:min(230px,78%)!important;height:230px!important;transform:none!important;animation:none!important;filter:drop-shadow(0 7px 5px #2f66943b);overflow:visible;border:0!important;border-radius:0!important;object-fit:contain!important;mix-blend-mode:normal!important}
+#fortuneOverlay .storybook-stage{min-height:248px;overflow:hidden}
+#fortuneOverlay .gluco-sign{transform-box:view-box;cursor:pointer;outline:none}#fortuneOverlay .gluco-sign:focus-visible path{stroke:#df6c46;stroke-width:5}
+#fortuneOverlay .gluco-sign-1{transform-origin:68px 175px;animation:gmStick1 .53s ease-in-out infinite alternate}
+#fortuneOverlay .gluco-sign-2{transform-origin:91px 175px;animation:gmStick2 .44s ease-in-out .13s infinite alternate}
+#fortuneOverlay .gluco-sign-3{transform-origin:123px 178px;animation:gmChosen 2.7s ease-in-out both}
+#fortuneOverlay .gluco-sign-4{transform-origin:152px 179px;animation:gmStick4 .63s ease-in-out .08s infinite alternate}
+#fortuneOverlay .gluco-sign-5{transform-origin:177px 178px;animation:gmStick5 .49s ease-in-out .23s infinite alternate}
+#fortuneOverlay .gluco-handpainted-cup{filter:url(#gmPaper)}
+@keyframes gmStick1{from{transform:rotate(-8deg) translateY(1px)}to{transform:rotate(6deg) translateY(-7px)}}
+@keyframes gmStick2{from{transform:rotate(5deg) translateY(-7px)}to{transform:rotate(-7deg) translateY(2px)}}
+@keyframes gmStick4{from{transform:rotate(7deg) translateY(3px)}to{transform:rotate(-5deg) translateY(-8px)}}
+@keyframes gmStick5{from{transform:rotate(-6deg) translateY(-5px)}to{transform:rotate(8deg) translateY(4px)}}
+@keyframes gmChosen{0%{transform:rotate(1deg) translateY(0)}12%{transform:rotate(-5deg) translateY(-6px)}24%{transform:rotate(6deg) translateY(-3px)}37%{transform:rotate(-4deg) translateY(-9px)}50%{transform:rotate(3deg) translateY(-13px)}68%{transform:rotate(-2deg) translateY(-27px)}86%,100%{transform:rotate(2deg) translateY(-60px)}}
+#fortuneOverlay .gluco-save-sign{display:block!important;width:100%;font-size:13px!important;font-weight:800!important;background:#fff6dd!important;color:#a85a38!important;border:1.5px solid #efbd72!important;border-radius:15px!important;padding:11px 14px!important;margin:12px 0 0!important;box-shadow:none!important}
+#fortuneOverlay .gluco-save-sign[aria-pressed=true]{background:#ffe2d6!important;color:#b34842!important;border-color:#ee9e8b!important}
+.gluco-fortune-history{display:flex;flex-direction:column;gap:11px;margin-top:12px}
+.gluco-fortune-history-item{display:flex;gap:11px;padding:12px!important;border:1px solid #ead7b0;border-radius:17px;background:#fffaf0}
+.gluco-fortune-history-item .gluco-saved-art{flex:0 0 78px;height:92px;border:1px solid #bfd5d5;border-radius:10px;background-image:url("assets/glucomate-scenes.webp"),linear-gradient(#d5eef3,#fff0b5);background-size:300% 200%,cover;background-position:0% 0%;background-repeat:no-repeat}
+.gluco-saved-details{flex:1;min-width:0}
+.gluco-saved-details strong{color:#1a5e90;font-size:14px}
+.gluco-saved-details p{font-size:11px!important;line-height:1.55!important;margin:4px 0!important;overflow-wrap:anywhere}
+.gluco-saved-details .gluco-saved-quote{color:#3c647b;font-weight:600}
+.gluco-saved-details small{display:inline-block;color:#8f7e68;font-size:10px;margin-right:10px}
+.gluco-saved-details button{color:#ab684b;font-size:11px;padding:5px 0}
+.gluco-fortune-empty{font-size:13px;color:#607589;background:#fff9e8;padding:20px;border:1px dashed #e7c589;border-radius:12px;line-height:1.8}
+@media(prefers-reduced-motion:reduce){#fortuneOverlay .gluco-sign{animation:none!important}#fortuneOverlay .gluco-sign-3{transform:translateY(-12px)!important}}
+</style>
+<!-- END GLUCOMATE INDEPENDENT SIGN ANIMATION -->
+<style id="gluco-fortune-raster-embed">
+#fortuneOverlay .gluco-result-photo{display:block;width:100%;height:auto;aspect-ratio:340/320;object-fit:cover;object-position:50% 50%;border:2px solid #397ea8;border-radius:16px;background:#d9eff2;box-shadow:0 5px 0 #2f67852a;margin:10px 0}
+.gluco-fortune-history-item img.gluco-saved-art{object-fit:cover;object-position:center;background:#c7e5ea;display:block;flex:none}
+</style><script>const GLUCO_FORTUNE_ART="data:image/webp;base64,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";</script>
+<!-- GLUCOMATE IN-DEPTH SAVED FORTUNE UX + BUCKET POSITION -->
+<style id="gm-fortune-20261111-details">
+#fortuneOverlay .gluco-animated-cup{width:246px!important;height:248px!important;max-width:92%!important;animation:none!important;overflow:visible!important}
+#fortuneOverlay .storybook-stage{height:270px!important;min-height:270px!important;background:#e3eced!important}
+#fortuneOverlay .gluco-handpainted-cup{filter:drop-shadow(0 5px 3px #3d302733)}
+#fortuneOverlay .storybook-result>.button.again{margin-top:16px!important;width:100%!important;background:#eaf3f9!important;color:#236b9d!important}
+#fortuneOverlay .storybook-result>.button:not(.again){margin-bottom:4px}
+#fortuneOverlay .gluco-result-photo{image-rendering:auto!important}
+.gm-open-saved{display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;color:inherit}
+.gm-saved-open{padding:6px 9px;border:1px solid #acd0e2;border-radius:10px;background:#eaf4fc;color:#286e9d;font-size:11px;white-space:nowrap}
+.gluco-fortune-history-item{cursor:pointer;transition:border-color .16s,box-shadow .16s}
+.gluco-fortune-history-item:hover,.gluco-fortune-history-item:focus-visible{border-color:#2b7cae!important;box-shadow:0 2px 10px #4e8ca925;outline:none}
+.gm-fortune-detail{padding:10px 5px}
+.gm-fortune-detail h2{font-size:23px;color:#1e5985;text-align:center;margin:8px auto 12px}
+.gm-fortune-detail img{display:block;width:100%;height:auto;max-height:270px;object-fit:cover;border-radius:16px;border:2px solid #9ac2d2;background:#cde9ee}
+.gm-fortune-detail blockquote{margin:16px 2px;font-size:16px;line-height:1.8;color:#375d74;text-align:center}
+.gm-fortune-detail blockquote small{display:block;font-size:11px;color:#7a8791}
+.gm-fortune-detail section{background:#fff0ca;border:1px solid #f0d79e;border-radius:14px;padding:13px;font-size:12px;color:#5d655e;line-height:1.8}
+.gm-fortune-detail section strong{display:block;color:#bc6545;font-size:13px}
+.gm-fortune-detail .gm-detail-actions{display:flex;gap:12px;margin-top:15px}
+.gm-fortune-detail .gm-detail-actions button{flex:1;padding:11px;border-radius:13px}
+</style>
+<script>
+const showSavedSignsBeforeExpand = showSavedSigns;
+showSavedSigns=function(){
+ showSavedSignsBeforeExpand();
+ const rows=document.querySelectorAll('#modal .gluco-fortune-history-item');
+ rows.forEach((row,i)=>{
+  row.setAttribute('role','button');row.setAttribute('tabindex','0');row.setAttribute('aria-label','打开收藏的第'+(i+1)+'张今日签');
+  const open=()=>openSavedSignDetail(i);
+  row.addEventListener('click',event=>{if(event.target.closest('[data-remove-sign]'))return;open();});
+  row.addEventListener('keydown',event=>{if(event.target!==row)return;if(event.key==='Enter'||event.key===' '){event.preventDefault();open();}});
+ });
+};
+function openSavedSignDetail(index){
+ const item=savedSigns()[index];if(!item){showSavedSigns();return;}
+ const q=item.quote||'',name=item.author||'每日健康灵感';
+ modal('收藏的今日签',`<div class="gm-fortune-detail"><h2>${esc(item.kind||'今日宜 · 运动')}</h2><img src="assets/fortune-running-handdrawn.svg" onerror="this.onerror=null;this.src=GLUCO_FORTUNE_ART" alt="收藏的今日签：户外运动手绘插画"/><blockquote>“${esc(q)}”<small>— ${esc(name)}</small></blockquote><section><strong>一口健康小知识</strong>${esc(item.tip||'规律运动、适量饮水和睡眠有助于培养健康习惯。')}</section><p class="small muted" style="margin:10px 3px 0">收藏时间：${item.savedAt?new Date(item.savedAt).toLocaleDateString('zh-CN'):'历史收藏'}</p><div class="gm-detail-actions"><button class="button secondary" onclick="showSavedSigns()">‹ 返回收藏</button><button class="button" onclick="removeSavedSignDetail(${index})">取消收藏</button></div></div>`);
+}
+function removeSavedSignDetail(index){
+ const item=savedSigns()[index];if(item)setSignFavorite(item,false);
+ showSavedSigns();
+}
+</script>
+<!-- END GLUCOMATE FORTUNE DETAIL -->
+<!-- GLUCOMATE SAVED-CARD ENTRY REBIND -->
+<style>
+#fortuneOverlay .gluco-result-photo{aspect-ratio:900/540!important;max-height:none!important;object-fit:cover!important;image-rendering:auto!important}
+.gluco-saved-art{object-fit:cover!important}
+#fortuneOverlay .storybook-result>.again{display:block!important;max-width:100%!important;margin:18px 0 4px!important}
+#fortuneOverlay .storybook-result>.button:not(.again){display:block!important;width:100%!important}
+</style>
+<script>
+if(typeof favoriteEntry!=='undefined'){
+ favoriteEntry.style.cursor='pointer';
+ favoriteEntry.setAttribute('tabindex','0');
+ favoriteEntry.setAttribute('role','button');
+ favoriteEntry.setAttribute('aria-label','打开收藏的今日签');
+ const btn=favoriteEntry.querySelector('button');
+ if(btn)btn.onclick=()=>showSavedSigns();
+ favoriteEntry.addEventListener('click',e=>{if(e.target.closest('button'))return;showSavedSigns();});
+ favoriteEntry.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showSavedSigns();}});
+}
+</script>
+<!-- END SAVED ENTRY REBIND -->
 </body></html>
 
 
