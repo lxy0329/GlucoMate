@@ -342,6 +342,15 @@ function modernShowFortune(){
 <g fill="#ffce4b"><path d="M42 37l5 10 11 4-11 5-5 11-5-11-11-5 11-4Z"/><path d="M214 27l4 8 9 3-9 5-4 8-4-8-8-5 8-3Z"/></g>
 </svg></div><div class="storybook-progress"><i></i></div><p class="storybook-note">正在为你抽取今天的小小好签…</p><button class="shake-skip" onclick="revealFortune()">跳过动画 · 直接打开</button></div></div>`;
   document.body.append(wrap);
+  // Each fortune stick is a real independent animated, selectable element.
+  wrap.querySelectorAll('.gluco-sign').forEach((stick,index)=>{
+    stick.setAttribute('role','button');
+    stick.setAttribute('tabindex','0');
+    stick.setAttribute('aria-label','抽取第'+(index+1)+'支签');
+    const choose=()=>revealFortune();
+    stick.addEventListener('click',choose);
+    stick.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}});
+  });
   clearTimeout(lotteryTimer);lotteryTimer=setTimeout(()=>revealFortune(),2700);
 }
 function modernRevealFortune(){
@@ -951,9 +960,9 @@ function openDailyHealthReport(){
 <!-- END GLUCOMATE USER VISUAL POLISH -->
 <!-- GLUCOMATE INDEPENDENT STICK ANIMATION & FAVORITES -->
 <style id="gluco-sign-animation-favorites">
-#fortuneOverlay .gluco-animated-cup{display:block!important;width:min(230px,78%)!important;height:230px!important;transform:none!important;filter:drop-shadow(0 7px 5px #2f66943b);overflow:visible;border:0!important;border-radius:0!important;object-fit:contain!important;mix-blend-mode:normal!important}
+#fortuneOverlay .gluco-animated-cup{display:block!important;width:min(230px,78%)!important;height:230px!important;transform:none!important;animation:none!important;filter:drop-shadow(0 7px 5px #2f66943b);overflow:visible;border:0!important;border-radius:0!important;object-fit:contain!important;mix-blend-mode:normal!important}
 #fortuneOverlay .storybook-stage{min-height:248px;overflow:hidden}
-#fortuneOverlay .gluco-sign{transform-box:view-box}
+#fortuneOverlay .gluco-sign{transform-box:view-box;cursor:pointer;outline:none}#fortuneOverlay .gluco-sign:focus-visible path{stroke:#df6c46;stroke-width:5}
 #fortuneOverlay .gluco-sign-1{transform-origin:68px 175px;animation:gmStick1 .53s ease-in-out infinite alternate}
 #fortuneOverlay .gluco-sign-2{transform-origin:91px 175px;animation:gmStick2 .44s ease-in-out .13s infinite alternate}
 #fortuneOverlay .gluco-sign-3{transform-origin:123px 178px;animation:gmChosen 2.7s ease-in-out both}
