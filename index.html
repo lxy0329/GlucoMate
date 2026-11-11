@@ -258,7 +258,7 @@ $('#profile').prepend(favoriteEntry);
 function showSavedSigns(){
   const items=savedSigns();
   modal('收藏的今日签',items.length?'<div class="sign-favorites gluco-fortune-history">'+items.map(item=>
-    '<article class="history-item gluco-fortune-history-item"><img class="gluco-saved-art" src="'+GLUCO_FORTUNE_ART+'" alt="收藏的今日签手绘插画"><div class="gluco-saved-details"><strong>'+esc(item.kind||'今日健康签')+'</strong><p class="gluco-saved-quote">“'+esc(item.quote)+'”</p><p>— '+esc(item.author)+'</p><p>'+esc(item.tip||'给今天的一点健康灵感')+'</p><small>'+(item.savedAt?new Date(item.savedAt).toLocaleDateString('zh-CN'):'历史收藏')+'</small><button class="textbutton" data-remove-sign>取消收藏</button></div></article>'
+    '<article class="history-item gluco-fortune-history-item"><img class="gluco-saved-art" src="assets/fortune-running-handdrawn.svg" onerror="this.onerror=null;this.src=GLUCO_FORTUNE_ART" alt="收藏的今日签手绘插画"><div class="gluco-saved-details"><strong>'+esc(item.kind||'今日健康签')+'</strong><p class="gluco-saved-quote">“'+esc(item.quote)+'”</p><p>— '+esc(item.author)+'</p><p>'+esc(item.tip||'给今天的一点健康灵感')+'</p><small>'+(item.savedAt?new Date(item.savedAt).toLocaleDateString('zh-CN'):'历史收藏')+'</small><button class="textbutton" data-remove-sign>取消收藏</button></div></article>'
   ).join('')+'</div>':'<div class="gluco-fortune-empty">还没有收藏的今日签。下次抽签后，点 ♡ 收藏今日签，就能在这里找到。</div>');
   $('#modal').querySelectorAll('[data-remove-sign]').forEach((button,index)=>{
     button.onclick=()=>{setSignFavorite(items[index],false);showSavedSigns();};
@@ -381,7 +381,7 @@ function modernShowFortune(){
 function modernRevealFortune(){
  clearTimeout(lotteryTimer);const el=document.querySelector("#fortuneContent");if(!el)return;
  const q=fortuneQuotes[fortuneIndex%fortuneQuotes.length],fact=getTodayFact();
- el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><img class="gluco-result-photo" src="${GLUCO_FORTUNE_ART}" alt="手绘插画：蓝帽子的小朋友与小狗在绿色草地奔跑" loading="eager" /><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
+ el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><img class="gluco-result-photo" src="assets/fortune-running-handdrawn.svg" onerror="this.onerror=null;this.src=GLUCO_FORTUNE_ART" alt="手绘插画：蓝帽子的小朋友与小狗在绿色草地奔跑" loading="eager" /><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
 }
 function modernKnowledge(){
  const f=healthFacts[factIndex%healthFacts.length];
@@ -1055,7 +1055,7 @@ showSavedSigns=function(){
 function openSavedSignDetail(index){
  const item=savedSigns()[index];if(!item){showSavedSigns();return;}
  const q=item.quote||'',name=item.author||'每日健康灵感';
- modal('收藏的今日签',`<div class="gm-fortune-detail"><h2>${esc(item.kind||'今日宜 · 运动')}</h2><img src="${GLUCO_FORTUNE_ART}" alt="收藏的今日签：户外运动手绘插画"/><blockquote>“${esc(q)}”<small>— ${esc(name)}</small></blockquote><section><strong>一口健康小知识</strong>${esc(item.tip||'规律运动、适量饮水和睡眠有助于培养健康习惯。')}</section><p class="small muted" style="margin:10px 3px 0">收藏时间：${item.savedAt?new Date(item.savedAt).toLocaleDateString('zh-CN'):'历史收藏'}</p><div class="gm-detail-actions"><button class="button secondary" onclick="showSavedSigns()">‹ 返回收藏</button><button class="button" onclick="removeSavedSignDetail(${index})">取消收藏</button></div></div>`);
+ modal('收藏的今日签',`<div class="gm-fortune-detail"><h2>${esc(item.kind||'今日宜 · 运动')}</h2><img src="assets/fortune-running-handdrawn.svg" onerror="this.onerror=null;this.src=GLUCO_FORTUNE_ART" alt="收藏的今日签：户外运动手绘插画"/><blockquote>“${esc(q)}”<small>— ${esc(name)}</small></blockquote><section><strong>一口健康小知识</strong>${esc(item.tip||'规律运动、适量饮水和睡眠有助于培养健康习惯。')}</section><p class="small muted" style="margin:10px 3px 0">收藏时间：${item.savedAt?new Date(item.savedAt).toLocaleDateString('zh-CN'):'历史收藏'}</p><div class="gm-detail-actions"><button class="button secondary" onclick="showSavedSigns()">‹ 返回收藏</button><button class="button" onclick="removeSavedSignDetail(${index})">取消收藏</button></div></div>`);
 }
 function removeSavedSignDetail(index){
  const item=savedSigns()[index];if(item)setSignFavorite(item,false);
@@ -1063,6 +1063,26 @@ function removeSavedSignDetail(index){
 }
 </script>
 <!-- END GLUCOMATE FORTUNE DETAIL -->
+<!-- GLUCOMATE SAVED-CARD ENTRY REBIND -->
+<style>
+#fortuneOverlay .gluco-result-photo{aspect-ratio:900/540!important;max-height:none!important;object-fit:cover!important;image-rendering:auto!important}
+.gluco-saved-art{object-fit:cover!important}
+#fortuneOverlay .storybook-result>.again{display:block!important;max-width:100%!important;margin:18px 0 4px!important}
+#fortuneOverlay .storybook-result>.button:not(.again){display:block!important;width:100%!important}
+</style>
+<script>
+if(typeof favoriteEntry!=='undefined'){
+ favoriteEntry.style.cursor='pointer';
+ favoriteEntry.setAttribute('tabindex','0');
+ favoriteEntry.setAttribute('role','button');
+ favoriteEntry.setAttribute('aria-label','打开收藏的今日签');
+ const btn=favoriteEntry.querySelector('button');
+ if(btn)btn.onclick=()=>showSavedSigns();
+ favoriteEntry.addEventListener('click',e=>{if(e.target.closest('button'))return;showSavedSigns();});
+ favoriteEntry.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showSavedSigns();}});
+}
+</script>
+<!-- END SAVED ENTRY REBIND -->
 </body></html>
 
 
