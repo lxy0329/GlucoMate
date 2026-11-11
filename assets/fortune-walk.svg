@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="340" viewBox="0 0 560 340" role="img" aria-labelledby="title desc">
+<title id="title">阳光下轻快散步的卡通人物</title><desc id="desc">黄色太阳、蓝白条纹天空、绿色草地，以及穿红色背心蓝色帽子的散步小人，复古儿童绘本拼贴画风。</desc>
+<defs>
+<pattern id="skystripes" width="44" height="44" patternUnits="userSpaceOnUse"><rect width="44" height="44" fill="#b9e9ee"/><rect width="22" height="44" fill="#a4dce6"/></pattern>
+<filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".25" numOctaves="2" stitchTiles="stitch" result="noise"/><feColorMatrix in="noise" type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".075"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+</defs>
+<rect width="560" height="340" rx="20" fill="url(#skystripes)"/>
+<circle cx="448" cy="70" r="47" fill="#ffdb39" stroke="#f6ba28" stroke-width="5"/>
+<g stroke="#f8c52d" stroke-width="6" stroke-linecap="round"><path d="M448 8V1M448 131v13M380 70h-14M514 70h15M401 22l-12-13M498 118l12 11M496 23l10-11M395 118l-10 11"/></g>
+<g stroke="#286b98" stroke-width="4" stroke-linejoin="round"><path d="M45 92q-25-26 9-37 18-38 48-10 34-7 33 20 34 20 0 33H45Z" fill="#fff8e8"/><path d="M373 132q-19-22 7-29 15-25 33-5 22-4 25 18 26 10 0 24h-65Z" fill="#fff8e8"/></g>
+<path d="M0 273Q88 242 154 263T294 252Q396 208 560 253V340H0Z" fill="#b9d66d"/>
+<path d="M0 293Q100 269 218 296T560 285V340H0Z" fill="#73b67e"/>
+<path d="M0 322q120-44 240 0t320-13v31H0Z" fill="#4a9d73"/>
+<g fill="#eaf4bf" stroke="#2f8772" stroke-width="3"><path d="M35 293q-22-52 14-62 13-34 35 0 25-7 27 21 30 11 12 39Z"/><path d="M445 280q-12-43 21-54 15-28 37-1 30-9 35 19 34 10 14 39Z"/></g>
+<g fill="#fffcee" stroke="#2a75a0" stroke-width="3"><circle cx="152" cy="297" r="11"/><circle cx="136" cy="296" r="9"/><circle cx="166" cy="295" r="9"/><circle cx="151" cy="282" r="9"/><circle cx="152" cy="309" r="9"/><circle cx="401" cy="302" r="11"/><circle cx="387" cy="302" r="9"/><circle cx="414" cy="300" r="9"/></g>
+<g fill="#ffda38"><circle cx="151" cy="295" r="8"/><circle cx="401" cy="299" r="8"/></g>
+<!-- Illustrated strolling figure with navy outlines and paper-cut shapes -->
+<g stroke="#1e5e8c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="287" cy="305" rx="92" ry="13" fill="#31895f" opacity=".25" stroke="none"/>
+<!-- legs -->
+<path d="M260 203l-28 65-43 25" fill="none" stroke="#1e5e8c" stroke-width="20"/>
+<path d="M285 207l39 44 53 22" fill="none" stroke="#1e5e8c" stroke-width="20"/>
+<path d="M261 212l-28 51-39 29" fill="none" stroke="#f9c696" stroke-width="13"/>
+<path d="M290 213l38 40 40 18" fill="none" stroke="#f9c696" stroke-width="13"/>
+<!-- socks -->
+<path d="M213 277l-10 8 11 15 11-10Z" fill="#fff9e9"/><path d="M344 263l-4 15 23 11 7-16Z" fill="#fff9e9"/>
+<!-- shoes -->
+<path d="M201 288q-28 6-24 24 18 12 52-10l-10-17Z" fill="#ffdc38" stroke-width="5"/><path d="M363 270q34-5 51 9 6 11-2 19l-51-4-10-13Z" fill="#ffdc38" stroke-width="5"/>
+<!-- shorts -->
+<path d="M256 174l-15 48 39 7 10-31 22 25 27-22-39-47Z" fill="#2376b3"/>
+<!-- arms back -->
+<path d="M260 145q-40 10-60-19" fill="none" stroke="#f9c696" stroke-width="17"/><circle cx="198" cy="122" r="10" fill="#f9c696"/>
+<path d="M299 146q29 27 49-3" fill="none" stroke="#f9c696" stroke-width="17"/><circle cx="349" cy="138" r="11" fill="#f9c696"/>
+<!-- top -->
+<path d="M252 136q31-19 52-1l19 63-83 6Z" fill="#ef5545"/>
+<path d="M252 137l-14 40M303 136l13 36" fill="none"/>
+<!-- neck and head -->
+<path d="M272 122v18l20-1v-21" fill="#ffd19f"/>
+<circle cx="281" cy="93" r="37" fill="#ffd19f"/>
+<path d="M249 90q-6-39 36-44 37 6 35 40l-20-17-29 6Z" fill="#20669d"/>
+<path d="M243 82q9-47 47-45 37 4 43 30-41 6-90 15Z" fill="#2782bc"/>
+<path d="M247 76q43-16 88-11" stroke-width="6" fill="none"/>
+<circle cx="271" cy="99" r="2.5" fill="#183c64" stroke="none"/><circle cx="295" cy="96" r="2.5" fill="#183c64" stroke="none"/>
+<path d="M270 112q12 12 25-1" stroke="#d9574f" stroke-width="4" fill="none"/>
+<circle cx="252" cy="104" r="6" fill="#f7a587" stroke="none"/><circle cx="312" cy="103" r="6" fill="#f7a587" stroke="none"/>
+</g>
+<g fill="#ffdf41" stroke="#2a6d98" stroke-width="3"><path d="M107 143l6 13 15 2-11 10 2 14-12-7-13 6 3-14-10-10 14-1Z"/><path d="M492 171l5 10 12 2-9 8 2 12-10-6-11 5 2-12-8-8 12-2Z"/></g>
+<rect x="2" y="2" width="556" height="336" rx="19" fill="none" stroke="#2e78a4" stroke-width="4"/>
+</svg>
