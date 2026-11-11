@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" role="img" aria-labelledby="t d">
+<title id="t">今日宜运动，阳光下的快乐远足</title><desc id="d">细腻手绘插画：戴蓝帽子、背黄色背包的孩子在草地小路上跑步，身边有一只欢快的小狗。明亮的蓝色天空、绿草和黄色阳光，保留彩铅绘本的自然纹理与深色描边。</desc>
+<defs>
+<linearGradient id="sky" x2=".2" y2="1"><stop stop-color="#62b9e7"/><stop offset="1" stop-color="#b1e5ee"/></linearGradient>
+<linearGradient id="meadow" x2="0" y2="1"><stop stop-color="#cfe478"/><stop offset=".6" stop-color="#91c563"/><stop offset="1" stop-color="#57a071"/></linearGradient>
+<linearGradient id="shirt" x2=".7" y2="1"><stop stop-color="#f9ad6b"/><stop offset=".6" stop-color="#ed744d"/><stop offset="1" stop-color="#cc5243"/></linearGradient>
+<linearGradient id="shorts" x2="1" y2="1"><stop stop-color="#73b1d4"/><stop offset="1" stop-color="#2b73aa"/></linearGradient>
+<linearGradient id="boots" x2="0" y2="1"><stop stop-color="#fbe17a"/><stop offset="1" stop-color="#df9d3a"/></linearGradient>
+<filter id="paper" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence baseFrequency=".34" numOctaves="2" seed="9" result="noise"/><feColorMatrix in="noise" type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".11"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+<filter id="sketch"><feTurbulence type="fractalNoise" baseFrequency=".012 .02" numOctaves="2" seed="4" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="1.7"/></filter>
+</defs>
+<rect width="900" height="540" fill="#fff4dc"/><rect x="14" y="12" width="872" height="515" rx="32" fill="url(#sky)"/>
+<g fill="#fff2d6" stroke="#e3e6d0" stroke-width="3" opacity=".94" filter="url(#sketch)">
+<path d="M44 110Q56 78 92 81Q97 54 139 54Q170 53 181 82Q228 80 236 114Q257 119 246 142L44 143Q20 131 44 110Z"/>
+<path d="M665 143Q687 108 713 115Q726 91 760 93Q786 95 796 114Q835 108 846 144Q858 161 838 169L659 168Q644 157 665 143Z"/>
+<path d="M295 153Q312 133 335 138Q343 115 369 119Q392 120 403 144Q429 145 434 160Z"/>
+</g>
+<circle cx="745" cy="83" r="52" fill="#ffe16b" stroke="#f7c64b" stroke-width="7"/>
+<g stroke="#ffd566" stroke-width="7" stroke-linecap="round"><path d="M744 9v14M744 141v18M669 83h-14M829 83h16M691 31l-16-12M799 137l15 13M799 28l15-16M690 137l-15 14"/></g>
+<g filter="url(#sketch)"><path d="M14 391Q132 311 270 350Q401 275 529 348Q690 274 886 358V528H14Z" fill="#cde078"/>
+<path d="M14 414Q176 365 291 398Q445 347 585 391Q749 339 886 403V528H14Z" fill="url(#meadow)"/>
+<path d="M14 493Q231 447 403 464Q643 441 886 478V528H14Z" fill="#549f6d"/>
+<path d="M188 540Q340 430 485 417Q640 408 720 441Q607 479 567 540Z" fill="#f6d999" stroke="#d7b579" stroke-width="4"/></g>
+<!-- trees with irregular branch lines and layered foliage -->
+<g stroke="#4e7654" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#sketch)">
+<path d="M132 383l-7-88m7 49 36-39m-39 22-36-35" stroke="#896d49" stroke-width="16" fill="none"/>
+<path d="M61 300Q50 268 81 249Q87 213 119 220Q141 194 173 225Q211 226 210 265Q232 287 205 313Q192 340 151 327Q107 347 88 322Q69 327 61 300Z" fill="#83bb58"/>
+<path d="M72 269Q114 236 161 248M78 290Q138 257 195 276M97 315Q144 284 192 301" stroke="#cce574" stroke-width="8" fill="none" opacity=".75"/>
+<path d="M780 379l6-86m-10 43-28-27m33 8 31-29" stroke="#987451" stroke-width="13" fill="none"/>
+<path d="M722 300Q706 274 726 251Q719 222 754 215Q769 191 803 217Q845 209 853 250Q884 282 861 309Q850 341 811 335Q768 348 746 325Q731 324 722 300Z" fill="#86bb61"/>
+<path d="M737 276Q788 248 842 276M739 305Q796 286 854 300" stroke="#bfe072" stroke-width="8" opacity=".8" fill="none"/>
+</g>
+<!-- cheerful running child: detailed line work -->
+<g stroke="#63452e" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#sketch)">
+<!-- far leg and sneaker -->
+<path d="M402 346Q377 388 330 428L295 454" stroke="#efba8e" stroke-width="40" fill="none"/>
+<path d="M395 349Q365 395 323 431" stroke="#d98c70" stroke-width="5" fill="none"/>
+<path d="M293 434l-35 21q-30 17-20 38q35 25 87-18l-9-25Z" fill="url(#boots)"/>
+<path d="M252 481q33 10 65-12M267 452l23 17m-12-24 23 17" stroke="#fff7df" stroke-width="5" fill="none"/>
+<!-- far arm -->
+<path d="M461 279Q506 267 535 247" stroke="#edab83" stroke-width="26" fill="none"/><circle cx="536" cy="241" r="19" fill="#f3bb91"/>
+<!-- backpack behind body -->
+<path d="M395 260Q355 253 335 287Q314 338 365 365L426 342Z" fill="#ffd353" stroke="#ab763b" stroke-width="6"/><path d="M352 283Q348 325 376 343M357 271Q375 279 384 301" stroke="#e9aa4c" stroke-width="5" fill="none"/>
+<!-- main leg and shoes -->
+<path d="M450 358Q484 409 552 443" stroke="#f3b78c" stroke-width="43" fill="none"/>
+<path d="M483 402Q516 421 548 442" stroke="#e79e78" stroke-width="4" fill="none"/>
+<path d="M542 420l36 10q37 7 39 35q-6 28-45 22l-52-16 5-36Z" fill="url(#boots)"/>
+<path d="M556 443l28 14m-35-2 28 14m-48 10q42 18 77-6" stroke="#fff8dc" stroke-width="5" fill="none"/>
+<!-- rolled shorts -->
+<path d="M408 332Q442 321 480 338L492 380L450 393L425 362L395 394L358 367L382 326Z" fill="url(#shorts)"/>
+<path d="M395 371l32 8m47-5 16-6" stroke="#d6e5ed" stroke-width="7" fill="none"/>
+<!-- near arm: back swing -->
+<path d="M408 280Q375 307 336 314" stroke="#f0b88e" stroke-width="27" fill="none"/><circle cx="332" cy="310" r="17" fill="#ffd0a2"/>
+<!-- torso and t-shirt -->
+<path d="M419 254Q443 247 471 261Q492 289 484 345Q438 367 397 339Z" fill="url(#shirt)"/>
+<path d="M417 261l-14 18m71-13 10 21" fill="none" stroke="#faf0d4" stroke-width="10"/>
+<path d="M418 255l31 24 19-19" stroke="#9b5641" stroke-width="5" fill="none"/>
+<path d="M411 313Q440 328 479 319" stroke="#f6b47c" stroke-width="5" opacity=".85" fill="none"/>
+<!-- happy face, curved ears -->
+<path d="M423 189Q418 155 444 134Q475 107 509 130Q538 148 538 183Q532 229 504 249Q467 267 438 237Z" fill="#ffd2a1"/>
+<path d="M430 183q-23-12-24 9q0 17 22 21" fill="#f2b48e"/>
+<path d="M422 193q-7 10 3 13" fill="none" stroke="#b67254" stroke-width="3"/>
+<!-- hair under cap -->
+<path d="M418 173Q423 147 448 145Q474 121 496 139Q513 144 517 159L492 147Q467 178 440 176L432 188Z" fill="#70462e"/>
+<path d="M434 168q11-13 18-14m9-9q17 8 21-5M492 155q10-8 16-6" stroke="#9c6844" stroke-width="5" fill="none"/>
+<!-- cap brim and crown -->
+<path d="M405 164Q398 127 428 109Q468 89 499 104Q526 120 532 150L486 158Q451 150 421 170Z" fill="#3580b8"/>
+<path d="M412 166Q458 147 513 151Q543 157 538 171Q492 183 444 172Z" fill="#235a92"/>
+<path d="M433 116Q458 102 483 111M457 116Q462 129 462 144" stroke="#8bc2e3" stroke-width="5" fill="none"/>
+<circle cx="486" cy="111" r="5" fill="#f4c951" stroke="none"/>
+<!-- eyes, mouth, blush -->
+<path d="M472 184q9-7 15 1M507 185q10-6 14 2" fill="none" stroke="#4b352a" stroke-width="4"/>
+<ellipse cx="483" cy="194" rx="3.3" ry="5.3" fill="#362a26" stroke="none"/><ellipse cx="515" cy="194" rx="3.3" ry="5.3" fill="#362a26" stroke="none"/>
+<path d="M488 212Q508 233 523 213Q519 240 500 235Q490 233 488 212Z" fill="#a34c48" stroke="#82463c" stroke-width="3.4"/>
+<path d="M497 228q11-5 16 0" stroke="#e98583" stroke-width="4"/>
+<ellipse cx="458" cy="212" rx="13" ry="7" fill="#ef9e88" stroke="none" opacity=".75"/>
+<path d="M452 209l2 4m7-5 2 5" stroke="#cc745d" stroke-width="2"/>
+<!-- front arm raised -->
+<path d="M477 276Q521 288 550 242" stroke="#efb98f" stroke-width="29" fill="none"/>
+<path d="M550 241q-15-20-7-29q3-7 9 1q-2-21 8-22q9 0 9 17q5-20 13-16q8 5 1 23q13-13 18-4q4 12-13 30q-15 15-38 0Z" fill="#ffd1a1"/>
+<path d="M553 208q1 16 3 19m13-18q-3 13-1 20" stroke="#ca8a68" stroke-width="3" fill="none"/>
+</g>
+<!-- small running dog with joyful ears, warm brown coat -->
+<g transform="translate(641 332) rotate(-5)" stroke="#785035" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#sketch)">
+<path d="M42 61Q8 30 12 3Q27-2 41 25Q53 43 66 45" fill="#bf814c"/>
+<path d="M59 55Q88 35 128 52L156 75L145 99L100 98L79 111L64 96L43 86Z" fill="#d79a57"/>
+<path d="M91 89l-23 44-32 9" stroke="#bf8253" stroke-width="16" fill="none"/>
+<path d="M124 91l27 33 42 5" stroke="#d49a5f" stroke-width="17" fill="none"/>
+<path d="M81 104Q108 119 128 92" fill="#f9e5b4" stroke="none"/>
+<path d="M141 61Q135 22 164 20Q191 18 201 46Q210 66 187 80L160 86Z" fill="#d7a46a"/>
+<path d="M164 29Q143-8 123 6Q120 24 150 47" fill="#916039"/>
+<path d="M185 43Q209 39 212 59Q198 77 181 70" fill="#ffe6b3"/>
+<circle cx="178" cy="43" r="4" fill="#382b26" stroke="none"/>
+<circle cx="203" cy="53" r="5" fill="#382b26" stroke="none"/>
+<path d="M177 58Q190 76 201 61" stroke="#663b31" stroke-width="3" fill="none"/>
+<path d="M154 68q24 16 46 5" stroke="#d9624e" stroke-width="6" fill="none"/>
+<path d="M147 66l9 5" stroke="#ffe4a2" stroke-width="4" fill="none"/>
+</g>
+<!-- hand-drawn foreground flowers -->
+<g stroke="#448b59" stroke-width="4" stroke-linecap="round" filter="url(#sketch)">
+<path d="M83 511l-4-47m40 43-7-36m620 42 9-43m30 40 7-30" fill="none"/>
+<g fill="#fff0c1" stroke="#e7b866" stroke-width="2"><circle cx="79" cy="463" r="10"/><circle cx="65" cy="466" r="10"/><circle cx="93" cy="466" r="10"/><circle cx="79" cy="449" r="10"/><circle cx="79" cy="478" r="10"/><circle cx="742" cy="467" r="10"/><circle cx="731" cy="464" r="10"/><circle cx="751" cy="458" r="10"/></g>
+<g fill="#f8d050" stroke="none"><circle cx="79" cy="463" r="8"/><circle cx="742" cy="467" r="8"/></g>
+<path d="M28 516q8-23 22-16M143 521q11-29 23-21M706 520q-9-22-20-13M826 509q8-26 23-17" stroke-width="5" fill="none"/>
+</g>
+<rect x="15" y="13" width="869" height="514" rx="33" fill="none" stroke="#2779a8" stroke-width="7" opacity=".92"/>
+<rect x="18" y="16" width="864" height="508" rx="32" fill="none" stroke="#f1d69d" stroke-width="2"/>
+<rect x="14" y="12" width="872" height="515" rx="32" fill="transparent" filter="url(#paper)" pointer-events="none"/>
+</svg>
