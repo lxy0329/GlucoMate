@@ -5,11 +5,11 @@
 </style></head><body>
 <div class="layout"><aside class="sidebar"><div class="brand"><b>∿</b>GlucoMate</div><div class="tagline">日常，慢慢变好。</div><nav class="nav" id="nav"></nav><div class="sidebar-foot"><div style="font-size:21px">⌁</div><h3>让记录少一点负担</h3><p class="small muted" style="margin-top:7px">用自己的节奏，认识每一天。</p><button class="textbutton" style="padding:10px 0 0" onclick="go('profile')">设备与偏好 →</button></div></aside>
 <main class="main"><div class="mobilebrand">GlucoMate</div><header class="top"><div><div class="eyebrow" id="eyebrow">YOUR EVERYDAY, BETTER</div><h1 id="heading">今天，也照顾好自己。</h1></div><div class="top-right"><span class="date small muted">本地交互原型</span><button class="button" onclick="openMeal()">＋ 记录一餐</button><div class="avatar">你</div></div></header>
-<section class="page active" id="today"><div class="grid"><div class="col"><article class="card"><div class="row titleline"><h2>血糖趋势</h2><div class="seg" id="ranges"><button class="active" onclick="range('今日',this)">今日</button><button onclick="range('7天',this)">7天</button><button onclick="range('30天',this)">30天</button></div></div><div class="row"><div><div class="metric" id="reading">5.6 <span>mmol/L</span><strong>→</strong></div><div class="small muted" id="chartLabel">今日 14:30 · 演示读数</div></div><span class="pill blue">● 示例数据</span></div><svg class="chart" viewBox="0 0 580 190" role="img" aria-label="血糖示例趋势，非实际测量"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#737bf5" stop-opacity=".19"/><stop offset="1" stop-color="#737bf5" stop-opacity="0"/></linearGradient></defs><g stroke="#eeeef6" stroke-dasharray="3 5"><path d="M35 25H565M35 70H565M35 115H565M35 160H565"/></g><g><text x="0" y="29">9.0</text><text x="0" y="74">7.0</text><text x="0" y="119">5.0</text><text x="0" y="164">3.0</text><text x="35" y="187">06:00</text><text x="165" y="187">09:00</text><text x="295" y="187">12:00</text><text x="425" y="187">15:00</text><text x="535" y="187">18:00</text></g><path id="chartArea" d="M35 123C65 125 80 105 100 107S140 134 170 115S205 51 240 61S280 122 315 111S365 65 400 76S435 108 465 102S520 109 565 96V160H35Z" fill="url(#area)"/><path id="chartLine" d="M35 123C65 125 80 105 100 107S140 134 170 115S205 51 240 61S280 122 315 111S365 65 400 76S435 108 465 102S520 109 565 96" fill="none" stroke="#6370ed" stroke-width="3" stroke-linecap="round"/><circle cx="240" cy="61" r="5" fill="#ff9685" stroke="white" stroke-width="3"/><circle cx="400" cy="76" r="5" fill="#ff9685" stroke="white" stroke-width="3"/></svg><div class="row"><div class="legend"><span><i class="dot"></i>葡萄糖趋势</span><span><i class="dot orange"></i>进餐时间</span></div><button class="textbutton" onclick="go('profile')">尚未连接设备 →</button></div><div class="stats"><div><div class="stat-label">运动 · 示例</div><div class="stat-num">6,240 <small>步</small></div></div><div><div class="stat-label">睡眠 · 示例</div><div class="stat-num">7.2 <small>小时</small></div></div><div><div class="stat-label">今日记录</div><div class="stat-num" id="count">0 <small>餐</small></div></div></div><p class="footnote">曲线与穿戴数据均为演示，不用于诊断。进餐标记与曲线对照不证明因果。</p></article><article class="card"><div class="row"><h2>今天的饮食</h2><button class="textbutton" onclick="go('diary')">全部记录 →</button></div><div id="todayMeals"></div></article></div><div class="col right"><article class="card learn-card"><div class="eyebrow" style="color:#8b83be">DAILY LITTLE INSIGHT</div><div class="orb"></div><h2>少一点困惑，<br>多一点了解。</h2><p>今天的知识卡：标签上的“一份”，和你喝的一整瓶一样吗？</p><button class="button" onclick="knowledge()">抽取今日知识卡 ↗</button></article><article class="card"><div class="row"><h2>给你的一个小想法</h2><span class="pill orange">温和建议</span></div><div class="suggestion"><h3>先回顾，再做决定。</h3><p>查看最近的记录，选一个你愿意尝试的小改变。不着急，也可以以后再说。</p></div><div id="goalStatus"></div><div class="mini-action"><button onclick="openGoal()">看看小改变 ↗</button><button onclick="toast('没关系，按自己的节奏来。')">以后再说</button></div></article><article class="card"><div class="row"><h2>本周记录节奏</h2><button class="textbutton" onclick="go('insights')">回顾 →</button></div><div class="weekbar" id="weekbars"></div><p class="small muted">记录是为了了解自己，不用追求每天满分。</p></article></div></div></section>
+<section class="page active" id="today"><div class="grid"><div class="col"><article class="card"><div class="row titleline"><h2>血糖趋势</h2><div class="seg" id="ranges"><button class="active" onclick="range('今日',this)">今日</button><button onclick="range('7天',this)">7天</button><button onclick="range('30天',this)">30天</button></div></div><div class="row"><div><div class="metric" id="reading">5.6 <span>mmol/L</span><strong>→</strong></div><div class="small muted" id="chartLabel">今日 14:30 · 最新读数</div></div><span class="pill blue">● 示例数据</span></div><svg class="chart" viewBox="0 0 580 190" role="img" aria-label="血糖示例趋势，非实际测量"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#737bf5" stop-opacity=".19"/><stop offset="1" stop-color="#737bf5" stop-opacity="0"/></linearGradient></defs><g stroke="#eeeef6" stroke-dasharray="3 5"><path d="M35 25H565M35 70H565M35 115H565M35 160H565"/></g><g><text x="0" y="29">9.0</text><text x="0" y="74">7.0</text><text x="0" y="119">5.0</text><text x="0" y="164">3.0</text><text x="35" y="187">06:00</text><text x="165" y="187">09:00</text><text x="295" y="187">12:00</text><text x="425" y="187">15:00</text><text x="535" y="187">18:00</text></g><path id="chartArea" d="M35 123C65 125 80 105 100 107S140 134 170 115S205 51 240 61S280 122 315 111S365 65 400 76S435 108 465 102S520 109 565 96V160H35Z" fill="url(#area)"/><path id="chartLine" d="M35 123C65 125 80 105 100 107S140 134 170 115S205 51 240 61S280 122 315 111S365 65 400 76S435 108 465 102S520 109 565 96" fill="none" stroke="#6370ed" stroke-width="3" stroke-linecap="round"/><circle cx="240" cy="61" r="5" fill="#ff9685" stroke="white" stroke-width="3"/><circle cx="400" cy="76" r="5" fill="#ff9685" stroke="white" stroke-width="3"/></svg><div class="row"><div class="legend"><span><i class="dot"></i>葡萄糖趋势</span><span><i class="dot orange"></i>进餐时间</span></div><button class="textbutton" onclick="go('profile')">设备已连接 →</button></div><div class="stats"><div><div class="stat-label">运动 · 示例</div><div class="stat-num">6,240 <small>步</small></div></div><div><div class="stat-label">睡眠 · 示例</div><div class="stat-num">7.2 <small>小时</small></div></div><div><div class="stat-label">今日记录</div><div class="stat-num" id="count">0 <small>餐</small></div></div></div><p class="footnote">曲线与穿戴数据均为，不用于诊断。进餐标记与曲线对照不证明因果。</p></article><article class="card"><div class="row"><h2>今天的饮食</h2><button class="textbutton" onclick="go('diary')">全部记录 →</button></div><div id="todayMeals"></div></article></div><div class="col right"><article class="card learn-card"><div class="eyebrow" style="color:#8b83be">DAILY LITTLE INSIGHT</div><div class="orb"></div><h2>少一点困惑，<br>多一点了解。</h2><p>今天的知识卡：标签上的“一份”，和你喝的一整瓶一样吗？</p><button class="button" onclick="knowledge()">抽取今日知识卡 ↗</button></article><article class="card"><div class="row"><h2>给你的一个小想法</h2><span class="pill orange">温和建议</span></div><div class="suggestion"><h3>先回顾，再做决定。</h3><p>查看最近的记录，选一个你愿意尝试的小改变。不着急，也可以以后再说。</p></div><div id="goalStatus"></div><div class="mini-action"><button onclick="openGoal()">看看小改变 ↗</button><button onclick="toast('没关系，按自己的节奏来。')">以后再说</button></div></article><article class="card"><div class="row"><h2>本周记录节奏</h2><button class="textbutton" onclick="go('insights')">回顾 →</button></div><div class="weekbar" id="weekbars"></div><p class="small muted">记录是为了了解自己，不用追求每天满分。</p></article></div></div></section>
 <section class="page" id="diary"><div class="row section-head"><div><h2>把每一餐，留在生活里。</h2><p class="small muted">点击记录可编辑。糖分为手动输入或示例估算。</p></div><button class="button secondary" onclick="openMeal()">＋ 添加记录</button></div><div class="card entries" id="allMeals"></div></section>
 <section class="page" id="insights"><div class="row section-head"><div><h2>你的生活，有自己的节奏。</h2><p class="small muted">基于本地记录整理，不判断健康结果。</p></div><button class="button secondary" onclick="openShare()">↗ 分享总结</button></div><div class="wide-grid" id="stories"></div><div class="grid" style="margin-top:23px"><div class="card"><h2>从习惯里，找到小改变</h2><p class="muted" style="margin-top:12px">份量、配料和生活情境都很重要。仅凭喝了几次，不能判断摄入是否过量。</p><button class="button" style="margin-top:24px" onclick="openGoal()">选择我的下一步</button></div><div class="card"><h2>我的小目标</h2><div id="insightGoal" style="margin:18px 0"></div><button class="textbutton" onclick="openGoal()">调整目标 →</button><button class="textbutton" style="margin-left:16px;color:#b27c7c" onclick="cancelGoal()">取消目标</button></div></div></section>
 <section class="page" id="learn"><div class="section-head"><h2>每天一点，慢慢了解。</h2><p class="muted small">轻量知识，不代替个体化的专业建议。</p></div><div class="wide-grid"><article class="card learn-card"><div class="eyebrow">01 / DAILY CARD</div><h2>今天，抽到<br>什么小知识？</h2><p>一个问题，一点新发现。</p><button class="button" onclick="knowledge()">抽一张 ↗</button></article><article class="card"><span style="font-size:42px">◫</span><h2 style="margin:18px 0 10px">让糖分有量感</h2><p class="muted small">换一个份量，看看示例糖分怎么变化。</p><button class="button secondary" style="margin-top:25px" onclick="sugar()">打开糖分小罐</button></article><article class="card"><span style="font-size:42px;color:var(--blue)">∿</span><h2 style="margin:18px 0 10px">含糖量 ≠ 血糖反应</h2><p class="muted small">食物标签与传感器读数分别表达什么？</p><button class="textbutton" style="margin-top:25px" onclick="info('两种信息，分开理解','食物中的糖分，是食品成分信息。血糖读数，是身体在某一时刻的测量信息。两者不能直接换算；图表中的同时变化也不等于因果关系。')">了解一下 →</button></article></div></section>
-<section class="page" id="profile"><div class="card entries"><h2>设备与偏好</h2><div class="setting-row row"><div><h3>穿戴设备</h3><p class="muted small">未连接 · 当前页面使用演示数据</p></div><button class="button secondary" onclick="info('连接设备','这是一份离线交互原型，暂未接入真实设备。未来需通过兼容设备及获授权的数据接口连接；普通手表不能因此自动获得测糖能力。')">了解连接</button></div><div class="setting-row row"><div><h3>每周温和提醒</h3><p class="muted small">是否接收周期回顾</p></div><button class="toggle" id="reminderToggle" role="switch" aria-label="每周温和提醒" onclick="toggleReminder()"></button></div><div class="setting-row"><label for="time">偏好的提醒时间</label><input type="time" id="time" style="margin-left:20px;padding:7px;border:1px solid #eee;border-radius:8px" onchange="saveTime(this.value)"><p class="small muted" style="margin-top:8px">仅保存偏好，本地文件不会在后台推送通知。</p></div><div class="setting-row"><h3>数据留在你的设备</h3><p class="small muted" style="margin-top:8px">饮食记录及偏好仅存入当前浏览器，不会上传。分享前可选择内容。</p></div><div class="setting-row source"><h3>设计参考</h3><p class="small muted" style="margin-top:8px">参考信息结构与操作模式，非官方产品或医疗器械。</p><p class="small"><a href="https://www.dexcom.com/apps" target="_blank" rel="noreferrer">Dexcom</a> · <a href="https://www.freestyle.abbott/us-en/products/freestyle-libre-app.html" target="_blank" rel="noreferrer">FreeStyle Libre</a> · <a href="https://support.myfitnesspal.com/hc/en-us/articles/39985611667341-Your-Today-tab" target="_blank" rel="noreferrer">MyFitnessPal</a></p></div><button class="textbutton" style="margin-top:18px;color:#b27c7c" onclick="resetDemo()">重置本地演示数据</button></div></section>
+<section class="page" id="profile"><div class="card entries"><h2>设备与偏好</h2><div class="setting-row row"><div><h3>穿戴设备</h3><p class="muted small">GlucoMate 手环 · <span class="pill blue">已连接</span></p></div><button class="button secondary" onclick="info('GlucoMate 手环','连接状态：已连接。首页展示模拟的血糖趋势、步数和睡眠数据。')">设备详情</button></div><div class="setting-row row"><div><h3>每周温和提醒</h3><p class="muted small">是否接收周期回顾</p></div><button class="toggle" id="reminderToggle" role="switch" aria-label="每周温和提醒" onclick="toggleReminder()"></button></div><div class="setting-row"><label for="time">偏好的提醒时间</label><input type="time" id="time" style="margin-left:20px;padding:7px;border:1px solid #eee;border-radius:8px" onchange="saveTime(this.value)"><p class="small muted" style="margin-top:8px">仅保存偏好，本地文件不会在后台推送通知。</p></div><div class="setting-row"><h3>数据留在你的设备</h3><p class="small muted" style="margin-top:8px">饮食记录及偏好仅存入当前浏览器，不会上传。分享前可选择内容。</p></div><div class="setting-row source"><h3>设计参考</h3><p class="small muted" style="margin-top:8px">参考信息结构与操作模式，非官方产品或医疗器械。</p><p class="small"><a href="https://www.dexcom.com/apps" target="_blank" rel="noreferrer">Dexcom</a> · <a href="https://www.freestyle.abbott/us-en/products/freestyle-libre-app.html" target="_blank" rel="noreferrer">FreeStyle Libre</a> · <a href="https://support.myfitnesspal.com/hc/en-us/articles/39985611667341-Your-Today-tab" target="_blank" rel="noreferrer">MyFitnessPal</a></p></div><button class="textbutton" style="margin-top:18px;color:#b27c7c" onclick="resetDemo()">重置仅自己可见数据</button></div></section>
 </main></div><div class="modal-back" id="overlay" onclick="if(event.target===this)closeModal()"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" id="modal"></div></div><div class="toast" id="toast" role="status"></div>
 <script>
 const $=s=>document.querySelector(s);const icons={today:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',diary:'<path d="M5 3h14v18H5zM8 8h8M8 12h8M8 16h5"/>',insights:'<path d="M4 20V11M12 20V4M20 20v-6"/>',learn:'<path d="M3 5c4-2 7-1 9 1 2-2 5-3 9-1v14c-4-2-7-1-9 1-2-2-5-3-9-1zM12 6v14"/>',profile:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-9 16-9 16 0"/>'};const labels={today:'今日概览',diary:'饮食日记',insights:'生活集锦',learn:'每日发现',profile:'我的设置'};$('#nav').innerHTML=Object.keys(labels).map(k=>`<button data-page="${k}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${icons[k]}</svg>${labels[k]}</button>`).join('');
@@ -19,7 +19,7 @@ function modal(title,html){lastFocus=document.activeElement;$('#modal').innerHTM
 function openMeal(id){editing=id||null;photo='';let m=state.meals.find(x=>x.id===id)||{name:'',type:'加餐',portion:1,sugar:0,time:new Date().toTimeString().slice(0,5)};modal(id?'修改饮食记录':'记下这一餐',`<p>拍张照留作回忆，份量和糖分由你核对。</p><form id="mealForm" onsubmit="submitMeal(event)"><div class="upload" onclick="document.getElementById('file').click()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('file').click()}"><div id="photoPreview">＋ 添加食物照片</div><span class="small muted">仅本地预览，不会自动识别或上传</span></div><input type="file" id="file" accept="image/*" hidden onchange="previewPhoto(this)"><div class="formgroup"><label for="foodName">食物名称</label><input id="foodName" value="${esc(m.name)}" placeholder="例如：一杯奶茶" required maxlength="40"></div><div class="two"><div class="formgroup"><label for="mealType">餐次</label><select id="mealType">${['早餐','午餐','晚餐','加餐'].map(v=>`<option ${v===m.type?'selected':''}>${v}</option>`).join('')}</select></div><div class="formgroup"><label for="mealTime">时间</label><input id="mealTime" type="time" value="${m.time}" required></div></div><div class="two"><div class="formgroup"><label for="portion">份量（份／毫升）</label><input id="portion" type="number" value="${m.portion}" min="0.1" max="10000" step="0.1" required></div><div class="formgroup"><label for="sugarInput">估算糖分（克）</label><input id="sugarInput" type="number" value="${m.sugar}" min="0" max="1000" step="0.1" required></div></div><p>请参考标签填写。此值不是血糖读数，也不是AI识别结果。</p><div class="modal-actions"><button type="button" class="button ghost" onclick="closeModal()">取消</button><button class="button" type="submit">保存记录</button></div>${id?'<button type="button" class="textbutton" style="color:#bd7373;margin-top:18px" onclick="deleteMeal()">删除这条记录</button>':''}</form>`)}function previewPhoto(input){let f=input.files[0];if(!f)return;if(f.size>8*1024*1024){toast('请选择小于8MB的图片。');return}const reader=new FileReader();reader.onload=()=>{photo=reader.result;$('#photoPreview').innerHTML=`<img src="${photo}" alt="所选食物照片">更换照片`};reader.readAsDataURL(f)}function submitMeal(e){e.preventDefault();let m={id:editing||Date.now(),name:$('#foodName').value.trim(),type:$('#mealType').value,time:$('#mealTime').value,portion:Number($('#portion').value),sugar:Number($('#sugarInput').value),icon:$('#foodName').value.includes('茶')?'🧋':'🍽️'};if(!m.name){toast('请填写食物名称。');return}if(editing)state.meals=state.meals.map(x=>x.id===editing?m:x);else state.meals.push(m);save();closeModal();toast('已保存到你的饮食日记。')}function deleteMeal(){if(confirm('确定删除这条饮食记录？')){state.meals=state.meals.filter(x=>x.id!==editing);save();closeModal();toast('记录已删除。')}}
 const tips=[['一份，不一定是一整瓶。','营养标签可能按每100毫升或每份标示。看清标示单位，再结合实际饮用量理解糖分。'],['糖分和碳水，不是同一个数。','糖是碳水化合物的一部分。理解标签时，可以同时留意总碳水和糖的标示。'],['先记录，再慢慢发现。','写下进餐时间、份量和当时的感受，可以帮助回顾习惯。不用一次记录得很完美。']];let tip=0;function knowledge(){const[t,p]=tips[tip++%tips.length];modal('今日知识卡',`<div class="story" style="margin-top:23px;background:#f0efff"><span style="font-size:30px;color:var(--blue)">✦</span><h2>${t}</h2><p style="color:#77718c;font-size:14px">${p}</p></div><div class="modal-actions"><button class="button secondary" onclick="knowledge()">换一张</button><button class="button" onclick="closeModal();toast('今天也多了解了一点。')">收下这条知识</button></div>`)}function sugar(){modal('糖分小罐',`<p>奶茶配方示例：每250毫升含12克糖，非任何品牌实测。</p><div class="circleviz"><div class="jar" id="jar"></div><div><div class="metric" style="font-size:38px" id="sugarNumber">12 <span>g</span></div><p id="cubeLabel">约3块方糖 · 每块4克</p></div></div><div class="formgroup"><label for="sugarRange">调整饮品份量：<span id="ml">250</span>毫升</label><input type="range" min="250" max="500" step="250" value="250" id="sugarRange" oninput="updateSugar(this.value)"></div><p>罐子用于理解量感。示例估算不能预测个人血糖反应。</p><button class="button" style="width:100%;margin-top:24px" onclick="closeModal()">了解了</button>`);updateSugar(250)}function updateSugar(v){let n=v/250*3;$('#ml').textContent=v;$('#jar').innerHTML='<span class="cube"></span>'.repeat(n);$('#sugarNumber').innerHTML=n*4+' <span>g</span>';$('#cubeLabel').textContent=`约${n}块方糖 · 每块4克`}
 function openGoal(){modal('下一步，由你决定',`<p>先选一个舒服的方式，也可以暂时不设目标。</p><div id="goalChoices">${['下周少买一次奶茶','下次选择小份饮品','试试一种自己喜欢的替代饮品'].map(v=>`<label class="goal"><input type="radio" name="goal" value="${v}" ${state.goal===v?'checked':''}> ${v}</label>`).join('')}</div><div class="formgroup"><label for="customGoal">或者，写下自己的小目标</label><input id="customGoal" placeholder="从一个小改变开始" maxlength="60"></div><div class="modal-actions"><button class="button ghost" onclick="closeModal()">以后再说</button><button class="button" onclick="setGoal()">保存我的选择</button></div>`)}function setGoal(){let g=$('#customGoal').value.trim()||document.querySelector('input[name="goal"]:checked')?.value;if(!g){toast('先选一个目标，或写下自己的想法。');return}state.goal=g;save();closeModal();toast('目标已保存，可以随时调整。')}function cancelGoal(){if(!state.goal)return toast('目前没有设置目标。');state.goal='';save();toast('目标已取消。')}function toggleReminder(){state.reminder=!state.reminder;save();toast(state.reminder?'已开启提醒偏好。':'已关闭提醒偏好。')}function saveTime(v){state.time=v;save();toast('提醒时间已保存。')}
-function openShare(){modal('先看看，要分享什么',`<p>生成文件前先选择内容。不会自动发送给他人。</p><label class="checkline"><input id="shareFood" type="checkbox" checked> 饮食记录与份量</label><label class="checkline"><input id="shareGoal" type="checkbox"> 我的小目标</label><div class="pill">不包含血糖演示读数、照片和个人身份信息</div><div class="modal-actions"><button class="button ghost" onclick="closeModal()">取消</button><button class="button" onclick="previewShare()">预览总结</button></div>`)}let shareText='';function previewShare(){if(!$('#shareFood').checked&&!$('#shareGoal').checked)return toast('请至少选择一项内容。');shareText='GlucoMate · 我的生活总结\n\n';if($('#shareFood').checked)shareText+='饮食记录（糖分为估算）\n'+state.meals.map(m=>`${m.time} ${m.type} · ${m.name} · 份量${m.portion} · 糖分估算${m.sugar}克`).join('\n')+'\n\n';if($('#shareGoal').checked)shareText+='我的目标：'+(state.goal||'暂未设置')+'\n';shareText+='\n此总结包含示例或手动输入数据，不是医疗报告。';modal('总结预览',`<pre style="white-space:pre-wrap;font:13px/1.9 inherit;background:#f7f7fc;padding:18px;border-radius:12px;margin-top:20px">${esc(shareText)}</pre><div class="modal-actions"><button class="button ghost" onclick="openShare()">修改内容</button><button class="button" onclick="downloadSummary()">下载文字总结</button></div>`)}function downloadSummary(){const url=URL.createObjectURL(new Blob(['\ufeff'+shareText],{type:'text/plain;charset=utf-8'}));let a=document.createElement('a');a.href=url;a.download='GlucoMate-生活总结.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('总结已生成，请自行选择是否分享。')}function range(label,el){document.querySelectorAll('#ranges button').forEach(b=>b.classList.toggle('active',b===el));$('#chartLabel').textContent=label+' · 演示趋势';let d=label==='今日'?'M35 123C65 125 80 105 100 107S140 134 170 115S205 51 240 61S280 122 315 111S365 65 400 76S435 108 465 102S520 109 565 96':label==='7天'?'M35 110C85 110 90 61 145 78S210 137 270 103S330 60 390 91S490 114 565 80':'M35 130C85 92 130 120 180 97S270 74 320 90S420 123 470 88S530 87 565 70';$('#chartLine').setAttribute('d',d);$('#chartArea').setAttribute('d',d+'V160H35Z')}function resetDemo(){if(confirm('重置将删除当前浏览器的记录、目标与偏好，恢复示例数据。是否继续？')){state={meals:JSON.parse(JSON.stringify(initial)),goal:'',reminder:true,time:'18:00'};save();toast('已恢复演示数据。')}}render();go('today');
+function openShare(){modal('先看看，要分享什么',`<p>生成文件前先选择内容。不会自动发送给他人。</p><label class="checkline"><input id="shareFood" type="checkbox" checked> 饮食记录与份量</label><label class="checkline"><input id="shareGoal" type="checkbox"> 我的小目标</label><div class="pill">不包含血糖最新读数、照片和个人身份信息</div><div class="modal-actions"><button class="button ghost" onclick="closeModal()">取消</button><button class="button" onclick="previewShare()">预览总结</button></div>`)}let shareText='';function previewShare(){if(!$('#shareFood').checked&&!$('#shareGoal').checked)return toast('请至少选择一项内容。');shareText='GlucoMate · 我的生活总结\n\n';if($('#shareFood').checked)shareText+='饮食记录（糖分为估算）\n'+state.meals.map(m=>`${m.time} ${m.type} · ${m.name} · 份量${m.portion} · 糖分估算${m.sugar}克`).join('\n')+'\n\n';if($('#shareGoal').checked)shareText+='我的目标：'+(state.goal||'暂未设置')+'\n';shareText+='\n此总结包含示例或手动输入数据，不是医疗报告。';modal('总结预览',`<pre style="white-space:pre-wrap;font:13px/1.9 inherit;background:#f7f7fc;padding:18px;border-radius:12px;margin-top:20px">${esc(shareText)}</pre><div class="modal-actions"><button class="button ghost" onclick="openShare()">修改内容</button><button class="button" onclick="downloadSummary()">下载文字总结</button></div>`)}function downloadSummary(){const url=URL.createObjectURL(new Blob(['\ufeff'+shareText],{type:'text/plain;charset=utf-8'}));let a=document.createElement('a');a.href=url;a.download='GlucoMate-生活总结.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('总结已生成，请自行选择是否分享。')}function range(label,el){document.querySelectorAll('#ranges button').forEach(b=>b.classList.toggle('active',b===el));$('#chartLabel').textContent=label+' · 血糖趋势';let d=label==='今日'?'M35 123C65 125 80 105 100 107S140 134 170 115S205 51 240 61S280 122 315 111S365 65 400 76S435 108 465 102S520 109 565 96':label==='7天'?'M35 110C85 110 90 61 145 78S210 137 270 103S330 60 390 91S490 114 565 80':'M35 130C85 92 130 120 180 97S270 74 320 90S420 123 470 88S530 87 565 70';$('#chartLine').setAttribute('d',d);$('#chartArea').setAttribute('d',d+'V160H35Z')}function resetDemo(){if(confirm('重置将删除当前浏览器的记录、目标与偏好，恢复示例数据。是否继续？')){state={meals:JSON.parse(JSON.stringify(initial)),goal:'',reminder:true,time:'18:00'};save();toast('已恢复模拟数据。')}}render();go('today');
 </script><style>
 .overview{background:linear-gradient(110deg,#5262ec,#7f75e8);color:#fff;margin-bottom:22px;padding:26px 30px;display:flex;align-items:center;justify-content:space-between;border-radius:20px;gap:20px}.overview h2{font-size:25px}.overview p{font-size:12px;opacity:.85;margin-top:6px}.overview .pill{background:#ffffff24;color:#fff}.overview select{background:#ffffff24;color:white;border:1px solid #ffffff45;border-radius:9px;padding:8px}.overview select option{color:#20233b}.home-main{display:grid;grid-template-columns:1.8fr 1fr;gap:22px}.home-left{display:grid;gap:22px}.camera-page{position:fixed;inset:0;background:#111626;z-index:24;display:none;color:white;overflow:auto}.camera-page.open{display:block}.camera-inner{max-width:500px;margin:auto;min-height:100dvh;padding:25px 22px;display:flex;flex-direction:column}.camera-top{display:flex;justify-content:space-between;align-items:center}.camera-top button{background:#ffffff18;width:44px;height:44px;border-radius:50%;font-size:24px}.viewfinder{flex:1;min-height:360px;margin:25px 0;border:1px solid #ffffff35;border-radius:25px;display:grid;place-items:center;background:radial-gradient(ellipse,#293448,#121827);position:relative;overflow:hidden}.viewfinder img{width:100%;max-height:65vh;object-fit:contain}.camera-hint{text-align:center;color:#bac3d5;font-size:14px}.shutter{border:5px solid #cdd2e3;background:white;box-shadow:inset 0 0 0 4px #141a2b;width:78px;height:78px;border-radius:50%;display:block;margin:20px auto}.camera-bottom{text-align:center;padding-bottom:20px}.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.photo-tile{background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden}.photo-stage{height:230px;background:#f0f1fb;position:relative;display:grid;place-items:center}.photo-stage img{width:100%;height:100%;object-fit:cover}.photo-stage .badge{position:absolute;bottom:12px;left:12px;background:#20233bce;backdrop-filter:blur(8px);color:white;padding:7px 10px;border-radius:9px;font-size:12px;max-width:90%}.photo-caption{padding:15px}.lottery{position:fixed;inset:0;background:#1e214953;backdrop-filter:blur(8px);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}.lottery-panel{width:410px;background:#faf9ff;border-radius:26px;padding:30px;text-align:center;position:relative;max-height:92dvh;overflow:auto}.lottery-close{position:absolute;right:18px;top:12px;font-size:24px;color:#8b89a2}.sticks{font-size:70px;margin:35px 0 20px;transform-origin:bottom;animation:shake .22s ease-in-out 8 alternate}.fortune{animation:reveal .55s ease both}.fortune h2{font-size:35px;color:#535cdf;margin:15px 0}.fortune blockquote{font-size:13px;color:#78758d;margin:15px 0}.fortune .knowledge{background:#eeedff;border-radius:14px;padding:17px;text-align:left;margin:20px 0;font-size:13px}.fortune small{font-size:10px;color:#9996ac}.message{padding:17px 0;border-bottom:1px solid var(--line)}.message:last-child{border:0}.swipe-hint{text-align:center;margin-top:16px;font-size:12px;color:var(--muted)}@keyframes shake{from{transform:rotate(-12deg)}to{transform:rotate(12deg)}}@keyframes reveal{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}@media(max-width:900px){.home-main{grid-template-columns:1fr}.photo-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.overview{padding:21px;align-items:flex-start}.overview h2{font-size:21px}.overview select{font-size:10px;max-width:90px}.photo-stage{height:180px}.home-main{gap:18px}.photo-grid{gap:12px}.photo-caption{padding:12px}.photo-caption h3{font-size:13px}}
 </style>
@@ -28,11 +28,11 @@ function openShare(){modal('先看看，要分享什么',`<p>生成文件前先�
 // Updated mobile-first flows. Original demo remains fully offline.
 let capturedPhoto='',lotteryTimer;const oldRender=render,oldMeal=openMeal,oldGo=go;
 const trendCard=$('#today .col .card');const goalCard=$('#goalStatus').closest('.card');const mealsCard=$('#todayMeals').closest('.card');mealsCard.hidden=true;const today=$('#today');today.innerHTML='';
-today.innerHTML=`<article class="overview"><div><span class="pill">血糖评估 · 演示状态</span><h2 id="assessmentTitle" style="margin-top:10px">今日示例趋势平稳</h2><p id="assessmentText">未连接真实设备，当前结论仅用于界面演示。</p></div><select aria-label="切换演示状态" id="demoState" onchange="setAssessment(this.value)"><option value="stable">演示：平稳</option><option value="high">演示：偏高</option></select></article><div class="home-main"><div class="home-left" id="homeLeft"></div><aside class="col"><article class="card"><div class="row"><h2>消息提示</h2><span class="pill" id="messageCount">2条</span></div><div id="messages"></div></article><article class="card learn-card"><div class="eyebrow">TODAY'S LITTLE FORTUNE</div><h2>今天，宜动一动。</h2><p>一支轻松的小签，给生活一点新灵感。</p><button class="button" onclick="showFortune()">再看看今日签 ↗</button></article></aside></div><div class="swipe-hint">→ 向右滑动，拍下这一餐</div>`;
+today.innerHTML=`<article class="overview"><div><span class="pill">血糖评估 · 状态</span><h2 id="assessmentTitle" style="margin-top:10px">今日示例趋势平稳</h2><p id="assessmentText">未连接真实设备，当前结论仅用于参考。</p></div><select aria-label="切换状态" id="demoState" onchange="setAssessment(this.value)"><option value="stable">：平稳</option><option value="high">：偏高</option></select></article><div class="home-main"><div class="home-left" id="homeLeft"></div><aside class="col"><article class="card"><div class="row"><h2>消息提示</h2><span class="pill" id="messageCount">2条</span></div><div id="messages"></div></article><article class="card learn-card"><div class="eyebrow">TODAY'S LITTLE FORTUNE</div><h2>今天，宜动一动。</h2><p>一支轻松的小签，给生活一点新灵感。</p><button class="button" onclick="showFortune()">再看看今日签 ↗</button></article></aside></div><div class="swipe-hint">→ 向右滑动，拍下这一餐</div>`;
 $('#homeLeft').append(trendCard,goalCard,mealsCard);
 const lastDot=document.createElementNS('http://www.w3.org/2000/svg','g');lastDot.id='latestPoint';lastDot.innerHTML='<circle cx="565" cy="96" r="5" fill="#5362ec" stroke="white" stroke-width="2"/><rect x="480" y="59" width="91" height="26" rx="8" fill="#5362ec"/><text x="489" y="76" style="fill:white;font-size:12px;font-weight:600">5.6 mmol/L</text>';$('.chart').append(lastDot);
 const oldRange=range;range=function(label,el){oldRange(label,el);const y=label==='今日'?96:label==='7天'?80:70;$('#latestPoint circle').setAttribute('cy',y);$('#latestPoint rect').setAttribute('y',y-37);$('#latestPoint text').setAttribute('y',y-20);$('#latestPoint text').textContent=label==='今日'?'5.6 mmol/L':label==='7天'?'6.3 mmol/L':'6.8 mmol/L';$('#reading').innerHTML=(label==='今日'?'5.6':label==='7天'?'6.3':'6.8')+' <span>mmol/L</span><strong>→</strong>';};
-function setAssessment(v){const high=v==='high';$('#assessmentTitle').textContent=high?'本次示例读数偏高':'今日示例趋势平稳';$('#assessmentText').textContent=high?'先核对读数与测量情境，再查看建议。当前仅为演示。':'未连接真实设备，当前结论仅用于界面演示。';$('#messages').innerHTML=(high?`<div class="message"><span class="pill orange">偏高提示 · 示例</span><h3 style="margin-top:9px">先确认，再行动</h3><p class="small muted">若读数与身体感受不一致，按设备说明复核。持续异常或不适时联系专业人员。</p><button class="textbutton" style="padding:10px 0 0" onclick="info('偏高时，先确认情况','检查读数时间、数据来源和设备状态，回顾进餐与活动情境。不要仅凭一条提示自行调整药物。若读数持续异常或出现不适，请及时联系专业人员；严重不适时及时就医。')">查看应对方式 →</button></div>`:'')+`<div class="message"><span class="pill blue">设备消息</span><h3 style="margin-top:9px">尚未连接真实传感器</h3><p class="small muted">演示状态不能用于判断你的真实健康情况。</p></div><div class="message"><h3>今天的小目标，还在这里</h3><p class="small muted">按自己的节奏，随时调整或跳过。</p></div>`;$('#messageCount').textContent=high?'3条':'2条';}
+function setAssessment(v){const high=v==='high';$('#assessmentTitle').textContent=high?'本次示例读数偏高':'今日示例趋势平稳';$('#assessmentText').textContent=high?'先核对读数与测量情境，再查看建议。当前供参考。':'未连接真实设备，当前结论仅用于参考。';$('#messages').innerHTML=(high?`<div class="message"><span class="pill orange">偏高提醒</span><h3 style="margin-top:9px">先确认，再行动</h3><p class="small muted">若读数与身体感受不一致，按设备说明复核。持续异常或不适时联系专业人员。</p><button class="textbutton" style="padding:10px 0 0" onclick="info('偏高时，先确认情况','检查读数时间、数据来源和设备状态，回顾进餐与活动情境。不要仅凭一条提示自行调整药物。若读数持续异常或出现不适，请及时联系专业人员；严重不适时及时就医。')">查看应对方式 →</button></div>`:'')+`<div class="message"><span class="pill blue">设备消息</span><h3 style="margin-top:9px">设备已连接</h3><p class="small muted">设备连接正常，数据已更新。</p></div><div class="message"><h3>今天的小目标，还在这里</h3><p class="small muted">按自己的节奏，随时调整或跳过。</p></div>`;$('#messageCount').textContent=high?'3条':'2条';}
 function rebuildNav(){const ns=[['today','首页'],['diary','饮食集锦'],['learn','发现'],['profile','我的']];$('#nav').innerHTML=ns.map(([k,n])=>`<button data-page="${k}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${icons[k]}</svg>${n}</button>`).join('');labels.profile='我的';labels.diary='饮食集锦';}
 const reportEntry=document.createElement('div');reportEntry.className='setting-row row';reportEntry.innerHTML='<div><h3>我的报告</h3><p class="small muted">查看生活总结，选择分享内容</p></div><button class="button secondary" onclick="go(\'insights\')">查看报告 →</button>';$('#profile .card').insertBefore(reportEntry,$('#profile .setting-row'));
 $('.top-right .button').textContent='⌗ 拍照记录';$('.top-right .button').onclick=openCamera;
@@ -68,7 +68,7 @@ go('today');drawLightGoal();
 <script>
 const assessmentBeforeCopy=setAssessment;
 setAssessment=function(value){assessmentBeforeCopy(value);const high=value==='high';$('#assessmentTitle').textContent=high?'今日血糖有些偏高':'今日血糖状态正常';$('#assessmentText').textContent=high?'先复核读数，回顾近期饮食。持续偏高或出现不适，请联系专业人员。':'';$('#assessmentText').hidden=!high;};
-$('.overview .pill').textContent='演示';$('#demoState option[value="stable"]').textContent='正常';$('#demoState option[value="high"]').textContent='偏高';
+$('.overview .pill').textContent='';$('#demoState option[value="stable"]').textContent='正常';$('#demoState option[value="high"]').textContent='偏高';
 const goalDrawBeforeCopy=drawLightGoal;
 drawLightGoal=function(){goalDrawBeforeCopy();$('#lightGoalTitle').textContent=state.goal||'今天不喝含糖饮料';$('.light-goal-body p').textContent='想喝饮料时，试试白水或无糖茶。';};
 setAssessment($('#demoState').value);drawLightGoal();
@@ -102,7 +102,7 @@ drawLightGoal();
 <script>
 $('#demoState').innerHTML='<option value="stable">正常</option><option value="high">偏高</option><option value="low">偏低</option>';
 const statusMessagesBefore=setAssessment;
-setAssessment=function(value){statusMessagesBefore(value==='low'?'high':value);const data={stable:['今日血糖状态正常','保持日常节奏，继续留意变化。'],high:['今日血糖有些偏高','先复核读数；持续偏高或不适，请咨询医生。'],low:['今日血糖有些偏低','先确认读数，并查看低血糖应对建议。']}[value]||['今日血糖状态正常','保持日常节奏，继续留意变化。'];$('.overview').dataset.status=value;$('#assessmentTitle').textContent=data[0];$('#assessmentText').textContent=data[1];$('#assessmentText').hidden=false;if(value==='low'){const msg=$('#messages .message');msg.innerHTML='<span class="pill orange">偏低提示 · 示例</span><h3 style="margin-top:9px">先确认，及时处理</h3><p class="small muted">先暂停运动，按医生指导或既定低血糖方案处理。严重不适时及时求助。</p><button class="textbutton" style="padding-top:10px" onclick="info(\'偏低时，及时处理\',\'此处仅为界面演示。实际发生低血糖时，请遵循医生提供的处理方案；若意识不清或无法吞咽，旁人不要喂食，应立即呼叫急救。\')">查看应对方式 →</button>';}};
+setAssessment=function(value){statusMessagesBefore(value==='low'?'high':value);const data={stable:['今日血糖状态正常','保持日常节奏，继续留意变化。'],high:['今日血糖有些偏高','先复核读数；持续偏高或不适，请咨询医生。'],low:['今日血糖有些偏低','先确认读数，并查看低血糖应对建议。']}[value]||['今日血糖状态正常','保持日常节奏，继续留意变化。'];$('.overview').dataset.status=value;$('#assessmentTitle').textContent=data[0];$('#assessmentText').textContent=data[1];$('#assessmentText').hidden=false;if(value==='low'){const msg=$('#messages .message');msg.innerHTML='<span class="pill orange">偏低提醒</span><h3 style="margin-top:9px">先确认，及时处理</h3><p class="small muted">先暂停运动，按医生指导或既定低血糖方案处理。严重不适时及时求助。</p><button class="textbutton" style="padding-top:10px" onclick="info(\'偏低时，及时处理\',\'此处仅为参考。实际发生低血糖时，请遵循医生提供的处理方案；若意识不清或无法吞咽，旁人不要喂食，应立即呼叫急救。\')">查看应对方式 →</button>';}};
 setAssessment($('#demoState').value);
 const fortuneQuotes=[
 {quote:'步履轻快，心情轻松，我走上开阔的大路。',author:'沃尔特·惠特曼 · 美国',work:'《大路之歌》· 自译',url:'https://whitmanarchive.org/item/ppp.01663_01749',tip:'记录运动，也可以记下当时的心情。'},
@@ -121,7 +121,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('#fortune
 <script>
 state.socialPosts=state.socialPosts||[];state.buddyRequests=state.buddyRequests||[];state.messageHistory=state.messageHistory||[];state.archivedMessageIds=state.archivedMessageIds||[];state.likes=state.likes||[];state.joinedAction=!!state.joinedAction;
 const inboxNode=document.createElement('div');inboxNode.id='homeInbox';$('#today').prepend(inboxNode);
-function inboxItems(){const status=$('#demoState').value;const list=[];if(status!=='stable')list.push({id:'alert-'+status,title:status==='high'?'身体提醒：本次示例血糖偏高':'身体提醒：本次示例血糖偏低',text:status==='high'?'先复核读数；持续异常或不适，请联系专业人员。':'请确认读数，暂停运动，并按既定低血糖方案处理。',kind:'身体预警 · 演示'});list.push({id:'buddy-welcome',title:'小糖橘：明早一起吃早餐吗？',text:'想和你一起试试规律早餐。我们可以分享早餐照片，按自己的节奏打卡。',kind:'搭子消息 · 示例'});return list.filter(x=>!state.archivedMessageIds.includes(x.id));}
+function inboxItems(){const status=$('#demoState').value;const list=[];if(status!=='stable')list.push({id:'alert-'+status,title:status==='high'?'身体提醒：血糖偏高':'身体提醒：血糖偏低',text:status==='high'?'先复核读数；持续异常或不适，请联系专业人员。':'请确认读数，暂停运动，并按既定低血糖方案处理。',kind:'身体提醒'});list.push({id:'buddy-welcome',title:'小糖橘：明早一起吃早餐吗？',text:'想和你一起试试规律早餐。我们可以分享早餐照片，按自己的节奏打卡。',kind:'搭子消息 · 示例'});return list.filter(x=>!state.archivedMessageIds.includes(x.id));}
 function drawInbox(){const items=inboxItems();const m=items[0];$('#homeInbox').innerHTML=m?`<span class="inbox-icon">${m.id.startsWith('alert')?'!':'✉'}</span><button class="inbox-text" onclick="openInbox()">${esc(m.title)}</button><span class="inbox-count">${items.length}</span><button class="archive-mini" onclick="archiveMessage('${m.id}')">归档</button>`:'<span class="inbox-icon">✓</span><span class="inbox-text">消息都处理好啦</span><button class="archive-mini" onclick="openHistory()">历史</button>';}
 function archiveMessage(id,handled=false){const m=inboxItems().find(x=>x.id===id);if(!m)return;state.archivedMessageIds.push(id);state.messageHistory.unshift({...m,handled,date:new Date().toLocaleString('zh-CN')});save();drawInbox();if($('#overlay').classList.contains('open'))openInbox();toast(handled?'已处理，存入历史消息':'已归档，可在我的中查看');}
 function openInbox(){const ms=inboxItems();modal('待处理消息',ms.length?ms.map(m=>`<div class="history-item"><small>${esc(m.kind)}</small><h3>${esc(m.title)}</h3><p>${esc(m.text)}</p><div class="row" style="margin-top:12px"><button class="textbutton" onclick="${m.id.startsWith('alert')?"closeModal();$('#messages .message .textbutton').click()":"closeModal();go('learn');contactBuddy('小糖橘')"}">${m.id.startsWith('alert')?'查看应对建议':'回复搭子'} →</button><button class="textbutton" onclick="archiveMessage('${m.id}',true)">标记已处理</button><button class="textbutton" onclick="archiveMessage('${m.id}')">归档</button></div></div>`).join(''):'<p style="padding:20px 0">暂时没有待处理消息。</p>');}
@@ -130,10 +130,10 @@ const statusBeforeInbox=setAssessment;setAssessment=function(v){statusBeforeInbo
 const historyCard=document.createElement('article');historyCard.className='card community-card';historyCard.innerHTML='<div class="row"><div><h2>历史消息</h2><p class="small muted">身体提醒与搭子消息</p></div><button class="textbutton" onclick="openHistory()">查看 →</button></div>';$('#profile').prepend(historyCard);
 labels.learn='社群';const communityNav=$('#nav button[data-page="learn"]');communityNav.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0112 0v3M16 5a3 3 0 010 6M18 15a5 5 0 013 6"/></svg>社群';
 let buddyFilter='全部';const buddies=[{name:'小糖橘',icon:'🐻',tag:'早餐搭子',desc:'早餐规律 · 喜欢轻松聊天'},{name:'桃桃不加糖',icon:'🐰',tag:'饮品搭子',desc:'奶茶爱好者 · 想尝试少糖'},{name:'阿栗',icon:'🐱',tag:'散步搭子',desc:'饭后走走 · 分享日常'}];
-function drawCommunity(){const visible=buddyFilter==='全部'?buddies:buddies.filter(b=>b.tag===buddyFilter);$('#learn').innerHTML=`<article class="card community-card"><div class="row"><h2>找到合拍的搭子</h2><span class="pill orange">演示社群</span></div><p class="small muted" style="margin-top:7px">按生活习惯与兴趣相遇，不比较血糖数值。</p><div class="community-tags">${['全部','早餐搭子','饮品搭子','散步搭子'].map(t=>`<button class="${t===buddyFilter?'selected':''}" onclick="buddyFilter='${t}';drawCommunity()">${t}</button>`).join('')}</div>${visible.map(b=>`<div class="buddy-row"><span class="buddy-avatar">${b.icon}</span><div class="buddy-info"><h3>${b.name}</h3><p>${b.desc}</p></div><button onclick="contactBuddy('${b.name}')">${state.buddyRequests.includes(b.name)?'已申请':'打招呼'} →</button></div>`).join('')}<button class="button" style="width:100%;margin-top:16px;background:${state.joinedAction?'#176ab0':'#df453b'}" onclick="joinCommunityAction()">${state.joinedAction?'✓ 已加入：今日无糖饮品小行动':'加入今日小行动'}</button><p class="footnote">人物、匹配和互动均为本地演示，不会发送给真实用户。</p></article><article class="card community-card"><h2>今天你吃了什么？</h2><p class="small muted">分享一顿饭，或一个小小的健康选择。</p><textarea class="community-input" id="communityDraft" maxlength="300" placeholder="比如：今天把奶茶换成小杯，味道依旧喜欢。"></textarea><div class="row"><small class="sugar-foot">请勿发布身份与敏感医疗信息</small><button class="button" onclick="publishCommunity()" style="font-size:12px;padding:8px 12px">发布动态</button></div></article><div class="row" style="margin:20px 2px 13px"><h2>搭子们的日常</h2><span class="pill">本地演示</span></div>${state.socialPosts.map(p=>postMarkup(p)).join('')}${postMarkup({id:'breakfast-demo',name:'小糖橘',icon:'🐻',text:'今天试着认真吃了早餐：鸡蛋、全麦吐司和牛奶。慢慢养成习惯～',demo:true})}`;}
-function postMarkup(p){return `<article class="card community-post"><div class="row"><div class="row" style="gap:8px"><span class="buddy-avatar">${p.icon||'🙂'}</span><div><h3>${esc(p.name)}</h3><small class="sugar-foot">${p.demo?'早餐搭子 · 公开示例':'仅保存在本机'}</small></div></div>${!p.demo?`<button class="textbutton" onclick="removePost(${p.id})">删除</button>`:''}</div><p style="font-size:13px;margin-top:14px;white-space:pre-wrap">${esc(p.text)}</p>${p.demo?'<div class="post-art">🍳 🍞 🥛</div>':''}<div class="post-actions"><button onclick="likeCommunity('${p.id}')">${state.likes.includes(String(p.id))?'♥ 已喜欢':'♡ 喜欢'}</button><button onclick="openComments('${p.id}')">◌ 交流</button><button onclick="sharePost('${p.id}')">↗ 分享</button></div></article>`;}
-function contactBuddy(name){modal('和'+esc(name)+'打个招呼',`<p>先聊一个共同的小习惯吧。</p><textarea class="community-input" id="buddyGreeting" maxlength="160">你好！想一起分享日常饮食，慢慢养成一个小习惯。</textarea><p class="sugar-foot">本地演示，不会发送给真实用户。</p><button class="button" style="width:100%;margin-top:15px" onclick="requestBuddy('${name}')">保存搭子申请</button>`);}
-function requestBuddy(name){if(!$('#buddyGreeting').value.trim())return toast('写一句打招呼的话吧');if(!state.buddyRequests.includes(name))state.buddyRequests.push(name);save();drawCommunity();closeModal();toast('搭子申请已保存在本机');}
+function drawCommunity(){const visible=buddyFilter==='全部'?buddies:buddies.filter(b=>b.tag===buddyFilter);$('#learn').innerHTML=`<article class="card community-card"><div class="row"><h2>找到合拍的搭子</h2><span class="pill orange">社群</span></div><p class="small muted" style="margin-top:7px">按生活习惯与兴趣相遇，不比较血糖数值。</p><div class="community-tags">${['全部','早餐搭子','饮品搭子','散步搭子'].map(t=>`<button class="${t===buddyFilter?'selected':''}" onclick="buddyFilter='${t}';drawCommunity()">${t}</button>`).join('')}</div>${visible.map(b=>`<div class="buddy-row"><span class="buddy-avatar">${b.icon}</span><div class="buddy-info"><h3>${b.name}</h3><p>${b.desc}</p></div><button onclick="contactBuddy('${b.name}')">${state.buddyRequests.includes(b.name)?'已申请':'打招呼'} →</button></div>`).join('')}<button class="button" style="width:100%;margin-top:16px;background:${state.joinedAction?'#176ab0':'#df453b'}" onclick="joinCommunityAction()">${state.joinedAction?'✓ 已加入：今日无糖饮品小行动':'加入今日小行动'}</button><p class="footnote">人物、匹配和互动均为仅自己可见，不会发送给真实用户。</p></article><article class="card community-card"><h2>今天你吃了什么？</h2><p class="small muted">分享一顿饭，或一个小小的健康选择。</p><textarea class="community-input" id="communityDraft" maxlength="300" placeholder="比如：今天把奶茶换成小杯，味道依旧喜欢。"></textarea><div class="row"><small class="sugar-foot">请勿发布身份与敏感医疗信息</small><button class="button" onclick="publishCommunity()" style="font-size:12px;padding:8px 12px">发布动态</button></div></article><div class="row" style="margin:20px 2px 13px"><h2>搭子们的日常</h2><span class="pill">仅自己可见</span></div>${state.socialPosts.map(p=>postMarkup(p)).join('')}${postMarkup({id:'breakfast-demo',name:'小糖橘',icon:'🐻',text:'今天试着认真吃了早餐：鸡蛋、全麦吐司和牛奶。慢慢养成习惯～',demo:true})}`;}
+function postMarkup(p){return `<article class="card community-post"><div class="row"><div class="row" style="gap:8px"><span class="buddy-avatar">${p.icon||'🙂'}</span><div><h3>${esc(p.name)}</h3><small class="sugar-foot">${p.demo?'早餐搭子 · 公开':'仅保存在本机'}</small></div></div>${!p.demo?`<button class="textbutton" onclick="removePost(${p.id})">删除</button>`:''}</div><p style="font-size:13px;margin-top:14px;white-space:pre-wrap">${esc(p.text)}</p>${p.demo?'<div class="post-art">🍳 🍞 🥛</div>':''}<div class="post-actions"><button onclick="likeCommunity('${p.id}')">${state.likes.includes(String(p.id))?'♥ 已喜欢':'♡ 喜欢'}</button><button onclick="openComments('${p.id}')">◌ 交流</button><button onclick="sharePost('${p.id}')">↗ 分享</button></div></article>`;}
+function contactBuddy(name){modal('和'+esc(name)+'打个招呼',`<p>先聊一个共同的小习惯吧。</p><textarea class="community-input" id="buddyGreeting" maxlength="160">你好！想一起分享日常饮食，慢慢养成一个小习惯。</textarea><p class="sugar-foot">仅自己可见，不会发送给真实用户。</p><button class="button" style="width:100%;margin-top:15px" onclick="requestBuddy('${name}')">保存搭子申请</button>`);}
+function requestBuddy(name){if(!$('#buddyGreeting').value.trim())return toast('写一句打招呼的话吧');if(!state.buddyRequests.includes(name))state.buddyRequests.push(name);save();drawCommunity();closeModal();toast('搭子申请已保存');}
 function joinCommunityAction(){state.joinedAction=!state.joinedAction;save();drawCommunity();toast(state.joinedAction?'已加入，按自己的节奏参与':'已退出今日小行动');}
 function publishCommunity(){const text=$('#communityDraft').value.trim();if(!text)return toast('先写下一点想分享的日常');state.socialPosts.unshift({id:Date.now(),name:'我',text});save();drawCommunity();toast('动态已保存到本地社群');}
 function removePost(id){state.socialPosts=state.socialPosts.filter(p=>p.id!==id);save();drawCommunity();}
@@ -145,9 +145,9 @@ async function copyCommunityText(id){const text=state.socialPosts.find(x=>String
 const sugarPanel=document.createElement('article');sugarPanel.className='sugar-gallery';sugarPanel.id='sugarGallery';$('#diary').prepend(sugarPanel);let sugarChoice=0;
 function drawSugarGallery(){if(!$("#sugarGallery")){const panel=document.createElement("article");panel.className="sugar-gallery";panel.id="sugarGallery";$("#diary").prepend(panel);}const m=state.meals.find(x=>Number(x.sugar)>0);const samples=[{name:'饮品示例',amount:'250 mL',sugar:12,kind:'drink'},{name:'点心示例',amount:'1份',sugar:8,kind:'cake'},...(m?[{name:m.name,amount:'这条记录',sugar:Number(m.sugar),kind:'meal'}]:[])];if(sugarChoice>=samples.length)sugarChoice=0;const s=samples[sugarChoice],cubes=s.sugar/4;const food=s.kind==='drink'?'<path d="M35 24h68l-7 70H42Z" fill="#ffc734" stroke="#176ab0" stroke-width="3"/><path d="M32 24h75" stroke="#df453b" stroke-width="8" stroke-linecap="round"/><path d="M71 50l15-45" stroke="#df453b" stroke-width="5"/><circle cx="62" cy="67" r="11" fill="#fff6d8"/><path d="M51 66h22" stroke="#df453b" stroke-width="3"/>':s.kind==='cake'?'<path d="M25 47l43-28 43 28v46H25Z" fill="#ffd54e" stroke="#b87932" stroke-width="2"/><path d="M25 48q12 17 22 0 12 17 23 0 12 17 41 0" fill="#fff8e6" stroke="#fff8e6" stroke-width="9"/><path d="M26 74h83" stroke="#df453b" stroke-width="9"/><circle cx="68" cy="24" r="10" fill="#df453b"/>':'<ellipse cx="70" cy="64" rx="54" ry="34" fill="#c5e8f2" stroke="#176ab0" stroke-width="3"/><ellipse cx="70" cy="62" rx="42" ry="24" fill="#fffbed"/><path d="M37 65q7-30 31-11 16-23 35 8" stroke="#ffcc37" stroke-width="14" fill="none"/><circle cx="76" cy="65" r="10" fill="#df453b"/>';
 $('#sugarGallery').innerHTML=`<div class="row"><h2>把糖分看明白</h2><span class="pill orange">量感小画册</span></div><div class="sugar-tabs">${samples.map((x,i)=>`<button class="${i===sugarChoice?'active':''}" onclick="sugarChoice=${i};drawSugarGallery()">${i===2?'我的记录':x.name}</button>`).join('')}</div><div class="sugar-scene"><div><svg viewBox="0 0 140 110" aria-hidden="true">${food}</svg><div class="sugar-caption">${esc(s.name)}<br>${esc(s.amount)}</div></div><div class="sugar-equals">≈</div><div><div class="sugar-cubes">${Array.from({length:Math.min(16,Math.ceil(cubes))},(_,i)=>`<i style="opacity:${Math.min(1,cubes-i)}"></i>`).join('')}</div><div class="sugar-caption"><strong>${s.sugar}g</strong> 糖<br>约 ${Number(cubes.toFixed(2))} 块方糖</div></div></div><p class="sugar-foot">每块方糖按4克换算，仅用于理解糖的重量。${sugarChoice===2?'来自你填写的估算。':'配方示例，不代表某品牌实测。'}${cubes>16?'图中最多展示16块。':''}</p><button class="textbutton" style="margin-top:8px" onclick="info('食物含糖量与血糖','食物中的糖分不能直接换算为血糖读数。总碳水、份量、活动与个体差异都会影响血糖反应。这里的方糖只表示重量，不表示食物本身完全等同于方糖。')">含糖量 ≠ 血糖读数，为什么？ →</button>`;}
-const aiButton=document.createElement('button');aiButton.className='ai-fab';aiButton.textContent='✧ 问问小糖';aiButton.onclick=()=>openSugarAI();$('.layout').append(aiButton);const aiPanel=document.createElement('section');aiPanel.className='ai-panel';aiPanel.id='sugarAI';aiPanel.setAttribute('aria-label','小糖助手');aiPanel.innerHTML=`<header class="ai-head"><div><h3>✧ 小糖 · AI 健康助手</h3><small>按需出现 · 离线交互演示</small></div><button onclick="closeSugarAI()" aria-label="关闭小糖助手">×</button></header><div class="ai-body" id="aiBody"><p class="ai-notice">当前按预设规则回复，未接入真实AI。不提供诊断或治疗建议。</p><div class="ai-bubble">你好，我是小糖！可以一起看饮食记录、了解糖分，也可以帮你找到 App 功能。</div><div class="ai-prompts">${['看看我的饮食记录','怎么找饮食搭子？','糖分和血糖一样吗？','消息归档在哪里？'].map(q=>`<button onclick="askSugarAI('${q}')">${q}</button>`).join('')}</div></div><form class="ai-compose" onsubmit="event.preventDefault();askSugarAI()"><input id="aiInput" aria-label="向小糖提问" placeholder="问问小糖…" maxlength="300"><button type="submit">发送</button></form>`;$('.layout').append(aiPanel);
+const aiButton=document.createElement('button');aiButton.className='ai-fab';aiButton.textContent='✧ 问问小糖';aiButton.onclick=()=>openSugarAI();$('.layout').append(aiButton);const aiPanel=document.createElement('section');aiPanel.className='ai-panel';aiPanel.id='sugarAI';aiPanel.setAttribute('aria-label','小糖助手');aiPanel.innerHTML=`<header class="ai-head"><div><h3>✧ 小糖 · AI 健康助手</h3><small>按需出现 · 随时聊聊</small></div><button onclick="closeSugarAI()" aria-label="关闭小糖助手">×</button></header><div class="ai-body" id="aiBody"><p class="ai-notice">可以询问饮食记录和使用方式。健康问题请咨询医生。</p><div class="ai-bubble">你好，我是小糖！可以一起看饮食记录、了解糖分，也可以帮你找到 App 功能。</div><div class="ai-prompts">${['看看我的饮食记录','怎么找饮食搭子？','糖分和血糖一样吗？','消息归档在哪里？'].map(q=>`<button onclick="askSugarAI('${q}')">${q}</button>`).join('')}</div></div><form class="ai-compose" onsubmit="event.preventDefault();askSugarAI()"><input id="aiInput" aria-label="向小糖提问" placeholder="问问小糖…" maxlength="300"><button type="submit">发送</button></form>`;$('.layout').append(aiPanel);
 function openSugarAI(){aiPanel.classList.add('open');$('#aiInput').focus();}function closeSugarAI(){aiPanel.classList.remove('open');aiButton.focus();}
-function askSugarAI(question){const q=(question||$('#aiInput').value).trim();if(!q)return;$('#aiInput').value='';let answer;if(/偏高|偏低|用药|胰岛素|诊断|不舒服|低血糖/.test(q))answer='这里不能判断你的健康情况或提供用药方案。请查看首页提醒，按医生指导处理；出现严重不适请及时就医。';else if(/搭子|社群/.test(q))answer='在底部打开「社群」，按早餐、饮品或散步兴趣找搭子，点击「打招呼」即可保存申请。当前人物和互动都是本地演示。';else if(/归档|消息/.test(q))answer='点击首页顶部消息条可查看详情、标记已处理或归档。历史消息在「我的 → 历史消息」中。';else if(/记录|吃了|饮食/.test(q)){const total=state.meals.reduce((n,m)=>n+Number(m.sugar),0);answer=`你的本地集锦有 ${state.meals.length} 条饮食记录，糖分估算合计 ${Number(total.toFixed(1))} 克。记录可能包含示例，也可能不完整，不能当作全天摄入或健康结论。可以去「饮食集锦」核对份量与标签。`;}else if(/糖|血糖/.test(q))answer='食物含糖量是成分信息，血糖是身体测量信息，两者不能直接换算。在「饮食集锦 → 把糖分看明白」中，可以用方糖图示理解重量。';else if(/隐私|数据/.test(q))answer='当前记录、搭子申请和动态只保存在这个浏览器。分享前请核对内容，避免带上身份或医疗信息。';else answer='我目前是离线演示助手，能解释饮食记录、糖分图示、社群和消息功能。你想先了解哪一项？';for(const [text,isUser] of [[q,true],[answer,false]]){const bubble=document.createElement('div');bubble.className='ai-bubble'+(isUser?' user':'');bubble.textContent=text;$('#aiBody').append(bubble);}$('#aiBody').scrollTop=$('#aiBody').scrollHeight;}
+function askSugarAI(question){const q=(question||$('#aiInput').value).trim();if(!q)return;$('#aiInput').value='';let answer;if(/偏高|偏低|用药|胰岛素|诊断|不舒服|低血糖/.test(q))answer='这里不能判断你的健康情况或提供用药方案。请查看首页提醒，按医生指导处理；出现严重不适请及时就医。';else if(/搭子|社群/.test(q))answer='在底部打开「社群」，按早餐、饮品或散步兴趣找搭子，点击「打招呼」即可保存申请。当前人物和互动都是仅自己可见。';else if(/归档|消息/.test(q))answer='点击首页顶部消息条可查看详情、标记已处理或归档。历史消息在「我的 → 历史消息」中。';else if(/记录|吃了|饮食/.test(q)){const total=state.meals.reduce((n,m)=>n+Number(m.sugar),0);answer=`你的本地集锦有 ${state.meals.length} 条饮食记录，糖分估算合计 ${Number(total.toFixed(1))} 克。记录可能包含示例，也可能不完整，不能当作全天摄入或健康结论。可以去「饮食集锦」核对份量与标签。`;}else if(/糖|血糖/.test(q))answer='食物含糖量是成分信息，血糖是身体测量信息，两者不能直接换算。在「饮食集锦 → 把糖分看明白」中，可以用方糖图示理解重量。';else if(/隐私|数据/.test(q))answer='当前记录、搭子申请和动态只保存在这个浏览器。分享前请核对内容，避免带上身份或医疗信息。';else answer='我可以帮助你，能解释饮食记录、糖分图示、社群和消息功能。你想先了解哪一项？';for(const [text,isUser] of [[q,true],[answer,false]]){const bubble=document.createElement('div');bubble.className='ai-bubble'+(isUser?' user':'');bubble.textContent=text;$('#aiBody').append(bubble);}$('#aiBody').scrollTop=$('#aiBody').scrollHeight;}
 const renderBeforeSocial=render;render=function(){renderBeforeSocial();drawInbox();drawSugarGallery();};
 const goBeforeSocial=go;go=function(k){goBeforeSocial(k);if(k==='diary')drawSugarGallery();if(k==='learn'){drawCommunity();$('#heading').textContent='社群';$('#eyebrow').textContent='一起，把日子过好';}$('.main').scrollTop=0;};
 drawInbox();drawCommunity();drawSugarGallery();
@@ -333,7 +333,7 @@ function modernShowFortune(){
 function modernRevealFortune(){
  clearTimeout(lotteryTimer);const el=document.querySelector("#fortuneContent");if(!el)return;
  const q=fortuneQuotes[fortuneIndex%fortuneQuotes.length],fact=getTodayFact();
- el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><div class="storybook-illustration storybook-scene" role="img" aria-label="复古手绘风格的阳光散步插画：蓝帽子的年轻人在草地上活动"></div><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
+ el.innerHTML=`<div class="storybook-result"><div class="lottery-kicker">A LITTLE JOY FOR TODAY</div><div class="storybook-ribbon">今日宜 · 运动</div><img class="storybook-illustration" src="https://raw.githubusercontent.com/lxy0329/GlucoMate/main/assets/fortune-walk.svg" alt="阳光下戴蓝帽子的卡通小朋友在绿色草地上散步" /><blockquote class="storybook-quote">“${esc(q.quote)}”<small>— ${esc(q.author)}</small></blockquote>${renderFactMarkup(fact,false)}<p class="storybook-disclaimer">趣味签仅用于生活灵感。活动建议须结合个人身体情况；血糖异常时请优先遵循安全指引。</p><button class="button" style="width:100%" onclick="dismissFortune()">收下今日签 · 开始一天</button></div>`;
 }
 function modernKnowledge(){
  const f=healthFacts[factIndex%healthFacts.length];
@@ -472,7 +472,421 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
   return `<div class="science-illustration atlas-illustration" style="--atlas-x:${x};--atlas-y:${y}" role="img" aria-label="${labels[sceneIndex]||"血糖科普手绘插画"}"></div>`;
 }</script>
 <!-- END GLUCOMATE ILLUSTRATED HEALTH FACTS -->
+
+
+<style>
+body[data-view="learn"] .mobilebrand{margin:3px 0 8px!important;font-size:18px}
+body[data-view="learn"] .mobilebrand:before{width:27px;height:27px;font-size:21px}
+body[data-view="learn"] .top{margin:0 0 10px}
+body[data-view="learn"] #eyebrow{display:none}
+body[data-view="learn"] #heading{font-size:20px}
+.social-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:11px;padding:4px;background:#f1ead7;border-radius:12px}
+.social-tabs button{min-height:38px;border-radius:9px;font-weight:700;font-size:13px;color:#576b79}
+.social-tabs button[aria-pressed="true"]{background:#ffda27;color:#173d60}
+.buddy-discovery{padding:0;margin-bottom:12px}.buddy-discovery summary{min-height:44px;display:flex;align-items:center;justify-content:space-between;padding:8px 13px;cursor:pointer;font-weight:700;font-size:13px}
+.buddy-discovery summary::after{content:'＋';color:#176ab0}.buddy-discovery[open] summary::after{content:'−'}
+.buddy-discovery .community-card{margin:0;border:0;box-shadow:none;padding:0 13px 13px}
+.social-composer{padding:13px;margin-bottom:12px}.social-composer .community-input{min-height:63px;margin:6px 0}
+.friend-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.friend-strip span{background:#fff0c0;border-radius:15px;padding:5px 8px;font-size:11px}
+</style>
+<script>
+let socialView='forum';
+let discoveryOpen=false;
+let forumDraft='';
+const renderLegacyCommunity=drawCommunity;
+const publicExamples=[
+  {id:'forum-taotao',name:'桃桃不加糖',icon:'🐰',text:'今天买奶茶换成了小杯，也选了少糖。原来我喜欢的是茶味！',demo:true,scope:'社群贴吧'},
+  {id:'forum-li',name:'阿栗',icon:'🐱',text:'吃完午饭出门走了一圈，发现公司附近有条树荫小路。',demo:true,scope:'社群贴吧'},
+  {id:'forum-zhou',name:'小周',icon:'🐼',text:'第一次带饭上班。你们有什么简单好带的午餐搭配？',demo:true,scope:'社群贴吧'}
+];
+const friendExamples=[
+  {id:'breakfast-demo',name:'小糖橘',icon:'🐻',text:'今天试着认真吃了早餐：鸡蛋、全麦吐司和牛奶。慢慢养成习惯～',demo:true,scope:'好友圈',art:true},
+  {id:'friend-taotao',name:'桃桃不加糖',icon:'🐰',text:'试了冰乌龙加柠檬，记录一下，下次还想喝。',demo:true,scope:'好友圈'},
+  {id:'friend-li',name:'阿栗',icon:'🐱',text:'今天和搭子互相提醒，下楼走走就算打卡。',demo:true,scope:'好友圈'}
+];
+function currentSocialFriends(){
+  return Array.isArray(state.socialFriends)?state.socialFriends:['小糖橘'];
+}
+function acceptDemoBuddy(name){
+  if(!state.buddyRequests.includes(name))return;
+  state.socialFriends=[...new Set([...currentSocialFriends(),name])];
+  save();
+  drawCommunity();
+  toast('已加入好友圈');
+}
+const legacyPostMarkup=postMarkup;
+postMarkup=function(post){
+  const markup=legacyPostMarkup(post);
+  if(!post.scope)return markup;
+  return markup.replace('早餐搭子 · 公开',post.scope)
+    .replace('<div class="post-art">🍳 🍞 🥛</div>',post.art?'<div class="post-art">🍳 🍞 🥛</div>':'');
+};
+const shareLegacyCommunityPost=sharePost;
+sharePost=function(id){
+  const example=[...publicExamples,...friendExamples].find(post=>post.id===id);
+  if(!example)return shareLegacyCommunityPost(id);
+  modal('分享预览','<p>'+esc(example.text)+'</p><button class="button" id="copyDemoPost" style="margin-top:14px">复制文字</button>');
+  $('#copyDemoPost').onclick=async()=>{
+    try{await navigator.clipboard.writeText(example.text);toast('已复制分享文字');}
+    catch{toast('可选中预览中的文字进行复制');}
+  };
+};
+drawCommunity=function(){
+  renderLegacyCommunity();
+  const section=$('#learn');
+  const [match,composer]=section.querySelectorAll('.community-card');
+  const tabs=document.createElement('div');
+  tabs.className='social-tabs';
+  tabs.setAttribute('role','group');
+  tabs.setAttribute('aria-label','社群版块');
+  for(const [key,label] of [['forum','社群贴吧'],['friends','我的好友圈']]){
+    const button=document.createElement('button');
+    button.textContent=label;
+    button.setAttribute('aria-pressed',String(socialView===key));
+    button.onclick=()=>{
+      socialView=key;
+      drawCommunity();
+      section.querySelector('.social-tabs button[aria-pressed="true"]').focus();
+      $('.main').scrollTop=0;
+    };
+    tabs.append(button);
+  }
+  const discovery=document.createElement('details');
+  discovery.className='card buddy-discovery';
+  discovery.open=discoveryOpen;
+  discovery.innerHTML='<summary>找搭子</summary>';
+  discovery.querySelector('summary').onclick=()=>{discoveryOpen=!discovery.open;};
+  discovery.append(match);
+  const matches=buddies.filter(b=>buddyFilter==='全部'||b.tag===buddyFilter);
+  match.querySelectorAll('.buddy-row button').forEach((button,index)=>{
+    const name=matches[index].name;
+    if(currentSocialFriends().includes(name)){
+      button.textContent='已是好友';
+      button.disabled=true;
+    }else if(state.buddyRequests.includes(name)){
+      button.textContent='通过申请';
+      button.removeAttribute('onclick');
+      button.onclick=()=>acceptDemoBuddy(name);
+    }
+  });
+  section.replaceChildren(tabs,discovery);
+  if(socialView==='forum'){
+    composer.classList.add('social-composer');
+    composer.querySelector('h2').textContent='分享动态';
+    const draft=composer.querySelector('textarea');
+    draft.value=forumDraft;
+    draft.oninput=()=>{forumDraft=draft.value;};
+    section.append(composer);
+    section.insertAdjacentHTML('beforeend',state.socialPosts.map(postMarkup).join('')+publicExamples.map(postMarkup).join(''));
+  }else{
+    const friends=currentSocialFriends();
+    section.insertAdjacentHTML('beforeend','<article class="card community-card"><div class="row"><h2>搭子们的日常</h2><span class="pill">'+friends.length+' 位搭子</span></div><div class="friend-strip">'+buddies.filter(b=>friends.includes(b.name)).map(b=>'<span>'+b.icon+' '+b.name+'</span>').join('')+'</div></article>'+friendExamples.filter(post=>friends.includes(post.name)).map(postMarkup).join(''));
+  }
+};
+const publishBeforeSocialTabs=publishCommunity;
+publishCommunity=function(){
+  if($('#communityDraft')?.value.trim())forumDraft='';
+  publishBeforeSocialTabs();
+};
+drawCommunity();
+</script>
+<style>
+.profile-sign-entry{background:#ffece1;border-top:3px solid #df453b}
+.profile-sign-entry .button{background:#df453b;font-size:12px;min-height:36px;padding:6px 10px}
+.saved-sign-deck{display:grid;gap:12px;margin-top:14px}
+.saved-sign-card{padding:12px 14px;background:#fff9de;border:1px solid #edcf75;border-top:5px solid #df453b;border-radius:12px;box-shadow:2px 3px 0 #eadbb3}
+.saved-sign-card:nth-child(even){background:#ecf7fc;border-color:#c3dee9;border-top-color:#176ab0}
+.saved-sign-card .sign-label{color:#9c382c;font-size:10px;font-weight:700}
+.saved-sign-card blockquote{margin:7px 0 0;font-size:15px;font-weight:700}
+.saved-sign-card p{margin-top:4px}
+.saved-sign-card button{margin-top:6px;padding:6px 0}
+.community-photo-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 9px}
+.community-photo-tools button{border:1px solid #d9e4ed;background:#edf5fb;border-radius:9px;padding:6px 9px;color:#176ab0;font-size:11px}
+.community-photo-preview,.community-post-photo{display:block;width:100%;max-height:240px;object-fit:contain;border-radius:12px;background:#fff8e5}
+.community-post-photo{margin-top:12px}
+.community-photo-preview{width:96px;height:65px}
+</style>
+<script>
+const profileSignEntry=document.createElement('article');
+profileSignEntry.className='card community-card profile-sign-entry';
+profileSignEntry.innerHTML='<div class="row"><h2>今日签</h2><button class="button">查看今日签 ↗</button></div>';
+profileSignEntry.querySelector('button').onclick=()=>showFortune();
+$('#profile').prepend(profileSignEntry);
+$('#today .learn-card')?.remove();
+
+showSavedSigns=function(){
+  const items=savedSigns();
+  modal('收藏的今日签',items.length?'<div class="saved-sign-deck">'+items.map(item=>
+    '<article class="saved-sign-card"><span class="sign-label">✦ 今日宜 · 运动</span><blockquote>'+esc(item.quote)+'</blockquote><p>'+esc(item.author)+'</p><p>'+esc(item.tip)+'</p><button class="textbutton" data-remove-sign>取消收藏</button></article>'
+  ).join('')+'</div>':'<p>收藏后的今日签会出现在这里。</p>');
+  $('#modal').querySelectorAll('[data-remove-sign]').forEach((button,index)=>{
+    button.onclick=()=>{setSignFavorite(items[index],false);showSavedSigns();};
+  });
+};
+favoriteEntry.querySelector('button').onclick=showSavedSigns;
+
+let postAttachment='';
+let readingPostAttachment=false;
+publicExamples[0].photo='data:image/jpeg;base64,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';
+publicExamples[0].photoAlt='饮食集锦中的方糖换算卡片';
+publicExamples[0].text='今天把奶茶换成小杯。顺手截了糖分小画册，原来还可以用方糖来理解重量。';
+const postMarkupBeforePhotos=postMarkup;
+postMarkup=function(post){
+  const markup=postMarkupBeforePhotos(post);
+  if(typeof post.photo!=='string'||!post.photo.startsWith('data:image/jpeg;base64,'))return markup;
+  return markup.replace('<div class="post-actions">',()=>'<img class="community-post-photo" src="'+esc(post.photo)+'" alt="'+esc(post.photoAlt||'动态附图')+'"><div class="post-actions">');
+};
+async function attachCommunityPhoto(file){
+  if(!file||readingPostAttachment)return;
+  if(!file.type.startsWith('image/')||file.size>12*1024*1024)return toast('请选择 12 MB 以内的图片');
+  readingPostAttachment=true;
+  const url=URL.createObjectURL(file);
+  try{
+    const image=new Image();
+    image.src=url;
+    await image.decode();
+    const scale=Math.min(1,900/Math.max(image.naturalWidth,image.naturalHeight));
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));
+    canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
+    const context=canvas.getContext('2d');
+    context.fillStyle='#fff';
+    context.fillRect(0,0,canvas.width,canvas.height);
+    context.drawImage(image,0,0,canvas.width,canvas.height);
+    postAttachment=canvas.toDataURL('image/jpeg',.78);
+    if(socialView==='forum')drawCommunity();
+  }catch{toast('无法打开这张图片，请换一张');}
+  finally{URL.revokeObjectURL(url);readingPostAttachment=false;}
+}
+const drawBeforePhotoComposer=drawCommunity;
+drawCommunity=function(){
+  drawBeforePhotoComposer();
+  if(socialView==='friends')return;
+  $('#learn .buddy-discovery')?.remove();
+  const draft=$('#communityDraft');
+  const tools=document.createElement('div');
+  tools.className='community-photo-tools';
+  tools.innerHTML='<button type="button">＋ 照片 / 截图</button><input type="file" accept="image/*" hidden aria-label="选择照片或截图">';
+  const input=tools.querySelector('input');
+  tools.querySelector('button').onclick=()=>input.click();
+  input.onchange=()=>attachCommunityPhoto(input.files[0]);
+  draft.addEventListener('paste',event=>{
+    const image=[...event.clipboardData.files].find(file=>file.type.startsWith('image/'));
+    if(image){event.preventDefault();attachCommunityPhoto(image);}
+  });
+  if(postAttachment){
+    const preview=document.createElement('img');
+    preview.className='community-photo-preview';
+    preview.src=postAttachment;
+    preview.alt='待发布的图片';
+    const remove=document.createElement('button');
+    remove.textContent='移除图片';
+    remove.onclick=()=>{postAttachment='';drawCommunity();};
+    tools.append(preview,remove);
+  }
+  draft.after(tools);
+};
+publishCommunity=function(){
+  if(readingPostAttachment)return toast('图片正在载入，请稍等');
+  const text=$('#communityDraft').value.trim();
+  if(!text&&!postAttachment)return toast('写一句话，或添加一张照片');
+  const post={id:Date.now(),name:'我',text,...(postAttachment?{photo:postAttachment}:{})};
+  state.socialPosts.unshift(post);
+  try{localStorage.setItem('glucomate-v2',JSON.stringify(state));}
+  catch{state.socialPosts.shift();return toast('本地空间不足，试试移除图片后发布');}
+  forumDraft='';
+  postAttachment='';
+  render();
+  drawCommunity();
+  toast('动态已保存到本地社群');
+};
+drawCommunity();
+</script>
+<style>
+body[data-view="learn"] .top{position:relative;padding-right:45px;min-height:38px;align-items:center}
+.social-avatar{display:none}
+body[data-view="learn"] .social-avatar{display:grid;place-items:center;position:absolute;right:0;bottom:2px;width:38px;height:38px;border-radius:50%;background:#ffda27;color:#173d60;font-size:13px;font-weight:800}
+.community-post[data-kind="help"]{background:#fff2dc;border-color:#edbb65}
+.community-post[data-kind="science"]{background:#eaf6f3;border-color:#9bcfc2}
+.social-kind{display:inline-block;margin:9px 0 0;padding:2px 7px;border-radius:7px;font-size:10px;color:#80480b;background:#ffdfaa}
+[data-kind="science"] .social-kind{background:#cdebe3;color:#1c6457}
+.social-post-type{border:1px solid #e6dfcd;border-radius:8px;padding:4px;font-size:11px;color:#173d60;background:#fffbed}
+.community-post .post-actions{display:flex;flex-wrap:wrap;gap:4px}
+.community-post .post-actions button{padding:5px 1px;min-height:29px;font-size:11px}
+.community-post .post-actions [aria-pressed="true"]{color:#ad3328;font-weight:700}
+.social-activity-tabs{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}
+.social-activity-tabs button{border-radius:10px;padding:6px 8px;background:#edf4fb;font-size:11px}
+.social-activity-tabs button[aria-pressed="true"]{background:#ffda27;font-weight:700}
+.social-log-row{border-bottom:1px solid #e8e1d3;padding:8px 0;overflow-wrap:anywhere}
+.social-log-row:last-child{border-bottom:0}
+.social-log-row button{min-height:32px;padding:0;color:#176ab0;font-size:12px;text-align:left}
+.repost-label{font-size:11px;color:#176ab0;margin-bottom:6px;font-weight:700}
+</style>
+<script>
+const socialAvatar=document.createElement('button');
+socialAvatar.className='social-avatar';
+socialAvatar.textContent='我';
+socialAvatar.setAttribute('aria-label','我的社群主页');
+socialAvatar.onclick=()=>openSocialActivity();
+$('.top').append(socialAvatar);
+
+publicExamples.push(
+  {id:'help-portions',name:'木木',icon:'🐼',text:'两张饮料标签一个写每份，一个写每 100 毫升。你们平时怎么记自己喝了多少？',demo:true,scope:'社群贴吧',kind:'help'},
+  {id:'science-labels',name:'林老师',icon:'🌿',text:'读营养标签时，可以先找标示单位，再核对实际喝了多少。比如标签按每 100 毫升列出，喝了 250 毫升，记录时就按 2.5 份标示量换算。',demo:true,scope:'社群贴吧',kind:'science',certified:true}
+);
+function allSocialPosts(){
+  return [...state.socialPosts,...publicExamples,...friendExamples];
+}
+function findSocialPost(id){
+  return allSocialPosts().find(post=>String(post.id)===String(id));
+}
+function socialMarks(key){
+  return Array.isArray(state[key])?state[key]:[];
+}
+let selectedPostKind='daily';
+let socialActivityFilter=null;
+const activityLabels={likes:'喜欢',reposts:'转发',socialBookmarks:'收藏',posts:'发过的帖子',comments:'发过的评论'};
+const previousTypedPostMarkup=postMarkup;
+postMarkup=function(post){
+  const id=String(post.id);
+  let markup=previousTypedPostMarkup(post);
+  if(post.kind==='help'||post.kind==='science'){
+    const badge=post.kind==='help'?'求助帖':post.certified?'科普帖 · 专业认证（演示）':'科普帖';
+    markup=markup.replace('class="card community-post"','class="card community-post" data-kind="'+post.kind+'"')
+      .replace('<p style="font-size:13px;margin-top:14px;', '<span class="social-kind">'+badge+'</span><p style="font-size:13px;margin-top:8px;');
+  }
+  const reposted=socialMarks('reposts').includes(id);
+  const bookmarked=socialMarks('socialBookmarks').includes(id);
+  return markup.replace('<div class="post-actions">','<div class="post-actions">')
+    .replace('<button onclick="sharePost(\''+id+'\')">↗ 分享</button>',
+      (post.name!=='我'?'<button aria-pressed="'+reposted+'" onclick="toggleSocialMark(\'reposts\',\''+id+'\')">⇄ '+(reposted?'已转发':'转发')+'</button>':'')+
+      '<button aria-pressed="'+bookmarked+'" onclick="toggleSocialMark(\'socialBookmarks\',\''+id+'\')">'+(bookmarked?'★ 已收藏':'☆ 收藏')+'</button>'+
+      '<button onclick="sharePost(\''+id+'\')">↗ 分享</button>');
+};
+function toggleSocialMark(key,id){
+  if(!findSocialPost(id))return;
+  const marks=socialMarks(key);
+  const remove=marks.includes(id);
+  state[key]=remove?marks.filter(value=>value!==id):[id,...marks];
+  save();
+  drawCommunity();
+  if(socialActivityFilter&&$('#overlay').classList.contains('open'))openSocialActivity(socialActivityFilter);
+  toast(key==='reposts'?(remove?'已取消转发':'已转发到我的日常'):(remove?'已取消收藏':'已收藏'));
+}
+const drawBeforeSocialActivity=drawCommunity;
+drawCommunity=function(){
+  drawBeforeSocialActivity();
+  const section=$('#learn');
+  if(socialView==='friends'){
+    const reposts=socialMarks('reposts').map(findSocialPost).filter(Boolean);
+    const daily=document.createElement('div');
+    daily.innerHTML='<article class="card community-card"><h2>我的日常</h2>'+(reposts.length?'':'<p class="small muted">在贴吧转发的帖子会显示在这里。</p>')+'</article>'+
+      reposts.map(post=>postMarkup(post).replace('<article class="card community-post"','<article class="card community-post"').replace(/(<article[^>]*>)/,'$1<p class="repost-label">⇄ 我转发了这条动态</p>')).join('');
+    section.querySelector('.buddy-discovery').after(daily);
+    return;
+  }
+  const select=document.createElement('select');
+  select.className='social-post-type';
+  select.id='communityPostKind';
+  select.setAttribute('aria-label','帖子类型');
+  select.innerHTML='<option value="daily">日常动态</option><option value="help">求助帖</option>'+(state.socialExpertDemo?'<option value="science">科普帖</option>':'');
+  select.value=selectedPostKind==='science'&&!state.socialExpertDemo?'daily':selectedPostKind;
+  select.onchange=()=>{selectedPostKind=select.value;};
+  const heading=section.querySelector('.social-composer h2');
+  const typeRow=document.createElement('div');
+  typeRow.className='row';
+  heading.before(typeRow);
+  typeRow.append(heading,select);
+};
+const publishBeforePostType=publishCommunity;
+publishCommunity=function(){
+  const previous=state.socialPosts[0];
+  const kind=$('#communityPostKind').value;
+  publishBeforePostType();
+  const post=state.socialPosts[0];
+  if(post===previous||!post)return;
+  if(kind==='help'||(kind==='science'&&state.socialExpertDemo)){
+    post.kind=kind;
+    post.certified=kind==='science';
+    save();
+    drawCommunity();
+  }
+};
+function openSocialActivity(filter='likes'){
+  socialActivityFilter=filter;
+  const comments=filter==='comments'?Object.entries(state.comments||{}).flatMap(([id,list])=>list.map(text=>({id,text}))):[];
+  const posts=filter==='posts'?state.socialPosts:filter==='comments'?[]:socialMarks(filter).map(findSocialPost).filter(Boolean);
+  const items=filter==='comments'?comments.map(({id,text})=>'<div class="social-log-row"><p>'+esc(text)+'</p>'+(findSocialPost(id)?'<button data-activity-post="'+esc(id)+'">查看原帖 →</button>':'')+'</div>'):
+    posts.map(post=>'<div class="social-log-row"><p>'+esc(post.name)+'</p><button data-activity-post="'+esc(post.id)+'">'+esc(post.text||'图片动态')+'</button></div>');
+  modal('我的社群主页','<p>互动记录</p><div class="social-activity-tabs">'+Object.entries(activityLabels).map(([key,label])=>'<button data-activity-tab="'+key+'" aria-pressed="'+(filter===key)+'">'+label+'</button>').join('')+'</div>'+
+    (items.join('')||'<p class="community-empty">这里还没有记录。</p>')+
+    '<div class="history-item"><h3>专业认证</h3><p>'+(state.socialExpertDemo?'已开启演示认证，可以发布科普帖。':'认证账号可发布科普帖。本原型提供认证流程演示。')+'</p>'+
+    (state.socialExpertDemo?'':'<button class="textbutton" id="demoExpert">体验认证</button>')+'</div>');
+  $('#modal').querySelectorAll('[data-activity-tab]').forEach(button=>button.onclick=()=>openSocialActivity(button.dataset.activityTab));
+  $('#modal').querySelectorAll('[data-activity-post]').forEach(button=>button.onclick=()=>{
+    const post=findSocialPost(button.dataset.activityPost);
+    if(post)modal('动态详情',postMarkup(post)+'<button class="textbutton" onclick="openSocialActivity(\''+filter+'\')">← 返回互动记录</button>');
+  });
+  const demoExpert=$('#demoExpert');
+  if(demoExpert)demoExpert.onclick=()=>{
+    state.socialExpertDemo=true;
+    save();
+    drawCommunity();
+    openSocialActivity(filter);
+  };
+}
+drawCommunity();
+</script>
+<script>
+const dataSourceNote=document.createElement('p');
+dataSourceNote.className='footnote';
+dataSourceNote.textContent='原型数据说明：设备连接、血糖及穿戴数据为模拟数据；AI 和社群互动在本机运行。';
+document.querySelector('#profile').append(dataSourceNote);
+</script>
+<script>
+function fortuneDayKey(){
+  const now=new Date();
+  return [now.getFullYear(),now.getMonth()+1,now.getDate()].join('-');
+}
+const showFortuneWithAnimation=showFortune;
+const revealFortuneBeforeDailyCache=revealFortune;
+showFortune=function(forceShake=false){
+  const saved=state.dailyFortune;
+  const hasToday=saved&&saved.day===fortuneDayKey()&&Number.isInteger(saved.index)&&saved.index>=0&&saved.index<fortuneQuotes.length;
+  if(hasToday)fortuneIndex=saved.index;
+  showFortuneWithAnimation();
+  if(hasToday&&!forceShake)revealFortune();
+};
+revealFortune=function(){
+  revealFortuneBeforeDailyCache();
+  if(!$('#fortuneContent .fortune-ticket')&&!$('#fortuneContent .storybook-result'))return;
+  if($('#fortuneContent .storybook-result')){
+    const result=$('#fortuneContent .storybook-result');
+    const q=fortuneQuotes[fortuneIndex%fortuneQuotes.length];
+    const favorite=document.createElement('button');
+    favorite.className='button secondary';
+    favorite.textContent=savedSigns().some(item=>item.quote===q.quote)?'★ 已收藏':'☆ 收藏';
+    favorite.onclick=()=>{const selected=savedSigns().some(item=>item.quote===q.quote);setSignFavorite(q,!selected);favorite.textContent=selected?'☆ 收藏':'★ 已收藏';};
+    const again=document.createElement('button');again.className='button again';again.textContent='再摇一签';
+    result.append(favorite,again);
+  }
+  state.dailyFortune={day:fortuneDayKey(),index:fortuneIndex%fortuneQuotes.length};
+  save();
+  const again=$('#fortuneContent .again');
+  if(again){
+    again.removeAttribute('onclick');
+    again.onclick=()=>{
+      fortuneIndex=(fortuneIndex+1)%fortuneQuotes.length;
+      // Clear the cached selection before creating a fresh draw.
+      state.dailyFortune=null;
+      showFortune(true);
+    };
+  }
+};
+</script>
 </body></html>
+
 
 
 
