@@ -2606,6 +2606,113 @@ function gmExportMedicalReport(){
 }
 </script>
 <!-- END GLUCOMATE EXPLAINABLE CLINICAL-STYLE REPORT -->
+
+<!-- GLUCOMATE FLOATING AI CHAT 2026-11-11 -->
+<style id="gm-floating-ai-style">
+/* Override the old full-screen AI panel while preserving its messages and handlers. */
+.layout #sugarAI.ai-panel{
+  inset:auto 12px 118px auto!important;
+  position:absolute!important;
+  width:min(344px,calc(100% - 24px))!important;
+  height:min(440px,calc(100% - 175px))!important;
+  min-height:270px;
+  max-height:440px;
+  z-index:69!important;
+  background:#fffefa!important;
+  border:1.5px solid #bfd4dd!important;
+  border-radius:22px!important;
+  box-shadow:0 15px 38px rgba(30,59,86,.22),0 3px 0 rgba(38,102,148,.09)!important;
+  overflow:hidden!important;
+  transform-origin:100% 100%;
+  animation:gmAiAppear .21s ease-out both;
+}
+.layout #sugarAI.ai-panel:not(.open){display:none!important}
+.layout #sugarAI.ai-panel.open{display:flex!important}
+.layout #sugarAI .ai-head{
+  padding:12px 14px!important;
+  min-height:64px;
+  gap:8px;
+  background:linear-gradient(105deg,#e6f1e9 0%,#ffefc8 100%)!important;
+  border-bottom:1px solid #d8e4df;
+  flex-shrink:0;
+}
+.layout #sugarAI .ai-head h3{font-size:14px!important;color:#215879;line-height:1.4}
+.layout #sugarAI .ai-head small{font-size:10px!important;color:#76858c}
+.layout #sugarAI .gm-ai-heading{flex:1;min-width:0}
+.layout #sugarAI .gm-ai-icon{display:grid;place-items:center;font-size:19px;color:#1674a5;background:white;border-radius:13px;width:37px;height:37px;flex:none;border:1px solid #c9d9dd}
+.layout #sugarAI .gm-ai-header-actions{display:flex;align-items:center;gap:5px;flex:none}
+.layout #sugarAI .gm-ai-header-actions button{width:30px;height:30px;border-radius:10px;border:1px solid transparent;background:#ffffffae;color:#386d85!important;display:grid;place-items:center;padding:0!important;font-size:18px!important;cursor:pointer}
+.layout #sugarAI .gm-ai-header-actions button:hover{border-color:#bdced8;background:white}
+.layout #sugarAI .ai-body{padding:12px!important;min-height:0;overscroll-behavior:contain;gap:9px!important}
+.layout #sugarAI .ai-bubble{font-size:12px!important;max-width:91%;padding:10px 12px;line-height:1.75}
+.layout #sugarAI .ai-notice{font-size:10px!important;line-height:1.55}
+.layout #sugarAI .ai-prompts button{font-size:10px;padding:7px 8px}
+.layout #sugarAI .ai-compose{padding:10px!important;background:#fffefa;flex-shrink:0;gap:7px}
+.layout #sugarAI .ai-compose input{font-size:12px!important;padding:10px!important;min-height:40px}
+.layout #sugarAI .ai-compose button{background:#257aab!important;border-radius:11px;min-height:40px;padding:0 13px;font-size:12px;color:#fff}
+.layout .ai-fab{z-index:70!important}
+.layout .ai-fab[aria-expanded=true]{background:#286f9c!important;box-shadow:0 4px 0 #1a547b,0 8px 20px #153e6b2b!important}
+@keyframes gmAiAppear{from{opacity:0;transform:translateY(11px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:480px){
+ .layout #sugarAI.ai-panel{right:9px!important;bottom:112px!important;width:calc(100% - 18px)!important;height:min(410px,calc(100% - 155px))!important;min-height:245px}
+ .layout #sugarAI .ai-body{padding:10px!important}
+}
+@media(prefers-reduced-motion:reduce){.layout #sugarAI.ai-panel{animation:none!important}}
+</style>
+<script>
+(function setupFloatingSugarAssistant(){
+ const panel=document.getElementById('sugarAI');
+ if(!panel||typeof aiButton==='undefined')return;
+ panel.setAttribute('role','dialog');
+ panel.setAttribute('aria-modal','false');
+ panel.setAttribute('aria-label','问问小糖 · 悬浮对话');
+ panel.setAttribute('aria-hidden','true');
+ aiButton.setAttribute('aria-expanded','false');
+ aiButton.setAttribute('aria-controls','sugarAI');
+ aiButton.setAttribute('aria-haspopup','dialog');
+ const header=panel.querySelector('.ai-head');
+ const title=header?.querySelector('div');
+ if(title)title.classList.add('gm-ai-heading');
+ const oldClose=header?.querySelector('button');
+ if(oldClose)oldClose.remove();
+ if(header){
+  const avatar=document.createElement('div');avatar.className='gm-ai-icon';avatar.setAttribute('aria-hidden','true');avatar.textContent='✧';
+  header.prepend(avatar);
+  const actions=document.createElement('div');actions.className='gm-ai-header-actions';
+  const minimize=document.createElement('button');
+  minimize.type='button';minimize.title='最小化小糖';minimize.setAttribute('aria-label','最小化小糖');
+  minimize.textContent='−';minimize.onclick=()=>closeSugarAI();
+  const close=document.createElement('button');
+  close.type='button';close.title='关闭小糖';close.setAttribute('aria-label','关闭小糖');
+  close.textContent='×';close.onclick=()=>closeSugarAI();
+  actions.append(minimize,close);header.append(actions);
+ }
+ const originalOpen=openSugarAI;
+ openSugarAI=function(){
+  panel.classList.add('open');
+  panel.setAttribute('aria-hidden','false');
+  aiButton.setAttribute('aria-expanded','true');
+  aiButton.textContent='✧ 收起小糖';
+  const body=panel.querySelector('.ai-body');
+  if(body)body.scrollTop=body.scrollHeight;
+  document.getElementById('aiInput')?.focus({preventScroll:true});
+ };
+ closeSugarAI=function(){
+  panel.classList.remove('open');
+  panel.setAttribute('aria-hidden','true');
+  aiButton.setAttribute('aria-expanded','false');
+  aiButton.textContent='✧ 问问小糖';
+  aiButton.focus({preventScroll:true});
+ };
+ aiButton.onclick=()=>{
+  if(panel.classList.contains('open'))closeSugarAI();else openSugarAI();
+ };
+ panel.addEventListener('keydown',event=>{
+  if(event.key==='Escape'){event.stopPropagation();event.preventDefault();closeSugarAI();}
+ });
+})();
+</script>
+<!-- END GLUCOMATE FLOATING AI CHAT -->
 </body></html>
 
 
