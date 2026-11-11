@@ -152,6 +152,119 @@ const renderBeforeSocial=render;render=function(){renderBeforeSocial();drawInbox
 const goBeforeSocial=go;go=function(k){goBeforeSocial(k);if(k==='diary')drawSugarGallery();if(k==='learn'){drawCommunity();$('#heading').textContent='社群';$('#eyebrow').textContent='一起，把日子过好';}$('.main').scrollTop=0;};
 drawInbox();drawCommunity();drawSugarGallery();
 </script>
+<style>
+.light-goal{width:calc(100% - 12px);justify-self:center;padding:12px 14px;border-radius:16px}
+.light-goal h2{font-size:15px}.light-goal h2:after{content:none}
+.goal-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.goal-heading button{min-height:32px;padding:0 2px}
+.light-goal .subtitle,.light-goal-icon{display:none}
+.light-goal-body{margin:2px 0 9px}.light-goal-body h3{font-size:14px;line-height:1.45}
+.light-goal-body p{font-size:11px;line-height:1.5;margin-top:3px}
+.light-goal-footer{flex-wrap:nowrap;gap:12px}
+.goal-week{flex:1;min-width:0}.goal-week .goal-progress{margin:0 0 3px;gap:4px}
+.goal-week .goal-progress span{height:4px}
+#lightGoalCaption{font-size:10px;color:#6d7f90}
+#lightGoalCheck{flex:none;min-height:36px}
+#lightGoalCheck:disabled{background:#e6f0f7;color:#245b83;opacity:1}
+#fortuneOverlay .lottery-panel{width:min(100%,296px);padding:13px;border-radius:22px;overflow-x:hidden;scrollbar-width:thin;box-shadow:3px 4px 0 #153e66}
+#fortuneOverlay .lottery-panel:before,#fortuneOverlay .lottery-panel:after{content:none}
+#fortuneOverlay .lottery-close{top:8px;right:8px}
+#fortuneOverlay .lottery-kicker{margin:0 30px 9px;font-size:11px;letter-spacing:2px;line-height:24px}
+#fortuneOverlay .shake-title{display:none}
+#fortuneOverlay .shake-stage{height:165px;margin:0;border-width:3px;border-radius:13px}
+#fortuneOverlay .shake-art{width:140px;height:160px}
+#fortuneOverlay .shake-caption{margin-top:7px;font-size:11px}
+#fortuneOverlay .shake-skip{margin:0;padding:7px}
+#fortuneOverlay .fortune-ticket{border:0;border-radius:13px}
+#fortuneOverlay .fortune-hero{display:flex;align-items:center;justify-content:space-between;gap:6px;background:#ffda27;padding-left:13px}
+#fortuneOverlay .ticket-head{padding:0;text-align:left;background:none}
+#fortuneOverlay .ticket-head h2{font-size:18px;letter-spacing:0;margin:0;line-height:1.3}
+#fortuneOverlay .fortune-art{width:96px;height:75px;border-radius:0 0 0 14px}
+#fortuneOverlay blockquote{min-height:0;font-size:13px;line-height:1.5;margin:10px 12px 3px}
+#fortuneOverlay .quote-author{margin:0 8px 8px;font-size:10px}
+#fortuneOverlay .quote-source{margin:0 10px 9px}
+#fortuneOverlay .quote-source p{margin:4px 0}
+#fortuneOverlay .fortune-actions{margin-top:10px;gap:6px}
+#fortuneOverlay .fortune-actions button{min-height:38px;padding:5px;font-size:11px}
+#fortuneOverlay .fortune-actions .again{flex:1}
+#fortuneOverlay .fortune-actions .save-sign{background:#fff8e7;color:#a92d25}
+#fortuneOverlay .fortune-disclaimer{margin-top:8px;line-height:1.4}
+.sign-favorites .history-item:last-child{border-bottom:0}
+</style>
+<script>
+const goalHeading=document.createElement('div');
+goalHeading.className='goal-heading';
+const goalAdjust=$('.light-goal-footer button:last-child');
+goalHeading.append(lightGoal.querySelector('h2'),goalAdjust);
+lightGoal.prepend(goalHeading);
+const goalWeek=document.createElement('div');
+goalWeek.className='goal-week';
+goalWeek.append($('#lightGoalProgress'),$('#lightGoalCaption'));
+$('.light-goal-footer').prepend(goalWeek);
+const drawBeforeCompactGoal=drawLightGoal;
+drawLightGoal=function(){
+  drawBeforeCompactGoal();
+  $('#lightGoalCaption').textContent='本周示例 '+Number(state.lightProgress??3)+' / 7';
+  $('#lightGoalCheck').disabled=!!state.lightChecked;
+};
+drawLightGoal();
+
+function savedSigns(){return Array.isArray(state.savedSigns)?state.savedSigns:[];}
+function setSignFavorite(quote, shouldSave){
+  state.savedSigns=savedSigns().filter(item=>item.quote!==quote.quote);
+  if(shouldSave)state.savedSigns.unshift({...quote});
+  save();
+}
+const revealBeforeCompactSign=revealFortune;
+revealFortune=function(){
+  revealBeforeCompactSign();
+  const content=$('#fortuneContent');
+  if(!content)return;
+  const q=fortuneQuotes[fortuneIndex%fortuneQuotes.length];
+  content.querySelector('.lottery-kicker').textContent='今日签';
+  content.querySelector('.ticket-number').remove();
+  const ticket=content.querySelector('.fortune-ticket');
+  const hero=document.createElement('div');
+  hero.className='fortune-hero';
+  hero.append(ticket.querySelector('.ticket-head'),ticket.querySelector('.fortune-art'));
+  ticket.prepend(hero);
+  const details=ticket.querySelector('.quote-source');
+  details.querySelector('summary').textContent='小知识和出处';
+  const tip=document.createElement('p');
+  tip.textContent=q.tip;
+  details.insertBefore(tip,details.querySelector('a'));
+  ticket.querySelector('.knowledge').remove();
+  const actions=content.querySelector('.fortune-actions');
+  actions.lastElementChild.textContent='完成';
+  const favorite=document.createElement('button');
+  favorite.className='button save-sign';
+  function refreshFavorite(){
+    const selected=savedSigns().some(item=>item.quote===q.quote);
+    favorite.setAttribute('aria-pressed',String(selected));
+    favorite.textContent=selected?'★ 已收藏':'☆ 收藏';
+  }
+  favorite.onclick=()=>{
+    setSignFavorite(q,favorite.getAttribute('aria-pressed')==='false');
+    refreshFavorite();
+  };
+  refreshFavorite();
+  actions.insertBefore(favorite,actions.lastElementChild);
+};
+const favoriteEntry=document.createElement('article');
+favoriteEntry.className='card community-card';
+favoriteEntry.innerHTML='<div class="row"><div><h2>收藏的今日签</h2></div><button class="textbutton">查看 →</button></div>';
+favoriteEntry.querySelector('button').onclick=showSavedSigns;
+$('#profile').prepend(favoriteEntry);
+function showSavedSigns(){
+  const items=savedSigns();
+  modal('收藏的今日签',items.length?'<div class="sign-favorites">'+items.map(item=>
+    '<div class="history-item"><h3>'+esc(item.quote)+'</h3><p>'+esc(item.author)+'</p><p>'+esc(item.tip)+'</p><button class="textbutton" data-remove-sign>取消收藏</button></div>'
+  ).join('')+'</div>':'<p>收藏后的今日签会出现在这里。</p>');
+  $('#modal').querySelectorAll('[data-remove-sign]').forEach((button,index)=>{
+    button.onclick=()=>{setSignFavorite(items[index],false);showSavedSigns();};
+  });
+}
+</script>
 </body></html>
 
 
