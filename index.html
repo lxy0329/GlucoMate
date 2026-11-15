@@ -1301,6 +1301,7 @@ favoriteEntry.querySelector('button').onclick=showSavedSigns;
 
 let communityFeed='all';
 let communityType='all';
+let communitySort='mixed';
 let communitySearch='';
 function followedAuthors(){return Array.isArray(state.followedAuthors)?state.followedAuthors:[];}
 const threadsPostMarkup=postMarkup;
@@ -1339,7 +1340,7 @@ drawCommunity=function(){
   const section=$('#learn');
   const browse=document.createElement('div');
   browse.className='social-browse';
-  browse.innerHTML='<button data-feed="all">推荐</button><button data-feed="following">关注</button><select aria-label="筛选帖子类型"><option value="all">全部帖子</option><option value="daily">日常动态</option><option value="help">求助帖</option><option value="science">科普帖</option></select><input type="search" aria-label="搜索社群" placeholder="搜索帖子或作者">';
+  browse.innerHTML='<button data-feed="all">推荐</button><button data-feed="following">关注</button><select aria-label="帖子排序"><option value="mixed">排序：综合</option><option value="new">排序：最新</option><option value="hot">排序：最热</option></select><div class="forum-type-row" role="group" aria-label="帖子类型"><button type="button" data-post-filter="all">全部</button><button type="button" data-post-filter="science">科普帖</button><button type="button" data-post-filter="help">求助帖</button><button type="button" data-post-filter="daily">日常帖</button></div><input type="search" aria-label="搜索社群" placeholder="搜索帖子或作者">';
   section.querySelector('.social-tabs').after(browse);
   const cards=[...section.querySelectorAll('.community-post')];
   const posts=[...state.socialPosts,...publicExamples];
@@ -1352,6 +1353,15 @@ drawCommunity=function(){
       card.hidden=!shown;
       if(shown)visible++;
     });
+    const entries=cards.map((card,index)=>({card,post:posts[index],index}));
+    const timestamp=post=>Date.parse(post?.createdAt)||Number(post?.id)||0;
+    const heat=post=>{
+      const id=String(post?.id);
+      return (state.comments?.[id]?.length||0)*2+Number(socialMarks('likes').includes(id))+Number(socialMarks('reposts').includes(id))*2+Number(socialMarks('socialBookmarks').includes(id));
+    };
+    if(communitySort==='new')entries.sort((a,b)=>timestamp(b.post)-timestamp(a.post)||a.index-b.index);
+    if(communitySort==='hot')entries.sort((a,b)=>heat(b.post)-heat(a.post)||timestamp(b.post)-timestamp(a.post)||a.index-b.index);
+    entries.forEach(({card})=>empty.before(card));
     empty.hidden=visible>0;
   }
   const empty=document.createElement('p');empty.className='community-empty';empty.textContent='没有符合条件的帖子';section.append(empty);
@@ -1359,7 +1369,11 @@ drawCommunity=function(){
     button.setAttribute('aria-pressed',String(button.dataset.feed===communityFeed));
     button.onclick=()=>{communityFeed=button.dataset.feed;browse.querySelectorAll('[data-feed]').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.feed===communityFeed)));filterPosts();};
   });
-  const select=browse.querySelector('select');select.value=communityType;select.onchange=()=>{communityType=select.value;filterPosts();};
+  const select=browse.querySelector('select');select.value=communitySort;select.onchange=()=>{communitySort=select.value;filterPosts();};
+  const typeButtons=[...browse.querySelectorAll('[data-post-filter]')];
+  function syncTypeButtons(){typeButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.postFilter===communityType)));}
+  typeButtons.forEach(button=>button.onclick=()=>{communityType=button.dataset.postFilter;syncTypeButtons();filterPosts();});
+  syncTypeButtons();
   const input=browse.querySelector('input');input.value=communitySearch;input.oninput=()=>{communitySearch=input.value;filterPosts();};
   filterPosts();
 };
@@ -1679,7 +1693,7 @@ renderPhotos=function(){
   const recent=[0,1,2].map(mealDayKey);
   const older=[...byDate.keys()].filter(day=>day<recent[2]).sort().reverse();
   oldGrid.outerHTML=recent.map(day=>dayMarkup(day,byDate.get(day)||[])).join('')+(older.length?'<details class="meal-history" id="mealHistory" '+(historyWasOpen?'open':'')+'><summary>更早的记录 · '+older.length+' 天</summary>'+older.map(day=>dayMarkup(day,byDate.get(day))).join('')+'</details>':'');
-  section.querySelector('.section-head h2').textContent='吃过的食物';
+  section.querySelector('.section-head h2').textContent='吃过的食物';section.querySelector('.section-head p')?.remove();
 };
 const drawSignSceneBeforeDoodles=signScene;
 signScene=function(sign){
@@ -1956,7 +1970,7 @@ renderPhotos=function(){
     const id=Number(button.getAttribute('onclick').match(/\((\d+)\)/)?.[1]);
     const meal=state.meals.find(entry=>entry.id===id);
     if(!meal)return;
-    button.removeAttribute('onclick');button.onclick=()=>openMealDetail(id);
+    button.dataset.mealId=String(id);button.removeAttribute('onclick');button.onclick=()=>openMealDetail(id);
     const old=button.querySelector('.doodle-box,img');
     if(old)old.outerHTML=mealPhotoTile(meal);
   });
@@ -2183,18 +2197,14 @@ function openCommunityNotices(){
   modal('社群消息',[...unread,...history].map(noticeMarkup).join('')||'<p>暂无社群消息。</p>');
   if(unread.length){readingMessages=unread;}
 }
-const drawBeforeCommunityNotices=drawCommunity;
-drawCommunity=function(){
-  drawBeforeCommunityNotices();
-  const tabs=$('#learn .social-tabs');
-  if(!tabs)return;
-  const button=document.createElement('button');
-  button.type='button';button.className='textbutton';
-  button.style.marginBottom='7px';
-  button.textContent='✉ 社群消息';
-  button.onclick=openCommunityNotices;
-  tabs.before(button);
-};
+const communityNoticeButton=document.createElement('button');
+communityNoticeButton.type='button';
+communityNoticeButton.className='community-notice-icon';
+communityNoticeButton.setAttribute('aria-label','社群消息');
+communityNoticeButton.title='社群消息';
+communityNoticeButton.textContent='✉';
+communityNoticeButton.onclick=openCommunityNotices;
+socialAvatar.before(communityNoticeButton);
 drawCommunity();
 drawInbox();
 </script>
@@ -2447,7 +2457,450 @@ if(profileDeviceCard){
 }
 historyCard.after(fortuneSettings);
 </script>
+<style>
+.layout .ai-panel{
+  inset:auto 10px calc(64px + env(safe-area-inset-bottom)) auto;
+  width:min(290px,calc(100% - 20px));
+  height:min(350px,calc(100% - 82px - env(safe-area-inset-bottom)));
+  border:1px solid #b4cce4;border-radius:15px;
+  box-shadow:0 7px 24px #173b7138;overflow:hidden;
+}
+.ai-panel .ai-head{padding:7px 11px;flex:none}
+.ai-panel .ai-head h3{font-size:13px}
+.ai-panel .ai-head small{display:none}
+.ai-panel .ai-head button{width:32px;height:32px;line-height:1;font-size:22px}
+.ai-panel .ai-body{min-height:0;padding:9px;gap:8px;overscroll-behavior:contain}
+.ai-panel .ai-bubble{padding:7px 9px;font-size:12px}
+.ai-panel .ai-compose{padding:7px;flex:none}
+.ai-panel .ai-compose input{padding:7px 8px;font-size:16px}
+.layout:has(.ai-panel.open) .ai-fab{visibility:hidden}
+</style>
+<script>
+aiPanel.setAttribute('role','dialog');
+aiButton.setAttribute('aria-controls',aiPanel.id);
+aiButton.setAttribute('aria-expanded','false');
+const openFloatingSugarAI=openSugarAI;
+openSugarAI=function(){
+  aiButton.setAttribute('aria-expanded','true');
+  openFloatingSugarAI();
+};
+const closeFloatingSugarAI=closeSugarAI;
+closeSugarAI=function(){
+  aiButton.setAttribute('aria-expanded','false');
+  closeFloatingSugarAI();
+};
+aiPanel.addEventListener('keydown',event=>{
+  if(event.key==='Escape'){event.stopPropagation();closeSugarAI();}
+});
+</script>
+<style>
+body .main .mobilebrand{position:sticky;top:0;z-index:18;background:linear-gradient(105deg,#c9edfa,#fff6d9 65%,#ffe686);padding:6px 4px;box-shadow:0 3px 0 #173b7112}
+#modal:has(.clinical-report)> .row:first-child{position:sticky;top:0;z-index:2;background:#fff;padding:6px 0;border-bottom:1px solid #dce6ee}
+.clinical-report{font-size:12px;color:#173b55}.clinical-report h3{margin:10px 0 5px}
+.clinical-meta{font-size:10px;color:#536c80;margin:7px 0}
+.clinical-block,.clinical-metric{border:1px solid #cbdde8;border-radius:10px;padding:8px;margin:6px 0;background:#f5faff}
+.clinical-block[data-risk="urgent"]{background:#ffe8ec;border-color:#ba3449;color:#831326}
+.clinical-block[data-risk="watch"]{background:#fff4dc}
+.clinical-metric{display:block;width:100%;text-align:left;color:#173b55}
+.clinical-metric strong{display:block;font-size:17px}
+.clinical-report table{width:100%;border-collapse:collapse}
+.clinical-report th,.clinical-report td{text-align:left;border-bottom:1px solid #dce6ee;padding:5px}
+.clinical-actions{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+</style>
+<script>
+const clinicalSources={
+  glucose:'https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis',
+  oxygen:'https://www.fda.gov/consumers/consumer-updates/pulse-oximeter-basics'
+};
+const reportScenarios={
+  stable:[5.4,5.1,7.3,6.9],
+  high:[5.8,6.4,8.6,9.1],
+  low:[5.4,5.0,4.5,3.6],
+  'urgent-high':[7.2,12.1,16.8,17.2],
+  'urgent-low':[5.1,4.4,3.6,2.8]
+};
+function clinicalSnapshot(){
+  const key=$('#demoState')?.value||'stable';
+  const glucose=reportScenarios[key]||reportScenarios.stable;
+  const oxygen=[98,97,98,98];
+  const times=['08:00','11:30','15:30','16:30'];
+  const abnormal=key!=='stable';
+  const urgent=key.startsWith('urgent');
+  const label=key.endsWith('low')?'低于低血糖警戒值':abnormal?'高于情境参考值':'进食状态未标记，暂不判断';
+  const guidance=glucoseAdvice[key]?.brief||'先标记空腹或进食时间。如有持续异常或症状，请咨询医生。';
+  return {key,glucose,oxygen,times,urgent,abnormal,label,guidance,date:new Date().toLocaleDateString('zh-CN')};
+}
+const glucoseReference='成人非孕实验室参考：空腹血浆葡萄糖 ≤5.5 mmol/L（99 mg/dL）；标准口服葡萄糖耐量试验 2 小时 <7.8 mmol/L。普通餐后和穿戴读数不能直接套用这些诊断界值。低血糖警戒值为 3.9 mmol/L。';
+const oxygenReference='多数健康成人静息 SpO₂ 为 95%–100%。高海拔或慢性心肺疾病的目标可能不同。低于个人目标或持续偏低，应复测并联系医生；严重呼吸困难、胸痛或嘴唇发紫时应立即求助。';
+const reportDisclaimer='课程原型模拟报告。数据未由设备采集，不能用于诊断、用药或真实风险判断。';
+function clinicalTable(r){
+  return '<table><thead><tr><th>测量时间</th><th>血糖 mmol/L</th><th>SpO₂ %</th></tr></thead><tbody>'+r.times.map((time,i)=>'<tr><td>'+time+'</td><td>'+r.glucose[i].toFixed(1)+'</td><td>'+r.oxygen[i]+'</td></tr>').join('')+'</tbody></table>';
+}
+function clinicalConclusion(r){
+  if(r.urgent)return '危急模拟情境 · 立即行动';
+  if(r.abnormal)return r.key==='low'?'血糖偏低 · 需要处理':'血糖偏高 · 建议复测';
+  return '血氧在常见范围，血糖需结合进食状态';
+}
+function clinicalMeta(r){
+  return '<p class="clinical-meta">报告日期 '+esc(r.date)+' · 最近测量 16:30<br>来源：原型模拟传感器 · 日度概览</p>';
+}
+function clinicalMetricDetail(metric){
+  const r=clinicalSnapshot();
+  const glucose=metric==='glucose';
+  const title=glucose?'血糖详情':'血氧饱和度详情';
+  const result=glucose?r.glucose.at(-1).toFixed(1)+' mmol/L':'98% SpO₂';
+  const range=glucose?glucoseReference:oxygenReference;
+  modal(title,'<div class="clinical-report">'+clinicalMeta(r)+'<div class="clinical-block"><h3>'+result+'</h3><p>'+esc(glucose?r.label:'位于常见参考范围内')+'</p></div><h3>参考范围与解读</h3><p>'+esc(range)+'</p><h3>趋势</h3>'+clinicalTable(r)+'<h3>下一步</h3><p>'+esc(glucose?r.guidance:'如读数异常，静坐、保持手指温暖并复测。若有明显症状，不要只依赖读数。')+'</p><a href="'+clinicalSources[metric]+'" target="_blank" rel="noopener">查阅参考来源 ↗</a><div class="clinical-actions"><button class="textbutton" onclick="openDailyHealthReport()">← 返回报告</button></div></div>');
+}
+function openClinicalTrend(){
+  const r=clinicalSnapshot();
+  modal('今日趋势与异常记录','<div class="clinical-report">'+clinicalMeta(r)+'<p>血糖范围 '+Math.min(...r.glucose).toFixed(1)+'–'+Math.max(...r.glucose).toFixed(1)+' mmol/L。血氧范围 97%–98%。</p>'+clinicalTable(r)+'<h3>异常事件</h3><p>'+esc(r.abnormal?'16:30 · '+clinicalConclusion(r)+'（模拟情境）':'本情境未设定异常事件。')+'</p><button class="textbutton" onclick="openDailyHealthReport()">← 返回报告</button></div>');
+}
+function printClinicalReport(){
+  const r=clinicalSnapshot();
+  const view=window.open('','_blank');
+  if(!view){toast('请允许打开打印窗口。');return;}
+  view.opener=null;
+  const fields=[['昵称',state.profileName||'未填写'],['年龄段','未记录'],['最近进食 / 运动','未记录'],['自报症状','未记录'],['异常事件',r.abnormal?'1 次（情境设定）':'0 次（情境设定）']];
+  view.document.write('<!doctype html><meta charset="utf-8"><title>GlucoMate 健康摘要</title><style>body{font:14px/1.65 sans-serif;color:#173b55;margin:32px}table{border-collapse:collapse;width:100%}th,td{padding:6px;border-bottom:1px solid #ccc;text-align:left} @media print{button{display:none}}</style><h1>GlucoMate 健康摘要</h1><p>'+esc(reportDisclaimer)+'</p>'+clinicalMeta(r)+'<h2>'+esc(clinicalConclusion(r))+'</h2><dl>'+fields.map(([label,value])=>'<dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd>').join('')+'</dl><h2>测量趋势</h2>'+clinicalTable(r)+'<h2>参考说明</h2><p>'+esc(glucoseReference)+'</p><p>'+esc(oxygenReference)+'</p><h2>建议</h2><p>'+esc(r.guidance)+'</p><p>参考：<a href="'+clinicalSources.glucose+'">NIDDK</a> · <a href="'+clinicalSources.oxygen+'">FDA</a></p><button onclick="print()">打印 / 保存为 PDF</button>');
+  view.document.close();
+}
+openDailyHealthReport=function(){
+  const r=clinicalSnapshot();
+  modal('今日健康报告','<div class="clinical-report">'+clinicalMeta(r)+'<section class="clinical-block" data-risk="'+(r.urgent?'urgent':r.abnormal?'watch':'stable')+'"><small>总体结论</small><h3>'+esc(clinicalConclusion(r))+'</h3><p>'+esc(r.guidance)+'</p></section><h3>核心指标</h3><button class="clinical-metric" onclick="clinicalMetricDetail(\'glucose\')"><strong>血糖 · '+r.glucose.at(-1).toFixed(1)+' mmol/L</strong>'+esc(r.label)+' · 查看参考区间与解释 →</button><button class="clinical-metric" onclick="clinicalMetricDetail(\'oxygen\')"><strong>血氧 · 98% SpO₂</strong>常见范围 95%–100% · 范围内 →</button><button class="clinical-metric" onclick="openClinicalTrend()"><strong>趋势与异常记录</strong>血糖 '+Math.min(...r.glucose).toFixed(1)+'–'+Math.max(...r.glucose).toFixed(1)+' mmol/L · 查看测量时间 →</button><p class="clinical-meta">'+esc(reportDisclaimer)+'</p><div class="clinical-actions"><button class="button secondary" onclick="printClinicalReport()">医学摘要 / PDF</button><button class="button" onclick="closeModal()">完成</button></div></div>');
+};
+const clinicalHomeCopy=$('#todayHealthReport .daily-report-body p');
+if(clinicalHomeCopy)clinicalHomeCopy.textContent='结论、指标与趋势 · 模拟报告';
+</script>
+<style>
+.layout{display:flex!important;flex-direction:column}
+.layout>.app-fixed-top{flex:0 0 auto;z-index:19;padding:max(5px,env(safe-area-inset-top)) 14px 5px;background:linear-gradient(105deg,#c9edfa,#fff6d9 65%,#ffe686);border-bottom:1px solid #b8d4e7}
+.layout>.app-fixed-top .mobilebrand{display:flex;margin:0!important;padding:2px 0;box-shadow:none}
+.layout>.main{flex:1;min-height:0;height:auto;padding-top:9px!important}
+.clinical-references{margin:10px 0 6px;padding-top:6px;border-top:1px solid #dce6ee}
+.clinical-references ul{margin:4px 0;padding-left:18px}
+.clinical-references a{color:#165da8;line-height:1.7}
+</style>
+<script>
+const fixedAppHeader=document.createElement('header');
+fixedAppHeader.className='app-fixed-top';
+const mainScroll=$('.layout > .main');
+mainScroll.before(fixedAppHeader);
+fixedAppHeader.append(mainScroll.querySelector('.mobilebrand'));
+
+const referenceList=[
+  ['NIDDK','糖尿病检测与诊断 · 空腹血糖与 OGTT',clinicalSources.glucose],
+  ['FDA','脉搏血氧仪 · 血氧范围与测量局限',clinicalSources.oxygen],
+  ['CDC','低血糖处理 · 15–15 规则',glucoseLowSource],
+  ['CDC','糖尿病酮症酸中毒 · 急症警讯',glucoseHighSource]
+];
+function addReportReferences(){
+  const report=$('#modal .clinical-report');
+  if(!report||report.querySelector('.clinical-references'))return;
+  const references=document.createElement('section');
+  references.className='clinical-references';
+  references.innerHTML='<h3>医学参考文献 · References</h3><ul>'+referenceList.map(([publisher,title,url])=>'<li><a href="'+url+'" target="_blank" rel="noopener noreferrer">'+esc(publisher+' · '+title)+' ↗</a></li>').join('')+'</ul>';
+  const actions=report.querySelector('.clinical-actions');
+  if(actions)actions.before(references);else report.append(references);
+}
+let personalReportMode=false;
+const openBaseClinicalReport=openDailyHealthReport;
+openDailyHealthReport=function(){
+  openBaseClinicalReport();
+  if(personalReportMode){
+    $('#modalTitle').textContent='我的数据与报告';
+    const report=$('#modal .clinical-report');
+    const extra=document.createElement('details');
+    extra.className='clinical-block';
+    extra.innerHTML='<summary>附加记录</summary><p>饮食记录 '+state.meals.length+' 条（含历史及模拟记录）。自报症状、近期活动与进食情境尚未记录。</p>';
+    report.querySelector('.clinical-actions').before(extra);
+  }
+  addReportReferences();
+};
+const baseClinicalMetric=clinicalMetricDetail;
+clinicalMetricDetail=function(metric){baseClinicalMetric(metric);addReportReferences();};
+const baseClinicalTrend=openClinicalTrend;
+openClinicalTrend=function(){baseClinicalTrend();addReportReferences();};
+const homepageReport=$('#todayHealthReport button');
+if(homepageReport){
+  homepageReport.removeAttribute('onclick');
+  homepageReport.onclick=()=>{personalReportMode=false;openDailyHealthReport();};
+}
+function openPersonalClinicalReport(){personalReportMode=true;openDailyHealthReport();}
+$('#viewMySummary').onclick=openPersonalClinicalReport;
+const settingsReportButton=$('#profile [onclick*="insights"]');
+if(settingsReportButton){
+  settingsReportButton.removeAttribute('onclick');
+  settingsReportButton.onclick=openPersonalClinicalReport;
+}
+</script>
+<style>
+:where(.layout,.layout *,#modal,#modal *,#fortuneOverlay,#fortuneOverlay *,#cameraPage,#cameraPage *){scrollbar-width:none;-ms-overflow-style:none}
+:where(.layout,.layout *,#modal,#modal *,#fortuneOverlay,#fortuneOverlay *,#cameraPage,#cameraPage *)::-webkit-scrollbar{display:none;width:0;height:0}
+.layout>.main,#modal,.lottery-panel,.ai-body{overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+body .layout>.main{padding-inline:14px!important}
+body .layout>.main .top{display:flex;align-items:center;justify-content:space-between;min-height:34px;margin:0 0 9px;padding:0;position:relative}
+body .layout>.main .top h1{margin:0;font-size:18px;line-height:1.3}
+body .layout>.main .top .social-avatar{position:static;width:32px;height:32px}
+body .layout>.main .top .top-right{display:none}
+.main :is(#today,#diary,#learn,#profile){--page-gap:10px}
+.main :is(#diary,#learn,#profile)>.card,.main #diary>.sugar-gallery{margin-bottom:var(--page-gap);border-radius:13px}
+.main #today #homeInbox,.main #today .overview{margin-bottom:var(--page-gap)}
+#today .home-main,#today .home-left,#today .col{gap:var(--page-gap)}
+</style>
+<script>
+const navigateBeforePageAlignment=go;
+const primaryPageTitles={today:'首页',diary:'饮食集锦',learn:'社群',profile:'我的'};
+function alignPrimaryPageTitle(page){
+  if(Object.hasOwn(primaryPageTitles,page))$('#heading').textContent=primaryPageTitles[page];
+}
+go=function(page){
+  navigateBeforePageAlignment(page);
+  alignPrimaryPageTitle(page);
+};
+alignPrimaryPageTitle(document.body.dataset.view||'today');
+</script>
+<style>
+body .layout>.app-fixed-top .mobilebrand{font-size:17px;line-height:1.2;min-height:28px}
+body .layout>.app-fixed-top .mobilebrand::before{width:26px;height:26px;font-size:19px;border-radius:8px;margin-right:7px}
+body .layout>.app-fixed-top .mobilebrand::after{font-size:7px;margin-left:6px}
+body .layout>.main .top #heading{font-size:18px;line-height:1.3}
+body .layout>.main .top{min-height:34px}
+body .layout>.main .top .social-avatar{position:absolute;right:0;top:1px;bottom:auto}
+</style><style>.forum-type-row{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.social-browse .forum-type-row button{min-height:32px;padding-inline:3px;white-space:nowrap}</style><style>.community-notice-icon{display:none}body[data-view="learn"] .main .top .community-notice-icon{display:grid;place-items:center;position:absolute;top:1px;right:39px;width:32px;height:32px;border-radius:8px;background:#edf6ff;color:#165da8;font-size:16px}</style><style>
+body[data-view="learn"] .layout>.main .top{margin-bottom:5px}
+#learn .social-tabs{gap:3px;margin-bottom:6px;padding:3px}
+#learn .social-tabs button{min-height:34px}
+#learn .social-browse{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:4px;margin-bottom:7px;align-items:stretch}
+#learn .social-browse>button,#learn .social-browse>select{min-height:32px;padding:4px 6px;white-space:nowrap}
+#learn .social-browse>input{grid-column:4;grid-row:1;min-width:0;min-height:32px;padding:4px 6px;font-size:12px}
+#learn .forum-type-row{grid-column:1/-1;grid-row:2;gap:3px;padding:2px;border-radius:8px;background:#edf5fc}
+#learn .forum-type-row button{min-height:31px;padding:3px 2px}
+@media(max-width:330px){
+ #learn .social-browse{grid-template-columns:auto auto minmax(0,1fr)}
+ #learn .social-browse>input{grid-column:1/-1;grid-row:3}
+}
+</style><style>
+.layout>.app-fixed-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.layout>.app-fixed-top #heading{margin:0;color:#173b71;font-size:16px;line-height:1.3;white-space:nowrap;font-weight:800}
+body:not([data-view="learn"]) .layout>.main .top{display:none}
+body[data-view="learn"] .layout>.main .top{min-height:32px;margin-bottom:5px}
+</style>
+<script>
+fixedAppHeader.append($('#heading'));
+</script>
+<style>
+.clinical-report{font-size:13px}.clinical-report .clinical-meta{font-size:11px;color:#405c73}
+.clinical-report .clinical-block{background:#e3f5ec;border-color:#a5d3bc}
+.clinical-report .clinical-block[data-risk=watch]{background:#fff0bd;border-color:#e8c567}
+.clinical-report .clinical-block[data-risk=urgent]{background:#ffe8ec}
+.clinical-report .clinical-metric{background:#e7f4ff;border-color:#a9cce8}
+.clinical-report .clinical-metric:nth-of-type(2){background:#e5f6f0;border-color:#aed7c9}
+.clinical-report .clinical-metric:nth-of-type(3){background:#fff4ce;border-color:#e8ce7e}
+.clinical-report .clinical-block h3{font-size:16px;margin:3px 0}
+.clinical-report .clinical-meta:last-of-type{margin:7px 0}
+.meal-slot>b{display:none}.meal-slot.empty-meal{min-height:35px}
+.meal-review{margin:8px 0;padding:8px;background:#fff3cb;border-radius:8px}
+.meal-review-stars{display:flex;gap:4px;margin:5px 0}
+.meal-review-stars button{color:#88570a;min-width:32px;min-height:32px;font-size:18px}
+.meal-review textarea{width:100%;box-sizing:border-box;min-height:52px;padding:6px;font:inherit;border:1px solid #c6dbea;border-radius:7px}
+.meal-slot .meal-mini-stars{color:#87560a;font-size:10px}.meal-slot .meal-mini-note{color:#365974;font-size:10px}
+</style>
+<script>
+const simpleGlucoseGuidance={
+  high:'先再测一次。若几次都比医生给你的目标高，就联系医生。',
+  low:'如果人清醒、能吞咽，马上补约 15 克快吸收糖，例如按说明吃葡萄糖片，15 分钟后再测。',
+  stable:'先看这次是空腹还是饭后。记录测量时间，方便下次对照。'
+};
+glucoseAdvice.high.brief=simpleGlucoseGuidance.high;
+glucoseAdvice.low.brief=simpleGlucoseGuidance.low;
+const reportSnapshotBeforePlainLanguage=clinicalSnapshot;
+clinicalSnapshot=function(){
+  const snapshot=reportSnapshotBeforePlainLanguage();
+  snapshot.guidance=simpleGlucoseGuidance[snapshot.key]||snapshot.guidance;
+  if(snapshot.key==='stable')snapshot.label='未记录是空腹还是饭后，先不判断';
+  return snapshot;
+};
+const reportBeforeReadableLayout=openDailyHealthReport;
+openDailyHealthReport=function(){
+  reportBeforeReadableLayout();
+  const report=$('#modal .clinical-report');
+  if(!report)return;
+  const conclusion=report.querySelector('.clinical-block');
+  if(conclusion){
+    conclusion.querySelector('small').textContent='先看这里';
+    const next=conclusion.querySelector('p');
+    next.prepend(document.createTextNode('接下来：'));
+  }
+  const references=report.querySelector('.clinical-references');
+  if(references){
+    const details=document.createElement('details');details.className='clinical-references';
+    details.innerHTML='<summary>医学参考文献</summary>';
+    const links=references.querySelector('ul');
+    if(links)details.append(links);
+    references.replaceWith(details);
+  }
+};
+const dailyReportIntro=$('#todayHealthReport .daily-report-body p');
+dailyReportIntro?.remove();
+setAssessment(glucoseSelect.value);
+
+if(!state.seededMealReviews){
+  for(const [index,meal] of state.meals.filter(item=>item.sample).slice(0,4).entries()){
+    meal.rating=index%2?4:5;
+    meal.note=['份量刚好','下次想加一份青菜','口味清淡','适合做工作日午饭'][index];
+  }
+  state.seededMealReviews=true;
+  save();
+}
+const mealDetailBeforeReview=openMealDetail;
+openMealDetail=function(id){
+  mealDetailBeforeReview(id);
+  const meal=state.meals.find(item=>item.id===id);
+  const modalBody=$('#modal');
+  if(!meal||!modalBody)return;
+  let rating=Number(meal.rating)||0;
+  const review=document.createElement('form');review.className='meal-review';
+  review.innerHTML='<h3>我的用餐评价</h3><div class="meal-review-stars" role="group" aria-label="星级评分"></div><label for="mealNote">备注（选填）</label><textarea id="mealNote" maxlength="120"></textarea><button class="textbutton" type="submit">保存评价</button><button class="textbutton" type="button" data-clear-rating>清除评分</button>';
+  review.querySelector('textarea').value=meal.note||'';
+  const stars=review.querySelector('.meal-review-stars');
+  function updateStars(){
+    [...stars.children].forEach((button,index)=>{
+      button.textContent=index<rating?'★':'☆';
+      button.setAttribute('aria-pressed',String(index+1===rating));
+    });
+  }
+  for(let value=1;value<=5;value++){
+    const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',value+' 星');
+    button.onclick=()=>{rating=value;updateStars();};stars.append(button);
+  }
+  updateStars();
+  review.querySelector('[data-clear-rating]').onclick=()=>{rating=0;updateStars();};
+  review.onsubmit=event=>{
+    event.preventDefault();
+    meal.rating=rating;
+    meal.note=review.querySelector('textarea').value.trim();
+    save();
+    if($('#diary').classList.contains('active'))renderPhotos();
+    toast('评价已保存');
+  };
+  modalBody.lastElementChild.before(review);
+};
+const mealSaveBeforeReview=submitMeal;
+submitMeal=function(event){
+  const previous=state.meals.find(item=>item.id===editing);
+  mealSaveBeforeReview(event);
+  const updated=previous&&state.meals.find(item=>item.id===previous.id);
+  if(updated&&updated!==previous){updated.rating=previous.rating;updated.note=previous.note;save();if($('#diary').classList.contains('active'))renderPhotos();}
+};
+const mealGalleryBeforeReview=renderPhotos;
+renderPhotos=function(){
+  mealGalleryBeforeReview();
+  for(const button of $('#diary').querySelectorAll('button.meal-slot')){
+    const period=button.querySelector('b');
+    const name=button.querySelector('span:not(.gallery-photo)')?.textContent;
+    if(period&&name)button.setAttribute('aria-label',period.textContent+'：'+name);
+  }
+};
+const renderGalleryWithReviewLabels=renderPhotos;
+renderPhotos=function(){
+  renderGalleryWithReviewLabels();
+  for(const card of $('#diary').querySelectorAll('.meal-slot[data-meal-id]')){
+    const meal=state.meals.find(item=>String(item.id)===card.dataset.mealId);
+    if(!meal)continue;
+    for(const [value,cls] of [[meal.rating?'★'.repeat(Math.min(5,Number(meal.rating))):'','meal-mini-stars'],[meal.note,'meal-mini-note']]){
+      if(!value)continue;
+      const line=document.createElement('small');line.className=cls;line.textContent=value;card.append(line);
+    }
+  }
+};
+const diaryHeaderHint=$('#diary .section-head p');
+diaryHeaderHint?.remove();
+</script>
+<script>
+const readableAlertCopy={
+  high:'先再测一次。如果多次测量都比医生给你的目标高，请联系医生。',
+  low:'如果你清醒、能正常吞咽，马上按包装说明补约 15 克糖，例如葡萄糖片。等 15 分钟再测一次。',
+  'urgent-low':'如果对方叫不醒、抽搐或吞不下东西，马上打 120。不要给对方吃东西或喝水。',
+  'urgent-high':'如果呼吸困难、吐到喝不下水、测出血酮明显升高，或血糖一直在 16.7 mmol/L 以上，马上去急诊或打 120。'
+};
+for(const [key,copy] of Object.entries(readableAlertCopy)){
+  glucoseAdvice[key].brief=copy;
+  if(key in simpleGlucoseGuidance)simpleGlucoseGuidance[key]=copy;
+}
+const noticeMarkupBeforePlainAlerts=noticeMarkup;
+noticeMarkup=function(message){
+  const key=String(message.id||'').replace(/^alert-/,'');
+  return noticeMarkupBeforePlainAlerts(readableAlertCopy[key]?{...message,text:readableAlertCopy[key]}:message);
+};
+setAssessment(glucoseSelect.value);
+</script>
+<style>
+.light-goal .goal-week{display:none}
+.light-goal .light-goal-footer{justify-content:flex-end}
+#lightGoalCheck[aria-pressed="true"]{background:#e6f0f7;color:#245b83}
+</style>
+<script>
+if(state.lightChecked&&!state.lightCheckedDay)state.lightCheckedDay=mealDayKey();
+const drawGoalBeforeUndo=drawLightGoal;
+drawLightGoal=function(){
+  if(state.lightChecked&&state.lightCheckedDay!==mealDayKey())state.lightChecked=false;
+  drawGoalBeforeUndo();
+  const button=$('#lightGoalCheck');
+  button.disabled=false;
+  button.setAttribute('aria-pressed',String(!!state.lightChecked));
+  button.textContent=state.lightChecked?'已完成 · 撤销':'完成目标';
+};
+checkLightGoal=function(){
+  state.lightChecked=!(state.lightChecked&&state.lightCheckedDay===mealDayKey());
+  state.lightCheckedDay=state.lightChecked?mealDayKey():null;
+  save();
+  toast(state.lightChecked?'已完成今日目标':'已撤销完成');
+};
+drawLightGoal();
+</script>
+<style>
+.goal-checkins{margin-top:8px}
+.goal-checkin-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:4px}
+.goal-checkin-day{display:grid;justify-items:center;padding:3px 0;background:#edf3f8;border-radius:6px;color:#526b80;font-size:9px}
+.goal-checkin-day.done{background:#ffda48;color:#173b71;font-weight:700}
+.goal-checkin-day.today{outline:1px solid #165da8}
+.goal-checkin-day b{font-size:12px}.goal-checkins>strong{font-size:11px;color:#173b71}
+.light-goal .light-goal-footer{margin-top:7px}
+</style>
+<script>
+const goalCheckins=document.createElement('div');
+goalCheckins.className='goal-checkins';
+$('.light-goal-footer').before(goalCheckins);
+function recordedGoalDays(){
+  if(!Array.isArray(state.lightCheckinDays))state.lightCheckinDays=state.lightChecked&&state.lightCheckedDay?[state.lightCheckedDay]:[];
+  return state.lightCheckinDays;
+}
+recordedGoalDays();
+const drawGoalBeforeCheckinHistory=drawLightGoal;
+drawLightGoal=function(){
+  drawGoalBeforeCheckinHistory();
+  const days=new Set(recordedGoalDays());
+  let offset=days.has(mealDayKey())?0:1;
+  let streak=0;
+  while(streak<days.size&&days.has(mealDayKey(offset+streak)))streak++;
+  goalCheckins.innerHTML='<strong>'+(streak?'连续打卡 '+streak+' 天':'最近 7 天打卡')+'</strong><div class="goal-checkin-days">'+[6,5,4,3,2,1,0].map(i=>{
+    const day=mealDayKey(i),done=days.has(day);
+    return '<span class="goal-checkin-day'+(done?' done':'')+(i===0?' today':'')+'" aria-label="'+day+(done?' 已打卡':' 未打卡')+'"><b>'+ (done?'✓':'·')+'</b>'+ (i===0?'今天':day.slice(5).replace('-','/'))+'</span>';
+  }).join('')+'</div>';
+};
+const toggleGoalBeforeCheckinHistory=checkLightGoal;
+checkLightGoal=function(){
+  const today=mealDayKey();
+  const days=recordedGoalDays().filter(day=>day!==today);
+  if(!(state.lightChecked&&state.lightCheckedDay===today))days.push(today);
+  state.lightCheckinDays=days;
+  toggleGoalBeforeCheckinHistory();
+};
+drawLightGoal();
+</script>
 </body></html>
+
 
 
 
