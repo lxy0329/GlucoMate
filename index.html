@@ -418,17 +418,23 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
   const L=43,R=337,T=27,B=168,W=360,H=218,units="mmol/L";
   let mode="今日",ratio=1,dragging=false;
   const fixed=n=>Number(n).toFixed(2);
-  function getVals(){return datasets[mode]}
+  function getVals(){
+    const series=window.activeGlucoseSimulation;
+    if(!series)return datasets[mode];
+    return mode==="今日"?series:[...datasets[mode].slice(0,-1),series.at(-1)];
+  }
   // Select the nearest recorded demo sample; do not invent interpolated readings.
   function sampleAt(r){
     const values=getVals();
     const index=Math.round(Math.max(0,Math.min(1,r))*(values.length-1));
     return {value:values[index],ratio:index/(values.length-1),index};
   }
-  const y=v=>B-(v-3)/6*(B-T);
+  const axisMax=()=>Math.max(9,Math.ceil(Math.max(...getVals())/3)*3);
+  const y=v=>B-(v-2)/(axisMax()-2)*(B-T);
   const x=r=>L+(R-L)*r;
   function timeLabel(r){
     if(mode==="今日"){
+      if(window.activeGlucoseSimulation)return ["08:00","11:30","15:30","16:30"][Math.round(r*3)];
       const minutes=Math.round((6*60+12*60*r)/5)*5;
       return `${String(Math.floor(minutes/60)).padStart(2,"0")}:${String(minutes%60).padStart(2,"0")}`;
     }
@@ -450,18 +456,18 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
     const d=toPath(),value=sample.value,cx=x(sample.ratio),cy=y(value);
     const tipX=Math.min(R-143,Math.max(L,cx-55)),tipY=Math.max(3,cy-74);
     const label=timeLabel(sample.ratio);
-    const tickLabels=mode==="今日"?["06:00","09:00","12:00","15:00","18:00"]:mode==="7天"?["7天前","5天前","3天前","1天前","今天"]:["30天前","23天前","15天前","7天前","今天"];
+    const tickLabels=mode==="今日"?(window.activeGlucoseSimulation?["08:00","11:30","15:30","16:30"]:["06:00","09:00","12:00","15:00","18:00"]):mode==="7天"?["7天前","5天前","3天前","1天前","今天"]:["30天前","23天前","15天前","7天前","今天"];
     svg.innerHTML=`<defs><linearGradient id="glucoNewFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#297bb8" stop-opacity=".24"/><stop offset="1" stop-color="#297bb8" stop-opacity=".02"/></linearGradient></defs>
-      ${[9,7,5,3].map(v=>`<line x1="${L}" y1="${y(v)}" x2="${R}" y2="${y(v)}" stroke="#dbe7ef" stroke-width="1" stroke-dasharray="3 5"/><text class="axis-label" x="${L-10}" y="${y(v)+5}" text-anchor="end">${v.toFixed(1)}</text>`).join("")}
+      ${[axisMax(),2+(axisMax()-2)*2/3,2+(axisMax()-2)/3,2].map(v=>`<line x1="${L}" y1="${y(v)}" x2="${R}" y2="${y(v)}" stroke="#dbe7ef" stroke-width="1" stroke-dasharray="3 5"/><text class="axis-label" x="${L-10}" y="${y(v)+5}" text-anchor="end">${v.toFixed(1)}</text>`).join("")}
       <path id="chartArea" d="${d} L${R} ${B} L${L} ${B} Z" fill="url(#glucoNewFill)"/>
       <path id="chartLine" d="${d}" fill="none" stroke="#1b73b6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      ${mode==="今日"?[[10/24,7.45],[17/24,6.55]].map(([r,v])=>`<circle cx="${x(r)}" cy="${y(v)}" r="3.4" fill="#e4574d" stroke="#fff" stroke-width="1.5"/>`).join(""):""}
+      ${mode==="今日"&&!window.activeGlucoseSimulation?[[10/24,7.45],[17/24,6.55]].map(([r,v])=>`<circle cx="${x(r)}" cy="${y(v)}" r="3.4" fill="#e4574d" stroke="#fff" stroke-width="1.5"/>`).join(""):""}
       <line x1="${cx}" y1="${T}" x2="${cx}" y2="${B}" stroke="#2d85c4" stroke-width="1.4" stroke-dasharray="4 4" opacity=".65"/>
       <circle cx="${cx}" cy="${cy}" r="11" fill="#2d85c4" opacity=".13"/>
       <circle cx="${cx}" cy="${cy}" r="6.2" fill="#fff" stroke="#176eaf" stroke-width="3"/>
       <circle cx="${R}" cy="${y(getVals().at(-1))}" r="4.7" fill="#176eaf" stroke="#fff" stroke-width="2.2"/>
       <g class="cursor-tip" transform="translate(${tipX},${tipY})"><rect x="0" y="0" width="143" height="61" rx="13" fill="#206eab"/><path d="M${Math.max(10,Math.min(133,cx-tipX))} 67 l-6 -6 h12Z" fill="#206eab"/><text class="cursor-time" x="13" y="21" fill="#dcecff" font-size="14" font-weight="700">${label}</text><text class="cursor-value" x="13" y="45" fill="#fff" font-size="21" font-weight="800">${value.toFixed(1)}<tspan class="cursor-unit" dx="6" font-size="11" font-weight="500">${units}</tspan></text></g>
-      ${tickLabels.map((s,i)=>`<text class="axis-label time-label" x="${x(i/4)}" y="${H-9}" text-anchor="${i===0?"start":i===4?"end":"middle"}">${s}</text>`).join("")}
+      ${tickLabels.map((s,i)=>`<text class="axis-label time-label" x="${x(i/(tickLabels.length-1))}" y="${H-9}" text-anchor="${i===0?"start":i===tickLabels.length-1?"end":"middle"}">${s}</text>`).join("")}
       <rect x="${L}" y="${T}" width="${R-L}" height="${B-T+10}" fill="transparent" style="cursor:ew-resize" aria-hidden="true"/>`;
     const metric=document.getElementById("reading");
     if(metric)metric.innerHTML=`${value.toFixed(1)} <span>${units}</span><strong>→</strong>`;
@@ -494,6 +500,7 @@ svg.chart:focus-visible{outline:2px solid #287bb9;outline-offset:4px;border-radi
   svg.addEventListener("pointerup",stop);svg.addEventListener("pointercancel",stop);
   svg.addEventListener("lostpointercapture",stop);
   svg.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","Home","End"].includes(e.key)){e.preventDefault();if(e.key==="Home")ratio=0;else if(e.key==="End")ratio=1;else ratio=Math.max(0,Math.min(1,ratio+(e.key==="ArrowRight"?1:-1)/(mode==="今日"?24:mode==="7天"?6:14)));paint();}});
+  window.refreshGlucoseSimulation=()=>{ratio=1;paint();};
   window.range=function(label,el){if(!datasets[label])return;mode=label;ratio=1;buttons.forEach(b=>b.classList.toggle("active",b===el));paint();};
   const hint=document.createElement("p");hint.id="chartScrubHint";hint.className="chart-scrub-hint";hint.setAttribute("aria-live","polite");svg.insertAdjacentElement("afterend",hint);
   paint();
@@ -1301,6 +1308,7 @@ favoriteEntry.querySelector('button').onclick=showSavedSigns;
 
 let communityFeed='all';
 let communityType='all';
+let communitySort='mixed';
 let communitySearch='';
 function followedAuthors(){return Array.isArray(state.followedAuthors)?state.followedAuthors:[];}
 const threadsPostMarkup=postMarkup;
@@ -1339,7 +1347,7 @@ drawCommunity=function(){
   const section=$('#learn');
   const browse=document.createElement('div');
   browse.className='social-browse';
-  browse.innerHTML='<button data-feed="all">推荐</button><button data-feed="following">关注</button><select aria-label="筛选帖子类型"><option value="all">全部帖子</option><option value="daily">日常动态</option><option value="help">求助帖</option><option value="science">科普帖</option></select><input type="search" aria-label="搜索社群" placeholder="搜索帖子或作者">';
+  browse.innerHTML='<button data-feed="all">推荐</button><button data-feed="following">关注</button><select aria-label="帖子排序"><option value="mixed">排序：综合</option><option value="new">排序：最新</option><option value="hot">排序：最热</option></select><div class="forum-type-row" role="group" aria-label="帖子类型"><button type="button" data-post-filter="all">全部</button><button type="button" data-post-filter="science">科普帖</button><button type="button" data-post-filter="help">求助帖</button><button type="button" data-post-filter="daily">日常帖</button></div><input type="search" aria-label="搜索社群" placeholder="搜索帖子或作者">';
   section.querySelector('.social-tabs').after(browse);
   const cards=[...section.querySelectorAll('.community-post')];
   const posts=[...state.socialPosts,...publicExamples];
@@ -1352,6 +1360,15 @@ drawCommunity=function(){
       card.hidden=!shown;
       if(shown)visible++;
     });
+    const entries=cards.map((card,index)=>({card,post:posts[index],index}));
+    const timestamp=post=>Date.parse(post?.createdAt)||Number(post?.id)||0;
+    const heat=post=>{
+      const id=String(post?.id);
+      return (state.comments?.[id]?.length||0)*2+Number(socialMarks('likes').includes(id))+Number(socialMarks('reposts').includes(id))*2+Number(socialMarks('socialBookmarks').includes(id));
+    };
+    if(communitySort==='new')entries.sort((a,b)=>timestamp(b.post)-timestamp(a.post)||a.index-b.index);
+    if(communitySort==='hot')entries.sort((a,b)=>heat(b.post)-heat(a.post)||timestamp(b.post)-timestamp(a.post)||a.index-b.index);
+    entries.forEach(({card})=>empty.before(card));
     empty.hidden=visible>0;
   }
   const empty=document.createElement('p');empty.className='community-empty';empty.textContent='没有符合条件的帖子';section.append(empty);
@@ -1359,7 +1376,11 @@ drawCommunity=function(){
     button.setAttribute('aria-pressed',String(button.dataset.feed===communityFeed));
     button.onclick=()=>{communityFeed=button.dataset.feed;browse.querySelectorAll('[data-feed]').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.feed===communityFeed)));filterPosts();};
   });
-  const select=browse.querySelector('select');select.value=communityType;select.onchange=()=>{communityType=select.value;filterPosts();};
+  const select=browse.querySelector('select');select.value=communitySort;select.onchange=()=>{communitySort=select.value;filterPosts();};
+  const typeButtons=[...browse.querySelectorAll('[data-post-filter]')];
+  function syncTypeButtons(){typeButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.postFilter===communityType)));}
+  typeButtons.forEach(button=>button.onclick=()=>{communityType=button.dataset.postFilter;syncTypeButtons();filterPosts();});
+  syncTypeButtons();
   const input=browse.querySelector('input');input.value=communitySearch;input.oninput=()=>{communitySearch=input.value;filterPosts();};
   filterPosts();
 };
@@ -1679,7 +1700,7 @@ renderPhotos=function(){
   const recent=[0,1,2].map(mealDayKey);
   const older=[...byDate.keys()].filter(day=>day<recent[2]).sort().reverse();
   oldGrid.outerHTML=recent.map(day=>dayMarkup(day,byDate.get(day)||[])).join('')+(older.length?'<details class="meal-history" id="mealHistory" '+(historyWasOpen?'open':'')+'><summary>更早的记录 · '+older.length+' 天</summary>'+older.map(day=>dayMarkup(day,byDate.get(day))).join('')+'</details>':'');
-  section.querySelector('.section-head h2').textContent='吃过的食物';
+  section.querySelector('.section-head h2').textContent='吃过的食物';section.querySelector('.section-head p')?.remove();
 };
 const drawSignSceneBeforeDoodles=signScene;
 signScene=function(sign){
@@ -1956,7 +1977,7 @@ renderPhotos=function(){
     const id=Number(button.getAttribute('onclick').match(/\((\d+)\)/)?.[1]);
     const meal=state.meals.find(entry=>entry.id===id);
     if(!meal)return;
-    button.removeAttribute('onclick');button.onclick=()=>openMealDetail(id);
+    button.dataset.mealId=String(id);button.removeAttribute('onclick');button.onclick=()=>openMealDetail(id);
     const old=button.querySelector('.doodle-box,img');
     if(old)old.outerHTML=mealPhotoTile(meal);
   });
@@ -2183,18 +2204,14 @@ function openCommunityNotices(){
   modal('社群消息',[...unread,...history].map(noticeMarkup).join('')||'<p>暂无社群消息。</p>');
   if(unread.length){readingMessages=unread;}
 }
-const drawBeforeCommunityNotices=drawCommunity;
-drawCommunity=function(){
-  drawBeforeCommunityNotices();
-  const tabs=$('#learn .social-tabs');
-  if(!tabs)return;
-  const button=document.createElement('button');
-  button.type='button';button.className='textbutton';
-  button.style.marginBottom='7px';
-  button.textContent='✉ 社群消息';
-  button.onclick=openCommunityNotices;
-  tabs.before(button);
-};
+const communityNoticeButton=document.createElement('button');
+communityNoticeButton.type='button';
+communityNoticeButton.className='community-notice-icon';
+communityNoticeButton.setAttribute('aria-label','社群消息');
+communityNoticeButton.title='社群消息';
+communityNoticeButton.textContent='✉';
+communityNoticeButton.onclick=openCommunityNotices;
+socialAvatar.before(communityNoticeButton);
 drawCommunity();
 drawInbox();
 </script>
@@ -2447,7 +2464,717 @@ if(profileDeviceCard){
 }
 historyCard.after(fortuneSettings);
 </script>
+<style>
+.layout .ai-panel{
+  inset:auto 10px calc(64px + env(safe-area-inset-bottom)) auto;
+  width:min(290px,calc(100% - 20px));
+  height:min(350px,calc(100% - 82px - env(safe-area-inset-bottom)));
+  border:1px solid #b4cce4;border-radius:15px;
+  box-shadow:0 7px 24px #173b7138;overflow:hidden;
+}
+.ai-panel .ai-head{padding:7px 11px;flex:none}
+.ai-panel .ai-head h3{font-size:13px}
+.ai-panel .ai-head small{display:none}
+.ai-panel .ai-head button{width:32px;height:32px;line-height:1;font-size:22px}
+.ai-panel .ai-body{min-height:0;padding:9px;gap:8px;overscroll-behavior:contain}
+.ai-panel .ai-bubble{padding:7px 9px;font-size:12px}
+.ai-panel .ai-compose{padding:7px;flex:none}
+.ai-panel .ai-compose input{padding:7px 8px;font-size:16px}
+.layout:has(.ai-panel.open) .ai-fab{visibility:hidden}
+</style>
+<script>
+aiPanel.setAttribute('role','dialog');
+aiButton.setAttribute('aria-controls',aiPanel.id);
+aiButton.setAttribute('aria-expanded','false');
+const openFloatingSugarAI=openSugarAI;
+openSugarAI=function(){
+  aiButton.setAttribute('aria-expanded','true');
+  openFloatingSugarAI();
+};
+const closeFloatingSugarAI=closeSugarAI;
+closeSugarAI=function(){
+  aiButton.setAttribute('aria-expanded','false');
+  closeFloatingSugarAI();
+};
+aiPanel.addEventListener('keydown',event=>{
+  if(event.key==='Escape'){event.stopPropagation();closeSugarAI();}
+});
+</script>
+<style>
+body .main .mobilebrand{position:sticky;top:0;z-index:18;background:linear-gradient(105deg,#c9edfa,#fff6d9 65%,#ffe686);padding:6px 4px;box-shadow:0 3px 0 #173b7112}
+#modal:has(.clinical-report)> .row:first-child{position:sticky;top:0;z-index:2;background:#fff;padding:6px 0;border-bottom:1px solid #dce6ee}
+.clinical-report{font-size:12px;color:#173b55}.clinical-report h3{margin:10px 0 5px}
+.clinical-meta{font-size:10px;color:#536c80;margin:7px 0}
+.clinical-block,.clinical-metric{border:1px solid #cbdde8;border-radius:10px;padding:8px;margin:6px 0;background:#f5faff}
+.clinical-block[data-risk="urgent"]{background:#ffe8ec;border-color:#ba3449;color:#831326}
+.clinical-block[data-risk="watch"]{background:#fff4dc}
+.clinical-metric{display:block;width:100%;text-align:left;color:#173b55}
+.clinical-metric strong{display:block;font-size:17px}
+.clinical-report table{width:100%;border-collapse:collapse}
+.clinical-report th,.clinical-report td{text-align:left;border-bottom:1px solid #dce6ee;padding:5px}
+.clinical-actions{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+</style>
+<script>
+const clinicalSources={
+  glucose:'https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis',
+  oxygen:'https://www.fda.gov/consumers/consumer-updates/pulse-oximeter-basics'
+};
+const reportScenarios={
+  stable:[5.4,5.1,7.3,6.9],
+  high:[5.8,6.4,8.6,9.1],
+  low:[5.4,5.0,4.5,3.6],
+  'urgent-high':[7.2,12.1,16.8,17.2],
+  'urgent-low':[5.1,4.4,3.6,2.8]
+};
+function clinicalSnapshot(){
+  const key=$('#demoState')?.value||'stable';
+  const glucose=reportScenarios[key]||reportScenarios.stable;
+  const oxygen=[98,97,98,98];
+  const times=['08:00','11:30','15:30','16:30'];
+  const abnormal=key!=='stable';
+  const urgent=key.startsWith('urgent');
+  const label=key.endsWith('low')?'低于低血糖警戒值':abnormal?'高于情境参考值':'进食状态未标记，暂不判断';
+  const guidance=glucoseAdvice[key]?.brief||'先标记空腹或进食时间。如有持续异常或症状，请咨询医生。';
+  return {key,glucose,oxygen,times,urgent,abnormal,label,guidance,date:new Date().toLocaleDateString('zh-CN')};
+}
+const glucoseReference='成人非孕实验室参考：空腹血浆葡萄糖 ≤5.5 mmol/L（99 mg/dL）；标准口服葡萄糖耐量试验 2 小时 <7.8 mmol/L。普通餐后和穿戴读数不能直接套用这些诊断界值。低血糖警戒值为 3.9 mmol/L。';
+const oxygenReference='多数健康成人静息 SpO₂ 为 95%–100%。高海拔或慢性心肺疾病的目标可能不同。低于个人目标或持续偏低，应复测并联系医生；严重呼吸困难、胸痛或嘴唇发紫时应立即求助。';
+const reportDisclaimer='课程原型模拟报告。数据未由设备采集，不能用于诊断、用药或真实风险判断。';
+function clinicalTable(r){
+  return '<table><thead><tr><th>测量时间</th><th>血糖 mmol/L</th><th>SpO₂ %</th></tr></thead><tbody>'+r.times.map((time,i)=>'<tr><td>'+time+'</td><td>'+r.glucose[i].toFixed(1)+'</td><td>'+r.oxygen[i]+'</td></tr>').join('')+'</tbody></table>';
+}
+function clinicalConclusion(r){
+  if(r.urgent)return '危急模拟情境 · 立即行动';
+  if(r.abnormal)return r.key==='low'?'血糖偏低 · 需要处理':'血糖偏高 · 建议复测';
+  return '血氧在常见范围，血糖需结合进食状态';
+}
+function clinicalMeta(r){
+  return '<p class="clinical-meta">报告日期 '+esc(r.date)+' · 最近测量 16:30<br>来源：原型模拟传感器 · 日度概览</p>';
+}
+function clinicalMetricDetail(metric){
+  const r=clinicalSnapshot();
+  const glucose=metric==='glucose';
+  const title=glucose?'血糖详情':'血氧饱和度详情';
+  const result=glucose?r.glucose.at(-1).toFixed(1)+' mmol/L':'98% SpO₂';
+  const range=glucose?glucoseReference:oxygenReference;
+  modal(title,'<div class="clinical-report">'+clinicalMeta(r)+'<div class="clinical-block"><h3>'+result+'</h3><p>'+esc(glucose?r.label:'位于常见参考范围内')+'</p></div><h3>参考范围与解读</h3><p>'+esc(range)+'</p><h3>趋势</h3>'+clinicalTable(r)+'<h3>下一步</h3><p>'+esc(glucose?r.guidance:'如读数异常，静坐、保持手指温暖并复测。若有明显症状，不要只依赖读数。')+'</p><a href="'+clinicalSources[metric]+'" target="_blank" rel="noopener">查阅参考来源 ↗</a><div class="clinical-actions"><button class="textbutton" onclick="openDailyHealthReport()">← 返回报告</button></div></div>');
+}
+function openClinicalTrend(){
+  const r=clinicalSnapshot();
+  modal('今日趋势与异常记录','<div class="clinical-report">'+clinicalMeta(r)+'<p>血糖范围 '+Math.min(...r.glucose).toFixed(1)+'–'+Math.max(...r.glucose).toFixed(1)+' mmol/L。血氧范围 97%–98%。</p>'+clinicalTable(r)+'<h3>异常事件</h3><p>'+esc(r.abnormal?'16:30 · '+clinicalConclusion(r)+'（模拟情境）':'本情境未设定异常事件。')+'</p><button class="textbutton" onclick="openDailyHealthReport()">← 返回报告</button></div>');
+}
+function printClinicalReport(){
+  const r=clinicalSnapshot();
+  const view=window.open('','_blank');
+  if(!view){toast('请允许打开打印窗口。');return;}
+  view.opener=null;
+  const fields=[['昵称',state.profileName||'未填写'],['年龄段','未记录'],['最近进食 / 运动','未记录'],['自报症状','未记录'],['异常事件',r.abnormal?'1 次（情境设定）':'0 次（情境设定）']];
+  view.document.write('<!doctype html><meta charset="utf-8"><title>GlucoMate 健康摘要</title><style>body{font:14px/1.65 sans-serif;color:#173b55;margin:32px}table{border-collapse:collapse;width:100%}th,td{padding:6px;border-bottom:1px solid #ccc;text-align:left} @media print{button{display:none}}</style><h1>GlucoMate 健康摘要</h1><p>'+esc(reportDisclaimer)+'</p>'+clinicalMeta(r)+'<h2>'+esc(clinicalConclusion(r))+'</h2><dl>'+fields.map(([label,value])=>'<dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd>').join('')+'</dl><h2>测量趋势</h2>'+clinicalTable(r)+'<h2>参考说明</h2><p>'+esc(glucoseReference)+'</p><p>'+esc(oxygenReference)+'</p><h2>建议</h2><p>'+esc(r.guidance)+'</p><p>参考：<a href="'+clinicalSources.glucose+'">NIDDK</a> · <a href="'+clinicalSources.oxygen+'">FDA</a></p><button onclick="print()">打印 / 保存为 PDF</button>');
+  view.document.close();
+}
+openDailyHealthReport=function(){
+  const r=clinicalSnapshot();
+  modal('我的今日健康报告','<div class="clinical-report">'+clinicalMeta(r)+'<section class="clinical-block" data-risk="'+(r.urgent?'urgent':r.abnormal?'watch':'stable')+'"><small>总体结论</small><h3>'+esc(clinicalConclusion(r))+'</h3><p>'+esc(r.guidance)+'</p></section><h3>核心指标</h3><button class="clinical-metric" onclick="clinicalMetricDetail(\'glucose\')"><strong>血糖 · '+r.glucose.at(-1).toFixed(1)+' mmol/L</strong>'+esc(r.label)+' · 查看参考区间与解释 →</button><button class="clinical-metric" onclick="clinicalMetricDetail(\'oxygen\')"><strong>血氧 · 98% SpO₂</strong>常见范围 95%–100% · 范围内 →</button><button class="clinical-metric" onclick="openClinicalTrend()"><strong>趋势与异常记录</strong>血糖 '+Math.min(...r.glucose).toFixed(1)+'–'+Math.max(...r.glucose).toFixed(1)+' mmol/L · 查看测量时间 →</button><p class="clinical-meta">'+esc(reportDisclaimer)+'</p><div class="clinical-actions"><button class="button secondary" onclick="printClinicalReport()">医学摘要 / PDF</button><button class="button" onclick="closeModal()">完成</button></div></div>');
+};
+const clinicalHomeCopy=$('#todayHealthReport .daily-report-body p');
+if(clinicalHomeCopy)clinicalHomeCopy.textContent='结论、指标与趋势 · 模拟报告';
+</script>
+<style>
+.layout{display:flex!important;flex-direction:column}
+.layout>.app-fixed-top{flex:0 0 auto;z-index:19;padding:max(5px,env(safe-area-inset-top)) 14px 5px;background:linear-gradient(105deg,#c9edfa,#fff6d9 65%,#ffe686);border-bottom:1px solid #b8d4e7}
+.layout>.app-fixed-top .mobilebrand{display:flex;margin:0!important;padding:2px 0;box-shadow:none}
+.layout>.main{flex:1;min-height:0;height:auto;padding-top:9px!important}
+.clinical-references{margin:10px 0 6px;padding-top:6px;border-top:1px solid #dce6ee}
+.clinical-references ul{margin:4px 0;padding-left:18px}
+.clinical-references a{color:#165da8;line-height:1.7}
+</style>
+<script>
+const fixedAppHeader=document.createElement('header');
+fixedAppHeader.className='app-fixed-top';
+const mainScroll=$('.layout > .main');
+mainScroll.before(fixedAppHeader);
+fixedAppHeader.append(mainScroll.querySelector('.mobilebrand'));
+
+const referenceList=[
+  ['NIDDK','糖尿病检测与诊断 · 空腹血糖与 OGTT',clinicalSources.glucose],
+  ['FDA','脉搏血氧仪 · 血氧范围与测量局限',clinicalSources.oxygen],
+  ['CDC','低血糖处理 · 15–15 规则',glucoseLowSource],
+  ['CDC','糖尿病酮症酸中毒 · 急症警讯',glucoseHighSource]
+];
+function addReportReferences(){
+  const report=$('#modal .clinical-report');
+  if(!report||report.querySelector('.clinical-references'))return;
+  const references=document.createElement('section');
+  references.className='clinical-references';
+  references.innerHTML='<h3>医学参考文献 · References</h3><ul>'+referenceList.map(([publisher,title,url])=>'<li><a href="'+url+'" target="_blank" rel="noopener noreferrer">'+esc(publisher+' · '+title)+' ↗</a></li>').join('')+'</ul>';
+  const actions=report.querySelector('.clinical-actions');
+  if(actions)actions.before(references);else report.append(references);
+}
+let personalReportMode=false;
+const openBaseClinicalReport=openDailyHealthReport;
+openDailyHealthReport=function(){
+  openBaseClinicalReport();
+  if(personalReportMode){
+    $('#modalTitle').textContent='我的数据与报告';
+    const report=$('#modal .clinical-report');
+    const extra=document.createElement('details');
+    extra.className='clinical-block';
+    extra.innerHTML='<summary>附加记录</summary><p>饮食记录 '+state.meals.length+' 条（含历史及模拟记录）。自报症状、近期活动与进食情境尚未记录。</p>';
+    report.querySelector('.clinical-actions').before(extra);
+  }
+  addReportReferences();
+};
+const baseClinicalMetric=clinicalMetricDetail;
+clinicalMetricDetail=function(metric){baseClinicalMetric(metric);addReportReferences();};
+const baseClinicalTrend=openClinicalTrend;
+openClinicalTrend=function(){baseClinicalTrend();addReportReferences();};
+const homepageReport=$('#todayHealthReport button');
+if(homepageReport){
+  homepageReport.removeAttribute('onclick');
+  homepageReport.onclick=()=>{personalReportMode=false;openDailyHealthReport();};
+}
+function openPersonalClinicalReport(){personalReportMode=true;openDailyHealthReport();}
+$('#viewMySummary').onclick=openPersonalClinicalReport;
+const settingsReportButton=$('#profile [onclick*="insights"]');
+if(settingsReportButton){
+  settingsReportButton.removeAttribute('onclick');
+  settingsReportButton.onclick=openPersonalClinicalReport;
+}
+</script>
+<style>
+:where(.layout,.layout *,#modal,#modal *,#fortuneOverlay,#fortuneOverlay *,#cameraPage,#cameraPage *){scrollbar-width:none;-ms-overflow-style:none}
+:where(.layout,.layout *,#modal,#modal *,#fortuneOverlay,#fortuneOverlay *,#cameraPage,#cameraPage *)::-webkit-scrollbar{display:none;width:0;height:0}
+.layout>.main,#modal,.lottery-panel,.ai-body{overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+body .layout>.main{padding-inline:14px!important}
+body .layout>.main .top{display:flex;align-items:center;justify-content:space-between;min-height:34px;margin:0 0 9px;padding:0;position:relative}
+body .layout>.main .top h1{margin:0;font-size:18px;line-height:1.3}
+body .layout>.main .top .social-avatar{position:static;width:32px;height:32px}
+body .layout>.main .top .top-right{display:none}
+.main :is(#today,#diary,#learn,#profile){--page-gap:10px}
+.main :is(#diary,#learn,#profile)>.card,.main #diary>.sugar-gallery{margin-bottom:var(--page-gap);border-radius:13px}
+.main #today #homeInbox,.main #today .overview{margin-bottom:var(--page-gap)}
+#today .home-main,#today .home-left,#today .col{gap:var(--page-gap)}
+</style>
+<script>
+const navigateBeforePageAlignment=go;
+const primaryPageTitles={today:'首页',diary:'饮食集锦',learn:'社群',profile:'我的'};
+function alignPrimaryPageTitle(page){
+  if(Object.hasOwn(primaryPageTitles,page))$('#heading').textContent=primaryPageTitles[page];
+}
+go=function(page){
+  navigateBeforePageAlignment(page);
+  alignPrimaryPageTitle(page);
+};
+alignPrimaryPageTitle(document.body.dataset.view||'today');
+</script>
+<style>
+body .layout>.app-fixed-top .mobilebrand{font-size:17px;line-height:1.2;min-height:28px}
+body .layout>.app-fixed-top .mobilebrand::before{width:26px;height:26px;font-size:19px;border-radius:8px;margin-right:7px}
+body .layout>.app-fixed-top .mobilebrand::after{font-size:7px;margin-left:6px}
+body .layout>.main .top #heading{font-size:18px;line-height:1.3}
+body .layout>.main .top{min-height:34px}
+body .layout>.main .top .social-avatar{position:absolute;right:0;top:1px;bottom:auto}
+</style><style>.forum-type-row{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.social-browse .forum-type-row button{min-height:32px;padding-inline:3px;white-space:nowrap}</style><style>.community-notice-icon{display:none}body[data-view="learn"] .main .top .community-notice-icon{display:grid;place-items:center;position:absolute;top:1px;right:39px;width:32px;height:32px;border-radius:8px;background:#edf6ff;color:#165da8;font-size:16px}</style><style>
+body[data-view="learn"] .layout>.main .top{margin-bottom:5px}
+#learn .social-tabs{gap:3px;margin-bottom:6px;padding:3px}
+#learn .social-tabs button{min-height:34px}
+#learn .social-browse{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:4px;margin-bottom:7px;align-items:stretch}
+#learn .social-browse>button,#learn .social-browse>select{min-height:32px;padding:4px 6px;white-space:nowrap}
+#learn .social-browse>input{grid-column:4;grid-row:1;min-width:0;min-height:32px;padding:4px 6px;font-size:12px}
+#learn .forum-type-row{grid-column:1/-1;grid-row:2;gap:3px;padding:2px;border-radius:8px;background:#edf5fc}
+#learn .forum-type-row button{min-height:31px;padding:3px 2px}
+@media(max-width:330px){
+ #learn .social-browse{grid-template-columns:auto auto minmax(0,1fr)}
+ #learn .social-browse>input{grid-column:1/-1;grid-row:3}
+}
+</style><style>
+.layout>.app-fixed-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.layout>.app-fixed-top #heading{margin:0;color:#173b71;font-size:16px;line-height:1.3;white-space:nowrap;font-weight:800}
+body:not([data-view="learn"]) .layout>.main .top{display:none}
+body[data-view="learn"] .layout>.main .top{min-height:32px;margin-bottom:5px}
+</style>
+<script>
+fixedAppHeader.append($('#heading'));
+</script>
+<style>
+.clinical-report{font-size:13px}.clinical-report .clinical-meta{font-size:11px;color:#405c73}
+.clinical-report .clinical-block{background:#e3f5ec;border-color:#a5d3bc}
+.clinical-report .clinical-block[data-risk=watch]{background:#fff0bd;border-color:#e8c567}
+.clinical-report .clinical-block[data-risk=urgent]{background:#ffe8ec}
+.clinical-report .clinical-metric{background:#e7f4ff;border-color:#a9cce8}
+.clinical-report .clinical-metric:nth-of-type(2){background:#e5f6f0;border-color:#aed7c9}
+.clinical-report .clinical-metric:nth-of-type(3){background:#fff4ce;border-color:#e8ce7e}
+.clinical-report .clinical-block h3{font-size:16px;margin:3px 0}
+.clinical-report .clinical-meta:last-of-type{margin:7px 0}
+.meal-slot>b{display:none}.meal-slot.empty-meal{min-height:35px}
+.meal-review{margin:8px 0;padding:8px;background:#fff3cb;border-radius:8px}
+.meal-review-stars{display:flex;gap:4px;margin:5px 0}
+.meal-review-stars button{color:#88570a;min-width:32px;min-height:32px;font-size:18px}
+.meal-review textarea{width:100%;box-sizing:border-box;min-height:52px;padding:6px;font:inherit;border:1px solid #c6dbea;border-radius:7px}
+.meal-slot .meal-mini-stars{color:#87560a;font-size:10px}.meal-slot .meal-mini-note{color:#365974;font-size:10px}
+</style>
+<script>
+const simpleGlucoseGuidance={
+  high:'先再测一次。若几次都比医生给你的目标高，就联系医生。',
+  low:'如果人清醒、能吞咽，马上补约 15 克快吸收糖，例如按说明吃葡萄糖片，15 分钟后再测。',
+  stable:'先看这次是空腹还是饭后。记录测量时间，方便下次对照。'
+};
+glucoseAdvice.high.brief=simpleGlucoseGuidance.high;
+glucoseAdvice.low.brief=simpleGlucoseGuidance.low;
+const reportSnapshotBeforePlainLanguage=clinicalSnapshot;
+clinicalSnapshot=function(){
+  const snapshot=reportSnapshotBeforePlainLanguage();
+  snapshot.guidance=simpleGlucoseGuidance[snapshot.key]||snapshot.guidance;
+  if(snapshot.key==='stable')snapshot.label='未记录是空腹还是饭后，先不判断';
+  return snapshot;
+};
+const reportBeforeReadableLayout=openDailyHealthReport;
+openDailyHealthReport=function(){
+  reportBeforeReadableLayout();
+  const report=$('#modal .clinical-report');
+  if(!report)return;
+  const conclusion=report.querySelector('.clinical-block');
+  if(conclusion){
+    conclusion.querySelector('small').textContent='先看这里';
+    const next=conclusion.querySelector('p');
+    next.prepend(document.createTextNode('接下来：'));
+  }
+  const references=report.querySelector('.clinical-references');
+  if(references){
+    const details=document.createElement('details');details.className='clinical-references';
+    details.innerHTML='<summary>医学参考文献</summary>';
+    const links=references.querySelector('ul');
+    if(links)details.append(links);
+    references.replaceWith(details);
+  }
+};
+const dailyReportIntro=$('#todayHealthReport .daily-report-body p');
+dailyReportIntro?.remove();
+setAssessment(glucoseSelect.value);
+
+if(!state.seededMealReviews){
+  for(const [index,meal] of state.meals.filter(item=>item.sample).slice(0,4).entries()){
+    meal.rating=index%2?4:5;
+    meal.note=['份量刚好','下次想加一份青菜','口味清淡','适合做工作日午饭'][index];
+  }
+  state.seededMealReviews=true;
+  save();
+}
+const mealDetailBeforeReview=openMealDetail;
+openMealDetail=function(id){
+  mealDetailBeforeReview(id);
+  const meal=state.meals.find(item=>item.id===id);
+  const modalBody=$('#modal');
+  if(!meal||!modalBody)return;
+  let rating=Number(meal.rating)||0;
+  const review=document.createElement('form');review.className='meal-review';
+  review.innerHTML='<h3>我的用餐评价</h3><div class="meal-review-stars" role="group" aria-label="星级评分"></div><label for="mealNote">备注（选填）</label><textarea id="mealNote" maxlength="120"></textarea><button class="textbutton" type="submit">保存评价</button><button class="textbutton" type="button" data-clear-rating>清除评分</button>';
+  review.querySelector('textarea').value=meal.note||'';
+  const stars=review.querySelector('.meal-review-stars');
+  function updateStars(){
+    [...stars.children].forEach((button,index)=>{
+      button.textContent=index<rating?'★':'☆';
+      button.setAttribute('aria-pressed',String(index+1===rating));
+    });
+  }
+  for(let value=1;value<=5;value++){
+    const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',value+' 星');
+    button.onclick=()=>{rating=value;updateStars();};stars.append(button);
+  }
+  updateStars();
+  review.querySelector('[data-clear-rating]').onclick=()=>{rating=0;updateStars();};
+  review.onsubmit=event=>{
+    event.preventDefault();
+    meal.rating=rating;
+    meal.note=review.querySelector('textarea').value.trim();
+    save();
+    if($('#diary').classList.contains('active'))renderPhotos();
+    toast('评价已保存');
+  };
+  modalBody.lastElementChild.before(review);
+};
+const mealSaveBeforeReview=submitMeal;
+submitMeal=function(event){
+  const previous=state.meals.find(item=>item.id===editing);
+  mealSaveBeforeReview(event);
+  const updated=previous&&state.meals.find(item=>item.id===previous.id);
+  if(updated&&updated!==previous){updated.rating=previous.rating;updated.note=previous.note;save();if($('#diary').classList.contains('active'))renderPhotos();}
+};
+const mealGalleryBeforeReview=renderPhotos;
+renderPhotos=function(){
+  mealGalleryBeforeReview();
+  for(const button of $('#diary').querySelectorAll('button.meal-slot')){
+    const period=button.querySelector('b');
+    const name=button.querySelector('span:not(.gallery-photo)')?.textContent;
+    if(period&&name)button.setAttribute('aria-label',period.textContent+'：'+name);
+  }
+};
+const renderGalleryWithReviewLabels=renderPhotos;
+renderPhotos=function(){
+  renderGalleryWithReviewLabels();
+  for(const card of $('#diary').querySelectorAll('.meal-slot[data-meal-id]')){
+    const meal=state.meals.find(item=>String(item.id)===card.dataset.mealId);
+    if(!meal)continue;
+    for(const [value,cls] of [[meal.rating?'★'.repeat(Math.min(5,Number(meal.rating))):'','meal-mini-stars'],[meal.note,'meal-mini-note']]){
+      if(!value)continue;
+      const line=document.createElement('small');line.className=cls;line.textContent=value;card.append(line);
+    }
+  }
+};
+const diaryHeaderHint=$('#diary .section-head p');
+diaryHeaderHint?.remove();
+</script>
+<script>
+const readableAlertCopy={
+  high:'先再测一次。如果多次测量都比医生给你的目标高，请联系医生。',
+  low:'如果你清醒、能正常吞咽，马上按包装说明补约 15 克糖，例如葡萄糖片。等 15 分钟再测一次。',
+  'urgent-low':'如果你还能呼救，马上请身边人帮忙。若你意识不清、抽搐或无法吞咽，身边人应立即拨打 120，不要喂你食物或水。',
+  'urgent-high':'如果呼吸困难、吐到喝不下水、测出血酮明显升高，或血糖一直在 16.7 mmol/L 以上，马上去急诊或打 120。'
+};
+for(const [key,copy] of Object.entries(readableAlertCopy)){
+  glucoseAdvice[key].brief=copy;
+  if(key in simpleGlucoseGuidance)simpleGlucoseGuidance[key]=copy;
+}
+const noticeMarkupBeforePlainAlerts=noticeMarkup;
+noticeMarkup=function(message){
+  const key=String(message.id||'').replace(/^alert-/,'');
+  return noticeMarkupBeforePlainAlerts(readableAlertCopy[key]?{...message,text:readableAlertCopy[key]}:message);
+};
+setAssessment(glucoseSelect.value);
+</script>
+<style>
+.light-goal .goal-week{display:none}
+.light-goal .light-goal-footer{justify-content:flex-end}
+#lightGoalCheck[aria-pressed="true"]{background:#e6f0f7;color:#245b83}
+</style>
+<script>
+if(state.lightChecked&&!state.lightCheckedDay)state.lightCheckedDay=mealDayKey();
+const drawGoalBeforeUndo=drawLightGoal;
+drawLightGoal=function(){
+  if(state.lightChecked&&state.lightCheckedDay!==mealDayKey())state.lightChecked=false;
+  drawGoalBeforeUndo();
+  const button=$('#lightGoalCheck');
+  button.disabled=false;
+  button.setAttribute('aria-pressed',String(!!state.lightChecked));
+  button.textContent=state.lightChecked?'已完成 · 撤销':'完成目标';
+};
+checkLightGoal=function(){
+  state.lightChecked=!(state.lightChecked&&state.lightCheckedDay===mealDayKey());
+  state.lightCheckedDay=state.lightChecked?mealDayKey():null;
+  save();
+  toast(state.lightChecked?'已完成今日目标':'已撤销完成');
+};
+drawLightGoal();
+</script>
+<style>
+.goal-checkins{margin-top:8px}
+.goal-checkin-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:4px}
+.goal-checkin-day{display:grid;justify-items:center;padding:3px 0;background:#edf3f8;border-radius:6px;color:#526b80;font-size:9px}
+.goal-checkin-day.done{background:#ffda48;color:#173b71;font-weight:700}
+.goal-checkin-day.today{outline:1px solid #165da8}
+.goal-checkin-day b{font-size:12px}.goal-checkins>strong{font-size:11px;color:#173b71}
+.light-goal .light-goal-footer{margin-top:7px}
+</style>
+<script>
+const goalCheckins=document.createElement('div');
+goalCheckins.className='goal-checkins';
+$('.light-goal-footer').before(goalCheckins);
+function recordedGoalDays(){
+  if(!Array.isArray(state.lightCheckinDays))state.lightCheckinDays=state.lightChecked&&state.lightCheckedDay?[state.lightCheckedDay]:[];
+  return state.lightCheckinDays;
+}
+recordedGoalDays();
+const drawGoalBeforeCheckinHistory=drawLightGoal;
+drawLightGoal=function(){
+  drawGoalBeforeCheckinHistory();
+  const days=new Set(recordedGoalDays());
+  let offset=days.has(mealDayKey())?0:1;
+  let streak=0;
+  while(streak<days.size&&days.has(mealDayKey(offset+streak)))streak++;
+  goalCheckins.innerHTML='<strong>'+(streak?'连续打卡 '+streak+' 天':'最近 7 天打卡')+'</strong><div class="goal-checkin-days">'+[6,5,4,3,2,1,0].map(i=>{
+    const day=mealDayKey(i),done=days.has(day);
+    return '<span class="goal-checkin-day'+(done?' done':'')+(i===0?' today':'')+'" aria-label="'+day+(done?' 已打卡':' 未打卡')+'"><b>'+ (done?'✓':'·')+'</b>'+ (i===0?'今天':day.slice(5).replace('-','/'))+'</span>';
+  }).join('')+'</div>';
+};
+const toggleGoalBeforeCheckinHistory=checkLightGoal;
+checkLightGoal=function(){
+  const today=mealDayKey();
+  const days=recordedGoalDays().filter(day=>day!==today);
+  if(!(state.lightChecked&&state.lightCheckedDay===today))days.push(today);
+  state.lightCheckinDays=days;
+  toggleGoalBeforeCheckinHistory();
+};
+drawLightGoal();
+</script>
+<script>
+function photoDrafts(){return state.mealPhotoDrafts??=[];}
+let editingPhotoDraft=null;
+captureFood=async function(input){
+  const file=input.files[0];
+  if(!file)return;
+  input.value='';
+  const url=URL.createObjectURL(file);
+  try{
+    const image=new Image();image.src=url;await image.decode();
+    const scale=Math.min(1,720/Math.max(image.width,image.height));
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.max(1,Math.round(image.width*scale));
+    canvas.height=Math.max(1,Math.round(image.height*scale));
+    canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
+    const draft={id:Date.now(),photo:canvas.toDataURL('image/jpeg',.72)};
+    photoDrafts().unshift(draft);save();closeCamera();go('diary');openPhotoDraft(draft.id);
+    if('TextDetector' in window){
+      try{
+        const lines=(await new window.TextDetector().detect(canvas)).map(line=>line.rawValue);
+        const sugar=lines.join('\n').match(/(?:总糖|糖分|糖含量|糖\s*[:：])\s*([\d.]+)\s*(?:克|g)/i);
+        const name=lines.find(line=>/^(?:品名|产品名称)[:：]/.test(line));
+        if(name)draft.name=name.split(/[:：]/).slice(1).join('：').trim();
+        if(sugar)draft.labelSugar=sugar[1];
+        save();
+        if(editingPhotoDraft===draft.id)applyPhotoSuggestions(draft);
+      }catch{}
+    }
+  }catch{toast('照片无法读取，请重新选择。');}
+  finally{URL.revokeObjectURL(url);}
+};
+function applyPhotoSuggestions(draft){
+  const name=$('#foodName');
+  if(name&&!name.value&&draft.name)name.value=draft.name.slice(0,40);
+  const hint=$('#photoDraftHint');
+  if(hint&&draft.labelSugar)hint.textContent='标签识别到糖 '+draft.labelSugar+' g，请核对标签份量后填写实际摄入量。';
+}
+function openPhotoDraft(id){
+  const draft=photoDrafts().find(item=>item.id===id);
+  if(!draft)return;
+  capturedPhoto=draft.photo;
+  openMeal();
+  editingPhotoDraft=id;
+  $('#mealForm').insertAdjacentHTML('afterbegin','<p id="photoDraftHint">照片已加入集锦。请确认食物名称和糖量。</p><button type="button" class="textbutton" id="deletePhotoDraft">删除待补照片</button>');
+  $('#deletePhotoDraft').onclick=()=>{
+    state.mealPhotoDrafts=photoDrafts().filter(item=>item.id!==id);
+    editingPhotoDraft=null;save();closeModal();go('diary');
+  };
+  applyPhotoSuggestions(draft);
+}
+const openMealBeforePhotoDraft=openMeal;
+openMeal=function(id){editingPhotoDraft=null;openMealBeforePhotoDraft(id);};
+const saveBeforePhotoDraft=submitMeal;
+submitMeal=function(event){
+  const draftId=editingPhotoDraft;
+  saveBeforePhotoDraft(event);
+  if(draftId&&!$('#overlay').classList.contains('open')){
+    state.mealPhotoDrafts=photoDrafts().filter(item=>item.id!==draftId);
+    editingPhotoDraft=null;save();renderPhotos();
+  }
+};
+const galleryBeforePhotoDrafts=renderPhotos;
+renderPhotos=function(){
+  galleryBeforePhotoDrafts();
+  if(!photoDrafts().length)return;
+  $('#diary .section-head')?.insertAdjacentHTML('afterend','<section class="meal-day"><h3>待补记录</h3><div class="meal-day-grid">'+photoDrafts().map(draft=>'<button type="button" class="meal-slot" onclick="openPhotoDraft('+Number(draft.id)+')"><img src="'+esc(draft.photo)+'" alt="待补的食物照片"><span>'+esc(draft.name||'补填食物信息')+'</span></button>').join('')+'</div></section>');
+};
+</script>
+<style>
+#fortuneOverlay:has(.fortune-ticket) .lottery-panel{background:#fff9eb;border:2px solid #abcbd7;color:#173b71;box-shadow:none}
+#fortuneOverlay .fortune-ticket{border:0;background:#fff9eb}
+#fortuneOverlay .fortune-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+#fortuneOverlay .fortune-disclaimer{color:#655b51}
+.clinical-report .report-first-action{background:#fff;padding:7px;border-radius:7px}
+.clinical-report .report-first-action strong{display:block}
+</style>
+<script>
+const assessmentBeforeChartSync=setAssessment;
+setAssessment=function(value){
+  assessmentBeforeChartSync(value);
+  window.activeGlucoseSimulation=reportScenarios[value]||reportScenarios.stable;
+  window.refreshGlucoseSimulation?.();
+};
+setAssessment(glucoseSelect.value);
+
+const reportBeforePriority=openDailyHealthReport;
+openDailyHealthReport=function(){
+  reportBeforePriority();
+  const report=$('#modal .clinical-report');
+  const summary=report?.querySelector('.clinical-block');
+  if(!summary)return;
+  const r=clinicalSnapshot();
+  const title=summary.querySelector('h3');
+  title.textContent=r.key==='stable'?'血氧在常见范围，血糖还需看测量时间':r.key.endsWith('low')?(r.urgent?'血糖很低，马上求助':'血糖偏低，先处理'):(r.urgent?'血糖危急，马上就医':'血糖偏高，先再测一次');
+  summary.querySelector('small').textContent='先看结论';
+  const action=summary.querySelector('p');
+  action.className='report-first-action';
+  action.textContent='';
+  const label=document.createElement('strong');label.textContent='下一步';
+  action.append(label,document.createTextNode(r.guidance));
+  const cards=report.querySelectorAll('.clinical-metric');
+  if(cards[0]?.lastChild)cards[0].lastChild.textContent=(r.key==='stable'?'需要知道是空腹还是饭后':r.key.endsWith('low')?'低于警戒值':'本次模拟读数偏高')+' · 查看详情 →';
+  if(cards[1]?.lastChild)cards[1].lastChild.textContent='在常见范围内 · 查看详情 →';
+};
+</script>
+<script>
+let labelReaderPromise;
+function getFoodLabelReader(){
+  if(!labelReaderPromise){
+    labelReaderPromise=new Promise((resolve,reject)=>{
+      const script=document.createElement('script');
+      script.src='https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';
+      script.onload=()=>resolve(window.Tesseract.createWorker('chi_sim+eng'));
+      script.onerror=()=>reject(new Error('识别组件未加载'));
+      document.head.append(script);
+    }).catch(error=>{labelReaderPromise=null;throw error;});
+  }
+  return labelReaderPromise;
+}
+let foodLabelQueue=Promise.resolve();
+function scanFoodDraft(draft){
+  draft.scanStatus='正在读取照片中的包装文字…';
+  applyPhotoSuggestions(draft);
+  foodLabelQueue=foodLabelQueue.then(async()=>{
+    try{
+      const worker=await getFoodLabelReader();
+      const result=await worker.recognize(draft.photo);
+      const lines=result.data.text.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+      const nameLine=lines.find(line=>/^(?:产品名称|品名|product name)\s*[:：]/i.test(line));
+      if(nameLine&&!draft.name)draft.name=nameLine.replace(/^[^:：]+[:：]\s*/,'').slice(0,40);
+      const sugarRow=lines.find(line=>/^(?:总\s*糖|糖|糖分|糖含量|total sugars?)\s*[:：]?\s*\d+(?:[.,]\d+)?\s*(?:克|g\b)/i.test(line));
+      if(sugarRow)draft.labelSugar=sugarRow.match(/\d+(?:[.,]\d+)?/)[0].replace(',','.');
+      if(sugarRow&&/(?:每份|per serving)/i.test(lines.join(' '))&&!/(?:每\s*100|per\s*100)/i.test(lines.join(' ')))draft.servingSugar=draft.labelSugar;
+      draft.scanStatus=draft.name?'已读取包装名称，请核对。':'未读到明确品名，请填写食物名称。';
+    }catch{draft.scanStatus='暂时无法识别包装文字，可以手动补填。';}
+    if(!photoDrafts().some(item=>item.id===draft.id))return;
+    save();
+    if(editingPhotoDraft===draft.id)applyPhotoSuggestions(draft);
+  });
+}
+const displayLabelBeforeOCR=applyPhotoSuggestions;
+applyPhotoSuggestions=function(draft){
+  displayLabelBeforeOCR(draft);
+  const hint=$('#photoDraftHint');
+  if(hint&&!draft.labelSugar&&draft.scanStatus)hint.textContent=draft.scanStatus;
+};
+const captureBeforeLabelOCR=captureFood;
+captureFood=async function(input){
+  const before=new Set(photoDrafts().map(item=>item.id));
+  await captureBeforeLabelOCR(input);
+  const draft=photoDrafts().find(item=>!before.has(item.id));
+  if(draft)scanFoodDraft(draft);
+};
+const albumPicker=document.createElement('input');
+albumPicker.type='file';albumPicker.accept='image/*';albumPicker.hidden=true;
+albumPicker.onchange=()=>captureFood(albumPicker);
+document.body.append(albumPicker);
+const renderGalleryBeforeAlbum=renderPhotos;
+renderPhotos=function(){
+  renderGalleryBeforeAlbum();
+  const header=$('#diary .section-head');
+  if(!header||header.querySelector('[data-meal-album]'))return;
+  const album=document.createElement('button');
+  album.type='button';album.className='button secondary';album.dataset.mealAlbum='';
+  album.textContent='相册';album.onclick=()=>albumPicker.click();
+  const camera=header.querySelector('button');
+  const actions=document.createElement('div');actions.style.cssText='display:flex;gap:4px;flex-wrap:wrap';
+  if(camera)actions.append(camera);
+  actions.append(album);header.append(actions);
+};
+const renderUnifiedSign=renderDailySign;
+renderDailySign=function(){
+  renderUnifiedSign();
+  const title=$('#fortuneContent .fortune-ticket h2');
+  if(title)title.textContent='今日宜 · 运动';
+};
+</script>
+<script>
+const showPhotoDraftSuggestions=applyPhotoSuggestions;
+applyPhotoSuggestions=function(draft){
+  showPhotoDraftSuggestions(draft);
+  const sugar=$('#sugarInput');
+  if(!sugar||sugar.value!==''||draft.servingSugar==null||Number($('#portion')?.value)!==1)return;
+  const amount=Number(draft.servingSugar);
+  if(!Number.isFinite(amount)||amount<0||amount>1000)return;
+  sugar.value=String(amount);
+  const hint=$('#photoDraftHint');
+  if(hint)hint.textContent='已填包装标注的每份糖量。请核对标签和实际吃了多少。';
+};
+const openPhotoDraftBeforePhotoOnly=openPhotoDraft;
+openPhotoDraft=function(id){
+  openPhotoDraftBeforePhotoOnly(id);
+  const form=$('#mealForm');
+  if(!form||editingPhotoDraft!==id)return;
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='button secondary';
+  button.textContent='只保存照片';
+  button.onclick=()=>{
+    editingPhotoDraft=null;
+    closeModal();
+    go('diary');
+    toast('照片已保存在饮食集锦');
+  };
+  form.querySelector('.modal-actions').before(button);
+};
+const previewPhotoBeforeGallerySync=previewPhoto;
+previewPhoto=function(input){
+  if(!input.files.length)return;
+  if(editing){previewPhotoBeforeGallerySync(input);return;}
+  captureFood(input);
+};
+</script>
+<script>
+const photoFoodExamples=[
+  [/^banana$/i,'香蕉',14,'一根中等大小'],
+  [/^granny smith$/i,'青苹果',19,'一个中等大小'],
+  [/^orange$/i,'橙子',12,'一个中等大小'],
+  [/^strawberry$/i,'草莓',7,'约 150 克'],
+  [/^pineapple$/i,'菠萝',16,'约 165 克'],
+  [/^pomegranate$/i,'石榴',12,'约 90 克果粒']
+];
+function loadFoodVisionScript(src){
+  return new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src=src;script.onload=resolve;script.onerror=reject;
+    document.head.append(script);
+  });
+}
+let foodVisionModel;
+function getFoodVisionModel(){
+  return foodVisionModel??=(async()=>{
+    await loadFoodVisionScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js');
+    await loadFoodVisionScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js');
+    return window.mobilenet.load({version:2,alpha:1});
+  })().catch(error=>{foodVisionModel=null;throw error;});
+}
+const scanLabelBeforeFoodVision=scanFoodDraft;
+scanFoodDraft=function(draft){
+  scanLabelBeforeFoodVision(draft);
+  const labelRead=foodLabelQueue;
+  (async()=>{
+    const image=new Image();image.src=draft.photo;await image.decode();
+    const model=await getFoodVisionModel();
+    const [prediction]=await model.classify(image,1);
+    if(!prediction||prediction.probability<.65)return;
+    const match=photoFoodExamples.find(([pattern])=>prediction.className.split(',').some(name=>pattern.test(name.trim())));
+    if(!match)return;
+    await labelRead;
+    if(!photoDrafts().includes(draft)||draft.name||draft.labelSugar!=null)return;
+    const [,name,sugar,portion]=match;
+    draft.name=name;draft.estimatedSugar=sugar;draft.estimatedPortion=portion;
+    save();
+    if(editingPhotoDraft===draft.id)applyPhotoSuggestions(draft);
+  })().catch(()=>{});
+};
+const applyBeforeVisionEstimate=applyPhotoSuggestions;
+applyPhotoSuggestions=function(draft){
+  const name=$('#foodName'),sugar=$('#sugarInput'),hint=$('#photoDraftHint');
+  applyBeforeVisionEstimate(draft);
+  if(draft.estimatedSugar==null||!name||!sugar||!hint)return;
+  if(name.value.trim()===draft.name&&sugar.value===''&&Number($('#portion')?.value)===1){
+    sugar.value=String(draft.estimatedSugar);
+  }
+  hint.textContent='图片识别建议：'+draft.name+'；'+draft.estimatedPortion+'约含糖 '+draft.estimatedSugar+' 克。请按实际份量核对。';
+};
+</script>
 </body></html>
+
 
 
 
